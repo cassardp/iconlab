@@ -1,0 +1,110 @@
+/* ============================================
+   Variables & Themes
+   ============================================ */
+
+/* Dark theme (default) - Tailwind Neutral */
+:root {
+    /* Background */
+    --background: #171717;       /* neutral-900 */
+    --background-subtle: #1a1a1a;
+
+    /* Card/Surface */
+    --card: #262626;             /* neutral-800 */
+    --card-foreground: #d4d4d4;  /* neutral-300 */
+
+    /* Muted */
+    --muted: #2f2f2f;
+    --muted-foreground: #a3a3a3; /* neutral-400 */
+
+    /* Border */
+    --border: #404040;           /* neutral-700 */
+    --border-subtle: #303030;
+
+    /* Input */
+    --input: #2f2f2f;
+    --input-border: transparent;
+
+    /* Ring (focus) */
+    --ring: #525252;             /* neutral-600 */
+    --ring-offset: #171717;
+    --ring-shadow: 0 0 0 3px rgba(82, 82, 82, 0.3);
+
+    /* Primary */
+    --primary: #525252;          /* neutral-600 */
+    --primary-foreground: #fafafa;
+
+    /* Secondary */
+    --secondary: #404040;        /* neutral-700 */
+    --secondary-foreground: #d4d4d4;
+
+    /* Accent */
+    --accent: #404040;
+    --accent-foreground: #d4d4d4;
+
+    /* Destructive */
+    --destructive: #dc2626;
+    --destructive-foreground: #d4d4d4;
+
+    /* Success */
+    --success: #22c55e;
+    --success-foreground: #fafafa;
+
+    /* Text */
+    --foreground: #d4d4d4;       /* neutral-300 */
+    --foreground-muted: #a3a3a3; /* neutral-400 */
+
+    /* Radius */
+    --radius-sm: 4px;
+    --radius: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Layout */
+    --settings-width: 380px;
+    --toolbar-height: 52px;
+    --gap: 16px;
+}
+
+/* Light theme - Tailwind Neutral */
+:root.light {
+    --background: #f7f7f7;
+    --background-subtle: #f0f0f0;
+
+    --card: #ffffff;
+    --card-foreground: #262626;
+
+    --muted: #ebebeb;
+    --muted-foreground: #636363;
+
+    --border: #d4d4d4;
+    --border-subtle: #e5e5e5;
+
+    --input: #f5f5f5;
+    --input-border: transparent;
+
+    --ring: #737373;
+    --ring-offset: #ffffff;
+    --ring-shadow: 0 0 0 3px rgba(115, 115, 115, 0.3);
+
+    --primary: #525252;
+    --primary-foreground: #fafafa;
+
+    --secondary: #ebebeb;
+    --secondary-foreground: #262626;
+
+    --accent: #e5e5e5;
+    --accent-foreground: #262626;
+
+    --destructive: #dc2626;
+    --destructive-foreground: #fafafa;
+
+    --success: #16a34a;
+    --success-foreground: #fafafa;
+
+    --foreground: #262626;
+    --foreground-muted: #525252;
+}

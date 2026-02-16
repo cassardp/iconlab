@@ -1,0 +1,175 @@
+/* ============================================
+   Buttons
+   ============================================ */
+
+/* Base button */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    line-height: 1;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+    outline: none;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    user-select: none;
+}
+
+.btn svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+/* Primary */
+.btn-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+    border-color: var(--secondary);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* Secondary */
+.btn-secondary {
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+    border-color: var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--accent);
+}
+
+/* Ghost */
+.btn-ghost {
+    background: transparent;
+    color: var(--foreground-muted);
+    border-color: transparent;
+    padding: 6px 8px;
+}
+
+.btn-ghost:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+/* Icon only */
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: transparent;
+    color: var(--foreground-muted);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.btn-icon:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.btn-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Full width */
+.btn-full {
+    width: 100%;
+}
+
+/* Large */
+.btn-lg {
+    height: 42px;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+}
+
+.btn-lg svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Small */
+.btn-sm {
+    height: 26px;
+    padding: 0 8px;
+    font-size: 11px;
+    border-radius: var(--radius-sm);
+}
+
+.btn-sm svg {
+    width: 13px;
+    height: 13px;
+}
+
+/* Disabled */
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Loading state */
+.btn.loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    /* Use the original text color for spinner */
+}
+
+.btn-primary.loading::after {
+    border-color: var(--background);
+    border-top-color: transparent;
+}
+
+.btn-secondary.loading::after {
+    border-color: var(--secondary-foreground);
+    border-top-color: transparent;
+}
+
+/* Danger */
+.btn-danger {
+    background: transparent;
+    color: var(--destructive);
+    border-color: transparent;
+}
+
+.btn-danger:hover {
+    background: rgba(220, 38, 38, 0.1);
+}

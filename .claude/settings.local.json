@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:platform.openai.com)",
+      "WebFetch(domain:ai.google.dev)",
+      "WebFetch(domain:docs.aimlapi.com)",
+      "WebFetch(domain:costgoat.com)",
+      "WebFetch(domain:openai.com)",
+      "WebFetch(domain:docs.cloud.google.com)",
+      "WebFetch(domain:developers.googleblog.com)",
+      "WebFetch(domain:img.ly)",
+      "WebFetch(domain:help.openai.com)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:www.atlabs.ai)",
+      "WebFetch(domain:www.datacamp.com)",
+      "WebFetch(domain:apidog.com)",
+      "WebFetch(domain:www.eesel.ai)",
+      "WebFetch(domain:felloai.com)",
+      "WebFetch(domain:cookbook.openai.com)",
+      "WebFetch(domain:wavespeed.ai)",
+      "WebFetch(domain:developers.openai.com)",
+      "WebFetch(domain:www.cursor-ide.com)",
+      "WebFetch(domain:blog.laozhang.ai)",
+      "WebFetch(domain:langcopilot.com)",
+      "WebFetch(domain:www.philschmid.de)",
+      "WebFetch(domain:discuss.ai.google.dev)",
+      "WebFetch(domain:blog.google)",
+      "WebFetch(domain:news.ycombinator.com)",
+      "WebFetch(domain:developers.google.com)",
+      "WebFetch(domain:midlibrary.io)",
+      "WebFetch(domain:llm-stats.com)",
+      "WebFetch(domain:kie.ai)",
+      "Bash(grep:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

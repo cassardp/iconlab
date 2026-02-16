@@ -1,0 +1,442 @@
+/* ============================================
+   Layout — 2 colonnes : settings + galerie
+   ============================================ */
+
+/* ---- Notification nouveaux modeles ---- */
+
+.new-models-notice {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 16px;
+    background: var(--accent, #3b82f6);
+    color: #fff;
+    font-size: 13px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+}
+
+.new-models-notice button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 4px;
+    opacity: 0.7;
+}
+
+.new-models-notice button:hover {
+    opacity: 1;
+}
+
+.app {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ---- Settings Panel (gauche) ---- */
+
+.settings-panel {
+    width: var(--settings-width);
+    min-width: var(--settings-width);
+    height: 100vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    background: var(--card);
+    border-right: 1px solid var(--border-subtle);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.settings-panel::-webkit-scrollbar {
+    display: none;
+}
+
+.settings-panel .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.settings-panel .app-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.settings-panel .app-title svg {
+    width: 18px;
+    height: 18px;
+}
+
+.settings-section {
+    padding: 0;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.settings-section:last-child {
+    border-bottom: none;
+}
+
+.section-content {
+    padding: 0 20px 20px;
+}
+
+/* ---- Main Content (droite) ---- */
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--background);
+}
+
+/* Toolbar */
+.main-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--toolbar-height);
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--background);
+    flex-shrink: 0;
+}
+
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toolbar-count {
+    font-size: 12px;
+    color: var(--foreground-muted);
+}
+
+/* Gallery Area */
+.gallery-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    align-content: start;
+}
+
+/* Gallery Loading State */
+.gallery-wrapper.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery-wrapper.loading .gallery {
+    display: none;
+}
+
+.gallery-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: var(--foreground-muted);
+    font-size: 13px;
+}
+
+/* Empty State */
+.gallery-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 400px;
+    color: var(--foreground-muted);
+    text-align: center;
+    gap: 12px;
+}
+
+.gallery-empty svg {
+    width: 48px;
+    height: 48px;
+    opacity: 0.3;
+}
+
+.gallery-empty p {
+    font-size: 14px;
+    max-width: 280px;
+}
+
+/* ---- Gallery Card ---- */
+
+.gallery-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color var(--transition-fast);
+}
+
+.gallery-card:hover {
+    border-color: var(--foreground-muted);
+}
+
+.gallery-card-image {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.gallery-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Badge modele dans le coin */
+.gallery-card-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 3px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-radius: var(--radius-sm);
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    backdrop-filter: blur(4px);
+}
+
+.gallery-card-meta {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.gallery-card-prompt {
+    font-size: 12px;
+    color: var(--foreground);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.gallery-card-details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--foreground-muted);
+}
+
+.gallery-card-details span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.gallery-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 12px 12px;
+}
+
+/* Per-card bg color picker */
+.card-bg-picker {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: auto;
+}
+
+.card-bg-picker .card-bg-color {
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    background: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.card-bg-picker .card-bg-color::-webkit-color-swatch-wrapper {
+    padding: 2px;
+}
+
+.card-bg-picker .card-bg-color::-webkit-color-swatch {
+    border: none;
+    border-radius: 2px;
+}
+
+/* Prompt enrichi (expandable) */
+.gallery-card-enriched {
+    padding: 0 12px 12px;
+    display: none;
+}
+
+.gallery-card-enriched.open {
+    display: block;
+}
+
+.gallery-card-enriched pre {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 10px;
+    line-height: 1.5;
+    color: var(--foreground-muted);
+    background: var(--muted);
+    padding: 8px;
+    border-radius: var(--radius-sm);
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+/* Loading card */
+.gallery-card.loading {
+    opacity: 0.7;
+}
+
+.gallery-card.loading .gallery-card-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--muted);
+}
+
+.gallery-card-loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: var(--foreground-muted);
+    font-size: 12px;
+}
+
+/* ---- Enriched Prompt (editable textarea) ---- */
+
+.enriched-prompt {
+    flex: 1;
+    min-height: 100px;
+    background: var(--muted);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 10px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--foreground);
+    resize: none;
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.enriched-prompt:focus {
+    border-color: var(--ring);
+}
+
+/* ---- Reference Image ---- */
+
+.ref-image-area {
+    position: relative;
+}
+
+.ref-image-dropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 16px;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-md);
+    color: var(--foreground-muted);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.ref-image-dropzone:hover,
+.ref-image-dropzone.dragover {
+    border-color: var(--foreground-muted);
+    background: var(--muted);
+}
+
+.ref-image-dropzone svg {
+    width: 24px;
+    height: 24px;
+    opacity: 0.5;
+}
+
+.ref-image-preview {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.ref-image-preview img {
+    width: 100%;
+    max-height: 120px;
+    object-fit: cover;
+}
+
+.btn-remove-ref {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.6) !important;
+    color: #fff !important;
+    border-radius: 50%;
+    backdrop-filter: blur(4px);
+}
+
+.btn-remove-ref svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ---- Generate button area ---- */
+
+.generate-area {
+    padding: 16px 20px 20px;
+    flex-shrink: 0;
+}

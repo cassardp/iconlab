@@ -252,9 +252,14 @@ App.attachCardEvents = function(card, generation) {
     var downloadBgBtn = card.querySelector('.btn-download-bg');
     if (downloadBgBtn) {
         downloadBgBtn.addEventListener('click', function() {
-            var bgColor = generation.previewBg && generation.previewBg !== 'checkerboard'
-                ? generation.previewBg
-                : '#1a1a1a';
+            // Si editorSettings existe, _renderComposition utilise es.bgColor/bgType
+            // Sinon fallback sur previewBg ou #1a1a1a
+            var bgColor = null;
+            if (!generation.editorSettings || !generation.editorSettings.layers || !generation.editorSettings.layers.length) {
+                bgColor = generation.previewBg && generation.previewBg !== 'checkerboard'
+                    ? generation.previewBg
+                    : '#1a1a1a';
+            }
             App.downloadImageWithBg(generation, bgColor);
         });
     }
@@ -538,33 +543,157 @@ App.fallbackCopy = function(text) {
     document.body.removeChild(textarea);
 };
 
+/* ---- Render composition sur canvas (layers + transforms + tint) ---- */
+
+App._renderComposition = function(generation, size, withBg, bgColor, callback) {
+    var es = generation.editorSettings;
+
+    // Pas d'editorSettings ou pas de layers : fallback image source
+    if (!es || !es.layers || !es.layers.length) {
+        var img = new Image();
+        img.onload = function() {
+            var canvas = document.createElement('canvas');
+            canvas.width = size || img.width;
+            canvas.height = size || img.height;
+            var ctx = canvas.getContext('2d');
+            if (withBg && bgColor) {
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            callback(canvas);
+        };
+        img.src = 'data:image/png;base64,' + generation.imageBase64;
+        return;
+    }
+
+    var layers = es.layers;
+    var exportSize = size || es.exportSize || 1024;
+
+    // Charger toutes les images des layers en parallele
+    var loaded = 0;
+    var images = [];
+    for (var i = 0; i < layers.length; i++) {
+        (function(idx) {
+            var imgEl = new Image();
+            images[idx] = imgEl;
+            imgEl.onload = function() {
+                loaded++;
+                if (loaded === layers.length) drawAll();
+            };
+            var src = layers[idx].imageBase64 || generation.imageBase64;
+            imgEl.src = 'data:image/png;base64,' + src;
+        })(i);
+    }
+
+    function drawAll() {
+        var canvas = document.createElement('canvas');
+        canvas.width = exportSize;
+        canvas.height = exportSize;
+        var ctx = canvas.getContext('2d');
+
+        // Fond
+        if (withBg) {
+            if (es.bgType === 'gradient') {
+                var cx = exportSize / 2;
+                var cy = exportSize / 2;
+                var radius = exportSize * 0.7;
+                var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+                grad.addColorStop(0, es.gradientCenter);
+                grad.addColorStop(1, es.gradientEdge);
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, exportSize, exportSize);
+            } else {
+                ctx.fillStyle = bgColor || es.bgColor || '#1a1a1a';
+                ctx.fillRect(0, 0, exportSize, exportSize);
+            }
+        }
+
+        // Layers
+        for (var i = 0; i < layers.length; i++) {
+            var layer = layers[i];
+            var img = images[i];
+            if (!img) continue;
+
+            ctx.save();
+
+            // Opacity
+            ctx.globalAlpha = (layer.opacity != null ? layer.opacity : 100) / 100;
+
+            // Shadow
+            if (layer.shadowEnabled) {
+                var scaleFactor = exportSize / 512;
+                var shadowAlpha = layer.shadowOpacity / 100;
+                ctx.shadowColor = App._hexToRgba(layer.shadowColor, shadowAlpha);
+                ctx.shadowBlur = layer.shadowBlur * scaleFactor;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = layer.shadowOffsetY * scaleFactor;
+            }
+
+            // Transforms
+            var half = exportSize / 2;
+            var ox = exportSize * (layer.offsetX || 0) / 100;
+            var oy = exportSize * (layer.offsetY || 0) / 100;
+            ctx.translate(half + ox, half + oy);
+            if (layer.scale && layer.scale !== 100) {
+                ctx.scale(layer.scale / 100, layer.scale / 100);
+            }
+            if (layer.rotation) {
+                ctx.rotate(layer.rotation * Math.PI / 180);
+            }
+
+            // Tint
+            if (layer.tintEnabled && layer.tintColor) {
+                var tmpCanvas = document.createElement('canvas');
+                tmpCanvas.width = exportSize;
+                tmpCanvas.height = exportSize;
+                var tmpCtx = tmpCanvas.getContext('2d');
+                tmpCtx.drawImage(img, 0, 0, exportSize, exportSize);
+                tmpCtx.globalCompositeOperation = 'color';
+                tmpCtx.fillStyle = layer.tintColor;
+                tmpCtx.fillRect(0, 0, exportSize, exportSize);
+                tmpCtx.globalCompositeOperation = 'destination-in';
+                tmpCtx.drawImage(img, 0, 0, exportSize, exportSize);
+                ctx.drawImage(tmpCanvas, -half, -half, exportSize, exportSize);
+            } else {
+                ctx.drawImage(img, -half, -half, exportSize, exportSize);
+            }
+
+            ctx.restore();
+        }
+
+        callback(canvas);
+    }
+};
+
+/* ---- Download helpers ---- */
+
 App.downloadImage = function(generation) {
-    var link = document.createElement('a');
-    link.download = 'icon-' + generation.model + '-' + Date.now() + '.png';
-    link.href = 'data:image/png;base64,' + generation.imageBase64;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    var es = generation.editorSettings;
+    var size = (es && es.exportSize) ? es.exportSize : null;
+
+    App._renderComposition(generation, size, false, null, function(canvas) {
+        var link = document.createElement('a');
+        link.download = 'icon-' + generation.model + '-' + Date.now() + '.png';
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
 };
 
 App.downloadImageWithBg = function(generation, bgColor) {
-    var img = new Image();
-    img.onload = function() {
-        var canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        var ctx = canvas.getContext('2d');
-        ctx.fillStyle = bgColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
+    var es = generation.editorSettings;
+    var size = (es && es.exportSize) ? es.exportSize : null;
+
+    App._renderComposition(generation, size, true, bgColor, function(canvas) {
         var link = document.createElement('a');
         link.download = 'icon-bg-' + generation.model + '-' + Date.now() + '.png';
         link.href = canvas.toDataURL('image/png');
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-    };
-    img.src = 'data:image/png;base64,' + generation.imageBase64;
+    });
 };
 
 App.showToast = function(message, type) {

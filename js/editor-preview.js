@@ -237,91 +237,25 @@ App._adjustColor = function(hex, factor) {
 
 App.editorExportPNG = function() {
     var s = App.state.editor;
+    if (!s.layers || !s.layers.length) return;
+
+    // Sauvegarder l'etat courant sur la generation
+    App._editorSave();
+
+    var idx = s.generationIndex;
+    var gen = App.state.generations[idx];
+    if (!gen) return;
+
     var size = s.exportSize;
-    var layers = s.layers || [];
-    if (!layers.length) return;
 
-    var canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    var ctx = canvas.getContext('2d');
+    App._renderComposition(gen, size, true, null, function(canvas) {
+        var link = document.createElement('a');
+        link.download = 'icon-edited-' + size + '-' + Date.now() + '.png';
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
-    // 1. Calque fond
-    if (s.bgType === 'solid') {
-        ctx.fillStyle = s.bgColor;
-        ctx.fillRect(0, 0, size, size);
-    } else {
-        var cx = size / 2;
-        var cy = size / 2;
-        var radius = size * 0.7;
-        var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
-        grad.addColorStop(0, s.gradientCenter);
-        grad.addColorStop(1, s.gradientEdge);
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, size, size);
-    }
-
-    // 2. Dessiner chaque layer
-    var imgs = document.querySelectorAll('.editor-layer-image');
-
-    for (var i = 0; i < layers.length; i++) {
-        var layer = layers[i];
-        var img = imgs[i];
-        if (!img || !img.complete) continue;
-
-        ctx.save();
-
-        // Opacity
-        ctx.globalAlpha = (layer.opacity != null ? layer.opacity : 100) / 100;
-
-        // Shadow
-        if (layer.shadowEnabled) {
-            var scaleFactor = size / 512;
-            var shadowAlpha = layer.shadowOpacity / 100;
-            ctx.shadowColor = App._hexToRgba(layer.shadowColor, shadowAlpha);
-            ctx.shadowBlur = layer.shadowBlur * scaleFactor;
-            ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = layer.shadowOffsetY * scaleFactor;
-        }
-
-        // Transforms
-        var half = size / 2;
-        var ox = size * layer.offsetX / 100;
-        var oy = size * layer.offsetY / 100;
-        ctx.translate(half + ox, half + oy);
-        if (layer.scale !== 100) {
-            ctx.scale(layer.scale / 100, layer.scale / 100);
-        }
-        if (layer.rotation !== 0) {
-            ctx.rotate(layer.rotation * Math.PI / 180);
-        }
-        // Tint : dessiner sur un canvas temporaire avec blend mode color
-        if (layer.tintEnabled && layer.tintColor) {
-            var tmpCanvas = document.createElement('canvas');
-            tmpCanvas.width = size;
-            tmpCanvas.height = size;
-            var tmpCtx = tmpCanvas.getContext('2d');
-            tmpCtx.drawImage(img, 0, 0, size, size);
-            tmpCtx.globalCompositeOperation = 'color';
-            tmpCtx.fillStyle = layer.tintColor;
-            tmpCtx.fillRect(0, 0, size, size);
-            tmpCtx.globalCompositeOperation = 'destination-in';
-            tmpCtx.drawImage(img, 0, 0, size, size);
-            ctx.drawImage(tmpCanvas, -half, -half, size, size);
-        } else {
-            ctx.drawImage(img, -half, -half, size, size);
-        }
-
-        ctx.restore();
-    }
-
-    // 3. Telecharger
-    var link = document.createElement('a');
-    link.download = 'icon-edited-' + size + '-' + Date.now() + '.png';
-    link.href = canvas.toDataURL('image/png');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    App.showToast('Exported ' + size + 'x' + size + ' PNG', 'success');
+        App.showToast('Exported ' + size + 'x' + size + ' PNG', 'success');
+    });
 };

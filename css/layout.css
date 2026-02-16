@@ -335,7 +335,7 @@ body.panels-hidden .editor-sidebar {
     object-fit: cover;
 }
 
-/* Badge modele dans le coin */
+/* Badge edit dans le coin */
 .gallery-card-badge {
     position: absolute;
     top: 8px;
@@ -349,6 +349,10 @@ body.panels-hidden .editor-sidebar {
     background: rgba(0, 0, 0, 0.6);
     color: #fff;
     backdrop-filter: blur(4px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .gallery-card-meta {

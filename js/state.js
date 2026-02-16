@@ -69,9 +69,6 @@ App.estimateCost = function(modelId, quality) {
 
 App.saveState = function() {
     localStorage.setItem(App.STORAGE_KEYS.model, App.state.model);
-    localStorage.setItem(App.STORAGE_KEYS.colorMode, App.state.colorMode);
-    localStorage.setItem(App.STORAGE_KEYS.subjectType, App.state.subjectType);
-    localStorage.setItem(App.STORAGE_KEYS.material, App.state.material);
     localStorage.setItem(App.STORAGE_KEYS.color, App.state.color);
     localStorage.setItem(App.STORAGE_KEYS.quality, App.state.quality);
 };
@@ -80,21 +77,6 @@ App.loadSavedState = function() {
     // Model and quality are locked to gpt-image-1.5 / medium
     App.state.model = 'gpt-image-1.5';
     App.state.quality = 'medium';
-
-    var colorMode = localStorage.getItem(App.STORAGE_KEYS.colorMode);
-    if (colorMode && App.COLOR_MODES[colorMode]) {
-        App.state.colorMode = colorMode;
-    }
-
-    var subjectType = localStorage.getItem(App.STORAGE_KEYS.subjectType);
-    if (subjectType && App.SUBJECT_TYPES[subjectType]) {
-        App.state.subjectType = subjectType;
-    }
-
-    var material = localStorage.getItem(App.STORAGE_KEYS.material);
-    if (material && App.MATERIALS[material]) {
-        App.state.material = material;
-    }
 
     var color = localStorage.getItem(App.STORAGE_KEYS.color);
     if (color) {

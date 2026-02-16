@@ -103,6 +103,19 @@ body.panels-hidden .settings-panel {
     height: 18px;
 }
 
+.version-number {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--foreground-muted);
+    opacity: 0.8;
+    padding: 12px 0 16px;
+    transition: opacity var(--transition-fast);
+}
+
+.version-number:hover {
+    opacity: 1;
+}
+
 /* Theme toggle icons */
 .mini-sidebar-btn .icon-sun {
     display: none;

@@ -1,0 +1,129 @@
+/* ============================================
+   Modal
+   ============================================ */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px 48px;
+    text-align: center;
+}
+
+/* ============================================
+   About Modal
+   ============================================ */
+
+.about-modal {
+    position: relative;
+    padding: 32px 40px;
+    max-width: 360px;
+}
+
+.about-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius);
+    color: var(--foreground-muted);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.about-close:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.about-close svg {
+    width: 16px;
+    height: 16px;
+}
+
+.about-logo {
+    height: 18px;
+    margin: 0 auto 8px;
+}
+
+.about-version {
+    font-size: 12px;
+    color: var(--foreground-muted);
+    margin-bottom: 16px;
+}
+
+.about-description {
+    font-size: 13px;
+    color: var(--foreground);
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.about-links {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.about-links a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--foreground);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    background: var(--muted);
+    border: 1px solid var(--border);
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.about-links a:hover {
+    background: transparent;
+    color: var(--foreground-muted);
+}
+
+.about-links a svg {
+    width: 14px;
+    height: 14px;
+}
+
+.about-author {
+    font-size: 12px;
+    color: var(--foreground-muted);
+}
+
+.about-author a,
+.about-author a:visited {
+    color: var(--foreground-muted);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color var(--transition-fast);
+}
+
+.about-author a:hover {
+    color: var(--foreground);
+}

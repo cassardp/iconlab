@@ -32,6 +32,19 @@ document.addEventListener('DOMContentLoaded', function() {
         themeToggle.addEventListener('click', toggleTheme);
     }
 
+    // 2b. About modal
+    var aboutModal = document.getElementById('aboutModal');
+    document.getElementById('aboutBtn').addEventListener('click', function() {
+        aboutModal.classList.add('show');
+        lucide.createIcons({ nodes: [aboutModal] });
+    });
+    document.getElementById('aboutClose').addEventListener('click', function() {
+        aboutModal.classList.remove('show');
+    });
+    aboutModal.addEventListener('click', function(e) {
+        if (e.target === aboutModal) aboutModal.classList.remove('show');
+    });
+
     // 3. Load saved state
     App.loadSavedState();
 

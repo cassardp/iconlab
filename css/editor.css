@@ -65,6 +65,7 @@
     background: #1a1a1a;
     overflow: hidden;
     cursor: grab;
+    border-radius: 22.5%;
 }
 
 .editor-canvas-wrap.dragging {

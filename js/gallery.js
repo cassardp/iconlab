@@ -137,19 +137,18 @@ App.createCardHTML = function(gen, index) {
         + '<div class="gallery-card-meta">'
         +   '<div class="gallery-card-prompt">' + App.escapeHtml(gen.userPrompt) + '</div>'
         +   '<div class="gallery-card-details">'
-        +     '<span>' + modelName + '</span>'
         +     '<span>'
         +       (durationStr ? '<i data-lucide="clock" style="width:12px;height:12px"></i> ' + durationStr : '')
-        +       (costStr ? ' &middot; ' + costStr : '')
+        +       (costStr ? ' ~ ' + costStr : '')
         +     '</span>'
         +   '</div>'
         + '</div>'
         + '<div class="gallery-card-actions">'
+        +   '<button class="btn btn-ghost btn-sm btn-copy-prompt" title="Copy enriched prompt">'
+        +     '<i data-lucide="copy"></i>'
+        +   '</button>'
         +   '<button class="btn btn-ghost btn-sm btn-show-prompt" title="Show enriched prompt">'
         +     '<i data-lucide="code-2"></i> Prompt'
-        +   '</button>'
-        +   '<button class="btn btn-ghost btn-sm btn-copy-prompt" title="Copy enriched prompt">'
-        +     '<i data-lucide="copy"></i> Copy'
         +   '</button>'
         +   '<button class="btn btn-ghost btn-sm btn-download" title="Download image">'
         +     '<i data-lucide="download"></i>'

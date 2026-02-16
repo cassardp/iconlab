@@ -159,6 +159,7 @@ App.initEventListeners = function() {
     if (clearGalleryBtn) {
         clearGalleryBtn.addEventListener('click', function() {
             if (App.state.generations.length === 0) return;
+            if (!confirm('Clear all generations? This cannot be undone.')) return;
             App.clearGallery();
             App.showToast('Gallery cleared', 'success');
         });

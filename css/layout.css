@@ -40,6 +40,80 @@
     overflow: hidden;
 }
 
+/* ---- Mini Sidebar (icones) ---- */
+
+.mini-sidebar {
+    width: 48px;
+    min-width: 48px;
+    background: var(--card);
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0;
+    box-sizing: border-box;
+}
+
+.mini-sidebar-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.mini-sidebar-bottom {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mini-sidebar-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius);
+    color: var(--foreground-muted);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+    text-decoration: none;
+}
+
+.mini-sidebar-btn:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.mini-sidebar-btn:active {
+    transform: scale(0.9);
+}
+
+.mini-sidebar-btn svg,
+.mini-sidebar-btn [data-lucide] {
+    width: 18px;
+    height: 18px;
+}
+
+/* Theme toggle icons */
+.mini-sidebar-btn .icon-sun {
+    display: none;
+}
+
+.mini-sidebar-btn .icon-moon {
+    display: block;
+}
+
+:root.light .mini-sidebar-btn .icon-sun {
+    display: block;
+}
+
+:root.light .mini-sidebar-btn .icon-moon {
+    display: none;
+}
+
 /* ---- Settings Panel (gauche) ---- */
 
 .settings-panel {
@@ -61,27 +135,36 @@
     display: none;
 }
 
-.settings-panel .app-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px;
-    margin-bottom: 0;
+/* Sidebar header avec logo */
+.sidebar-header {
+    height: var(--toolbar-height);
+    padding: 0 20px;
     border-bottom: 1px solid var(--border-subtle);
-}
-
-.settings-panel .app-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--foreground);
     display: flex;
     align-items: center;
-    gap: 8px;
+    box-sizing: border-box;
 }
 
-.settings-panel .app-title svg {
-    width: 18px;
-    height: 18px;
+.app-logo {
+    height: 13px;
+    width: auto;
+}
+
+/* Logo dark visible en mode light, logo light visible en mode dark */
+.logo-light {
+    display: block;
+}
+
+.logo-dark {
+    display: none;
+}
+
+:root.light .logo-light {
+    display: none;
+}
+
+:root.light .logo-dark {
+    display: block;
 }
 
 .settings-section {
@@ -170,28 +253,28 @@
     font-size: 13px;
 }
 
-/* Empty State */
-.gallery-empty {
+/* Empty State — galerie vide, centrage dans tout l'espace */
+.gallery-wrapper:has(.gallery-empty) {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    min-height: 400px;
-    color: var(--foreground-muted);
-    text-align: center;
-    gap: 12px;
+    padding: 0;
 }
 
-.gallery-empty svg {
-    width: 48px;
-    height: 48px;
-    opacity: 0.3;
+.gallery-wrapper:has(.gallery-empty) .gallery {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.gallery-empty {
+    color: var(--foreground-muted);
 }
 
 .gallery-empty p {
-    font-size: 14px;
-    max-width: 280px;
+    font-size: 13px;
 }
 
 /* ---- Gallery Card ---- */

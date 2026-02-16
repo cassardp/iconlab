@@ -21,19 +21,34 @@
 <div class="app">
 
     <!-- ================================================
+         MINI SIDEBAR (icones)
+         ================================================ -->
+    <aside class="mini-sidebar">
+        <div class="mini-sidebar-top">
+            <button class="mini-sidebar-btn" id="themeToggle" title="Toggle theme">
+                <i data-lucide="moon" class="icon-moon"></i>
+                <i data-lucide="sun" class="icon-sun"></i>
+            </button>
+        </div>
+        <div class="mini-sidebar-bottom">
+            <a href="https://github.com/nicobmusic" class="mini-sidebar-btn" target="_blank" title="GitHub">
+                <i data-lucide="github"></i>
+            </a>
+            <button class="mini-sidebar-btn" id="aboutBtn" title="About Icon Lab">
+                <i data-lucide="info"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ================================================
          SETTINGS PANEL (gauche)
          ================================================ -->
     <aside class="settings-panel">
 
-        <!-- Header -->
-        <div class="app-header">
-            <div class="app-title">
-                <i data-lucide="sparkles"></i>
-                Icon Lab
-            </div>
-            <button class="btn-icon" id="themeToggle" title="Toggle theme">
-                <i data-lucide="moon"></i>
-            </button>
+        <!-- Header avec logo -->
+        <div class="sidebar-header">
+            <img src="assets/light.png" alt="Icon Lab" class="app-logo logo-dark">
+            <img src="assets/dark.png" alt="Icon Lab" class="app-logo logo-light">
         </div>
 
         <!-- Section : API Key + Model -->
@@ -77,12 +92,12 @@
                     <textarea id="promptInput" rows="3" placeholder="e.g. a cute fox mascot"></textarea>
                 </div>
                 <div class="setting-row">
-                    <span class="setting-label">Color mode</span>
-                    <select id="colorModeSelect"></select>
-                </div>
-                <div class="setting-row">
                     <span class="setting-label">Subject</span>
                     <select id="subjectTypeSelect"></select>
+                </div>
+                <div class="setting-row">
+                    <span class="setting-label">Color mode</span>
+                    <select id="colorModeSelect"></select>
                 </div>
                 <div class="setting-row">
                     <span class="setting-label">Material</span>
@@ -151,8 +166,7 @@
             </div>
             <div class="gallery" id="gallery">
                 <div class="gallery-empty" id="galleryEmpty">
-                    <i data-lucide="image"></i>
-                    <p>Enter a prompt, tweak the enriched version, then hit Generate.</p>
+                    <p>No generations yet</p>
                 </div>
             </div>
         </div>
@@ -405,6 +419,9 @@
 <script src="js/api-openai.js"></script>
 <script src="js/gallery.js"></script>
 <script src="js/editor.js"></script>
+<script src="js/editor-layers.js"></script>
+<script src="js/editor-preview.js"></script>
+<script src="js/editor-events.js"></script>
 <script src="js/events.js"></script>
 <script src="app.js"></script>
 

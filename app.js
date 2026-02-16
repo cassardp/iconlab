@@ -15,16 +15,6 @@ function initTheme() {
 function toggleTheme() {
     var isLight = document.documentElement.classList.toggle('light');
     localStorage.setItem(App.STORAGE_KEYS.theme, isLight ? 'light' : 'dark');
-
-    // Update icon
-    var themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) {
-        var icon = themeToggle.querySelector('i');
-        if (icon) {
-            icon.setAttribute('data-lucide', isLight ? 'sun' : 'moon');
-            lucide.createIcons({ nodes: [themeToggle] });
-        }
-    }
 }
 
 // Init theme avant le DOM pour eviter le flash
@@ -40,14 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', toggleTheme);
-
-        // Set correct icon on load
-        var isLight = document.documentElement.classList.contains('light');
-        var icon = themeToggle.querySelector('i');
-        if (icon) {
-            icon.setAttribute('data-lucide', isLight ? 'sun' : 'moon');
-            lucide.createIcons({ nodes: [themeToggle] });
-        }
     }
 
     // 3. Load saved state

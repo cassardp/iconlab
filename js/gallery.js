@@ -132,7 +132,7 @@ App.createCardHTML = function(gen, index) {
     card.innerHTML = ''
         + '<div class="gallery-card-image' + bgClass + '"' + bgStyle + '>'
         +   imgHtml
-        +   '<span class="gallery-card-badge"><i data-lucide="pencil" style="width:11px;height:11px"></i> Edit</span>'
+        +   '<span class="gallery-card-badge">Edit</span>'
         + '</div>'
         + '<div class="gallery-card-meta">'
         +   '<div class="gallery-card-prompt">' + App.escapeHtml(gen.userPrompt) + '</div>'

@@ -42,7 +42,8 @@
 
 /* ---- Toggle panels hidden ---- */
 
-body.panels-hidden .settings-panel {
+body.panels-hidden .settings-panel,
+body.panels-hidden .editor-sidebar {
     display: none;
 }
 

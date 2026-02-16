@@ -57,6 +57,7 @@
 .editor-canvas-wrap {
     width: 100%;
     max-width: 512px;
+    max-height: calc(100vh - var(--toolbar-height) - 80px);
     aspect-ratio: 1;
     display: flex;
     align-items: center;
@@ -66,6 +67,10 @@
     overflow: hidden;
     cursor: grab;
     border-radius: 22.5%;
+}
+
+body.panels-hidden .editor-canvas-wrap {
+    max-width: calc(100vh - var(--toolbar-height) - 80px);
 }
 
 .editor-canvas-wrap.dragging {

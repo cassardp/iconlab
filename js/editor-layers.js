@@ -144,7 +144,7 @@ App.selectEditorLayer = function(index) {
 
 App.addEditorLayer = function(generation) {
     var layers = App.state.editor.layers || [];
-    if (layers.length >= 2) return; // Max 2 layers
+    if (layers.length >= 5) return; // Max 5 layers
 
     var layerDefaults = App.LAYER_DEFAULTS;
     var newLayer = {};
@@ -224,8 +224,8 @@ App._editorUpdateAddBtn = function() {
     var btn = document.getElementById('editorAddLayerBtn');
     if (!btn) return;
     var layers = App.state.editor.layers || [];
-    btn.disabled = layers.length >= 2;
-    btn.style.opacity = layers.length >= 2 ? '0.3' : '1';
+    btn.disabled = layers.length >= 5;
+    btn.style.opacity = layers.length >= 5 ? '0.3' : '1';
 };
 
 /* ---- Layer picker ---- */

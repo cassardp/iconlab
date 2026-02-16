@@ -129,6 +129,7 @@ App.initEventListeners = function() {
     if (enrichedPrompt) {
         enrichedPrompt.addEventListener('input', function() {
             App._enrichedManuallyEdited = true;
+            App.updateGenerateButton();
         });
     }
 

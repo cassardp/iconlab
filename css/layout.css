@@ -126,18 +126,24 @@ body.panels-hidden .settings-panel {
     width: var(--settings-width);
     min-width: var(--settings-width);
     height: 100vh;
-    overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
     background: var(--card);
     border-right: 1px solid var(--border-subtle);
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0;
+    overflow: hidden;
 }
 
-.settings-panel::-webkit-scrollbar {
+.settings-scroll {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-scroll::-webkit-scrollbar {
     display: none;
 }
 
@@ -533,4 +539,5 @@ body.panels-hidden .settings-panel {
 .generate-area {
     padding: 16px 20px 20px;
     flex-shrink: 0;
+    border-top: 1px solid var(--border-subtle);
 }

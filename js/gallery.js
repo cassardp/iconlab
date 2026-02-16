@@ -247,6 +247,10 @@ App.attachCardEvents = function(card, generation) {
             cardImageWrap.classList.remove('checkerboard');
             cardImageWrap.style.backgroundColor = this.value;
             generation.previewBg = this.value;
+            if (generation.editorSettings) {
+                generation.editorSettings.bgType = 'solid';
+                generation.editorSettings.bgColor = this.value;
+            }
             App.saveGallery();
         });
     }

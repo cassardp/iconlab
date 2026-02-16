@@ -44,6 +44,9 @@
          ================================================ -->
     <aside class="mini-sidebar">
         <div class="mini-sidebar-top">
+            <button class="mini-sidebar-btn" id="togglePanels" title="Toggle panels">
+                <i data-lucide="columns-3"></i>
+            </button>
             <button class="mini-sidebar-btn" id="themeToggle" title="Toggle theme">
                 <i data-lucide="moon" class="icon-moon"></i>
                 <i data-lucide="sun" class="icon-sun"></i>
@@ -166,19 +169,19 @@
          ================================================ -->
     <main class="main-content">
 
-        <header class="main-toolbar" id="galleryToolbar">
-            <div class="toolbar-left">
-                <span class="toolbar-count" id="galleryCount">0 generations</span>
-            </div>
-            <div class="toolbar-right">
-                <button class="btn btn-ghost btn-sm" id="clearGalleryBtn">
-                    <i data-lucide="trash-2"></i>
-                    Clear
-                </button>
-            </div>
-        </header>
-
         <div class="gallery-wrapper loading" id="galleryWrapper">
+
+            <header class="main-toolbar" id="galleryToolbar">
+                <div class="toolbar-left">
+                    <span class="toolbar-count" id="galleryCount">0 generations</span>
+                </div>
+                <div class="toolbar-right">
+                    <button class="btn btn-ghost btn-sm" id="clearGalleryBtn">
+                        <i data-lucide="trash-2"></i>
+                        Clear
+                    </button>
+                </div>
+            </header>
             <div class="gallery-loader" id="galleryLoader">
                 <div class="spinner"></div>
                 <span>Loading gallery...</span>

@@ -40,6 +40,12 @@
     overflow: hidden;
 }
 
+/* ---- Toggle panels hidden ---- */
+
+body.panels-hidden .settings-panel {
+    display: none;
+}
+
 /* ---- Mini Sidebar (icones) ---- */
 
 .mini-sidebar {
@@ -192,14 +198,19 @@
 
 /* Toolbar */
 .main-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: var(--toolbar-height);
     padding: 0 20px;
+    margin: 0 -20px;
     border-bottom: 1px solid var(--border-subtle);
-    background: var(--background);
-    flex-shrink: 0;
+    background: color-mix(in srgb, var(--background) 50%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .toolbar-left {
@@ -221,9 +232,11 @@
 
 /* Gallery Area */
 .gallery-wrapper {
+    position: relative;
     flex: 1;
     overflow-y: auto;
     padding: 20px;
+    padding-top: 0;
 }
 
 .gallery {
@@ -231,17 +244,25 @@
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 16px;
     align-content: start;
+    padding-top: 20px;
 }
 
 /* Gallery Loading State */
-.gallery-wrapper.loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.gallery-wrapper.loading .main-toolbar {
+    visibility: hidden;
 }
 
 .gallery-wrapper.loading .gallery {
     display: none;
+}
+
+.gallery-wrapper.loading .gallery-loader {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .gallery-loader {

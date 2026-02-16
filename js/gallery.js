@@ -69,6 +69,28 @@ App.createCardHTML = function(gen, index) {
                     : 'data:image/png;base64,' + gen.imageBase64;
 
                 imgHtml += '<img src="' + layerSrc + '" alt="Layer ' + (li + 1) + '" style="' + layerStyles.join(';') + '">';
+
+                // Tint overlay
+                if (layer.tintEnabled && layer.tintColor) {
+                    var tintStyles = [
+                        'position:absolute;top:0;left:0;width:100%;height:100%',
+                        'background-color:' + layer.tintColor,
+                        'mix-blend-mode:color',
+                        'pointer-events:none',
+                        '-webkit-mask-image:url(' + layerSrc + ')',
+                        'mask-image:url(' + layerSrc + ')',
+                        '-webkit-mask-size:contain',
+                        'mask-size:contain',
+                        '-webkit-mask-repeat:no-repeat',
+                        'mask-repeat:no-repeat',
+                        '-webkit-mask-position:center',
+                        'mask-position:center'
+                    ];
+                    if (transforms.length) {
+                        tintStyles.push('transform:' + transforms.join(' '));
+                    }
+                    imgHtml += '<div style="' + tintStyles.join(';') + '"></div>';
+                }
             }
         } else {
             // Legacy single-layer format

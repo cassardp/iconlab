@@ -164,11 +164,11 @@ App._updateAuthUI = function() {
         btn.innerHTML = '<span class="auth-avatar">' + App.escapeHtml(initial) + '</span>';
         btn.title = profile.display_name;
     } else if (isAuth) {
-        btn.innerHTML = '<i data-lucide="user"></i>';
+        btn.innerHTML = '<i data-lucide="key-round"></i>';
         btn.title = 'Complete profile';
         lucide.createIcons({ nodes: [btn] });
     } else {
-        btn.innerHTML = '<i data-lucide="user"></i>';
+        btn.innerHTML = '<i data-lucide="key-round"></i>';
         btn.title = 'Sign in';
         lucide.createIcons({ nodes: [btn] });
     }

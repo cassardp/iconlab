@@ -773,10 +773,10 @@ body.panels-hidden .editor-sidebar {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: var(--accent, #3b82f6);
-    color: #fff;
+    background: var(--foreground-muted);
+    color: var(--card);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -26,21 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 1. Init icons
     lucide.createIcons();
 
-    // 2. Toggle panels
-    document.getElementById('togglePanels').addEventListener('click', function() {
-        document.body.classList.toggle('panels-hidden');
-        var isHidden = document.body.classList.contains('panels-hidden');
-        var newIcon = isHidden ? 'square' : 'columns-3';
-        var svg = this.querySelector('svg');
-        if (svg) {
-            var newI = document.createElement('i');
-            newI.setAttribute('data-lucide', newIcon);
-            svg.replaceWith(newI);
-            lucide.createIcons({ nodes: [newI] });
-        }
-    });
-
-    // 2a. Theme toggle
+    // 2. Theme toggle
     var themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', toggleTheme);

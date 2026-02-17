@@ -35,6 +35,9 @@
     <!-- Supabase SDK -->
     <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
+    <!-- Vercel Analytics -->
+    <script defer src="/_vercel/insights/script.js"></script>
+
     <!-- App CSS -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -47,8 +50,8 @@
          ================================================ -->
     <aside class="mini-sidebar">
         <div class="mini-sidebar-top">
-            <button class="mini-sidebar-btn" id="togglePanels" title="Toggle panels">
-                <i data-lucide="columns-3"></i>
+            <button class="mini-sidebar-btn" id="authButton" title="Sign in">
+                <i data-lucide="key-round"></i>
             </button>
             <button class="mini-sidebar-btn active" id="tabLocal" data-tab="local" title="My Gallery">
                 <i data-lucide="house"></i>
@@ -58,9 +61,6 @@
             </button>
         </div>
         <div class="mini-sidebar-bottom">
-            <button class="mini-sidebar-btn" id="authButton" title="Sign in">
-                <i data-lucide="user"></i>
-            </button>
             <button class="mini-sidebar-btn" id="themeToggle" title="Toggle theme">
                 <i data-lucide="moon" class="icon-moon"></i>
                 <i data-lucide="sun" class="icon-sun"></i>
@@ -71,7 +71,7 @@
             <button class="mini-sidebar-btn" id="aboutBtn" title="About Icon Lab">
                 <i data-lucide="info"></i>
             </button>
-            <span class="version-number">0.20</span>
+            <span class="version-number">0.21</span>
         </div>
     </aside>
 
@@ -485,7 +485,7 @@
         </button>
         <img src="assets/light.png" alt="Icon Lab" class="about-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="about-logo logo-light">
-        <p class="about-version">Version <span class="version-number">0.20</span></p>
+        <p class="about-version">Version <span class="version-number">0.21</span></p>
         <p class="about-description">A free tool for generating and iterating on app icon designs using AI. Customize prompts, layers, and backgrounds — all in the browser.</p>
         <div class="about-links">
             <a href="https://github.com/cassardp/iconlab" target="_blank" rel="noopener">

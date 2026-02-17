@@ -134,7 +134,6 @@ App.createCardHTML = function(gen) {
     card.innerHTML = ''
         + '<div class="gallery-card-image' + bgClass + '"' + bgStyle + '>'
         +   imgHtml
-        +   '<span class="gallery-card-badge">Edit</span>'
         + '</div>'
         + '<div class="gallery-card-meta">'
         +   '<div class="gallery-card-prompt">' + App.escapeHtml(gen.userPrompt) + '</div>'
@@ -157,6 +156,9 @@ App.createCardHTML = function(gen) {
         +   '</button>'
         +   '<button class="btn btn-ghost btn-sm btn-download-bg" title="Download with background">'
         +     '<i data-lucide="image-down"></i>'
+        +   '</button>'
+        +   '<button class="btn btn-ghost btn-sm btn-share" title="' + (gen._sharedToCommunity ? 'Remove from community' : 'Share to community') + '">'
+        +     '<i data-lucide="' + (gen._sharedToCommunity ? 'cloud' : 'cloud-off') + '"></i>'
         +   '</button>'
         +   '<div class="card-bg-picker">'
         +     '<input type="color" class="card-bg-color" value="' + pickerValue + '" title="Preview background color">'
@@ -295,6 +297,20 @@ App.attachCardEvents = function(card, generation) {
         });
     }
 
+    // Partager / retirer de la communaute (toggle)
+    var shareBtn = card.querySelector('.btn-share');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', function() {
+            shareBtn.disabled = true;
+            var action = generation._sharedToCommunity
+                ? App.unshareToCommunity(generation)
+                : App.shareToCommunity(generation);
+            action.finally(function() {
+                shareBtn.disabled = false;
+            });
+        });
+    }
+
     // Supprimer la card
     var deleteBtn = card.querySelector('.btn-delete');
     if (deleteBtn) {
@@ -363,7 +379,7 @@ App.updateGalleryCount = function() {
     var countEl = document.getElementById('galleryCount');
     if (countEl) {
         var count = App.state.generations.length;
-        countEl.textContent = count + ' generation' + (count !== 1 ? 's' : '');
+        countEl.textContent = count + ' icon' + (count !== 1 ? 's' : '');
     }
 };
 

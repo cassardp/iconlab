@@ -162,6 +162,12 @@ App.EDITOR_DEFAULTS = {
     shadowColor: '#000000'
 };
 
+/* ---- Supabase ---- */
+
+App.SUPABASE_URL = 'https://bisxrchfzahyiiwtxiof.supabase.co';
+App.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpc3hyY2hmemFoeWlpd3R4aW9mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzMTQzMzcsImV4cCI6MjA4Njg5MDMzN30.286OcvMVCJ8QcNgvZgWl7dOxKeS64LtJT97JHLfigJQ';
+App.COMMUNITY_PAGE_SIZE = 20;
+
 /* ---- Storage keys ---- */
 
 App.STORAGE_KEYS = {
@@ -174,5 +180,6 @@ App.STORAGE_KEYS = {
     quality: 'icon-quality',
     transparentBg: 'icon-transparent-bg',
     theme: 'icon-theme',
-    gallery: 'icon-gallery'
+    gallery: 'icon-gallery',
+    deviceId: 'icon-device-id'
 };

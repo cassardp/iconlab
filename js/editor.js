@@ -78,11 +78,13 @@ App.openEditor = function(generation) {
         App.state.editor.activeLayerIndex = 0;
     }
 
-    // Cacher la galerie
+    // Cacher la galerie et la communaute
     var galleryToolbar = document.getElementById('galleryToolbar');
     var galleryWrapper = document.querySelector('.gallery-wrapper');
+    var communityWrapper = document.getElementById('communityWrapper');
     if (galleryToolbar) galleryToolbar.classList.add('hidden');
     if (galleryWrapper) galleryWrapper.classList.add('hidden');
+    if (communityWrapper) communityWrapper.classList.add('hidden');
 
     // Afficher l'editeur avec loader
     var editorView = document.getElementById('editorView');
@@ -149,11 +151,20 @@ App.closeEditor = function() {
     var gen = App.state.generations[App.state.editor.generationIndex];
     App.state.editor.active = false;
 
-    // Reafficher la galerie
+    // Reafficher le bon wrapper
     var galleryToolbar = document.getElementById('galleryToolbar');
     var galleryWrapper = document.querySelector('.gallery-wrapper');
-    if (galleryToolbar) galleryToolbar.classList.remove('hidden');
-    if (galleryWrapper) galleryWrapper.classList.remove('hidden');
+    var communityWrapper = document.getElementById('communityWrapper');
+
+    if (App._activeTab === 'community') {
+        if (galleryToolbar) galleryToolbar.classList.add('hidden');
+        if (galleryWrapper) galleryWrapper.classList.add('hidden');
+        if (communityWrapper) communityWrapper.classList.remove('hidden');
+    } else {
+        if (galleryToolbar) galleryToolbar.classList.remove('hidden');
+        if (galleryWrapper) galleryWrapper.classList.remove('hidden');
+        if (communityWrapper) communityWrapper.classList.add('hidden');
+    }
 
     // Rafraichir la card editee
     App.refreshGalleryCard(gen);

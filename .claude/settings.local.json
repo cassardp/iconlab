@@ -33,7 +33,46 @@
       "Bash(grep:*)",
       "Bash(git init:*)",
       "Bash(git remote add:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git -C /Users/patrice/Github/iconlab status)",
+      "Bash(git -C /Users/patrice/Github/iconlab diff)",
+      "Bash(git -C /Users/patrice/Github/iconlab log --oneline -3)",
+      "Bash(git -C /Users/patrice/Github/iconlab add app.js css/layout.css css/styles.css css/modal.css index.html)",
+      "Bash(git -C /Users/patrice/Github/iconlab commit -m \"$\\(cat <<''EOF''\nAdd About modal, fix gallery empty state, update GitHub link\n\n- Add About modal with logo, version, GitHub link and author credit\n- Fix gallery grid breaking when empty state was hidden \\(replace :has\\(\\) with grid-column approach\\)\n- Update mini-sidebar GitHub link to cassardp/iconlab\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /Users/patrice/Github/iconlab push)",
+      "Bash(git -C /Users/patrice/Github/iconlab add app.js css/layout.css css/variables.css index.html)",
+      "Bash(git -C /Users/patrice/Github/iconlab commit -m \"$\\(cat <<''EOF''\nAdd toggle panels button, sticky toolbar with blur, align heights\n\n- Add toggle panels button in mini-sidebar \\(columns-3/square icon\\)\n- Move gallery toolbar inside scroll wrapper as sticky with backdrop blur\n- Fix loading state positioning \\(hide toolbar, center loader\\)\n- Align toolbar/header height to 60px\n- Toolbar border extends full width with negative margins\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(chmod:*)",
+      "Bash(git checkout:*)",
+      "WebSearch",
+      "WebFetch(domain:supabase.com)",
+      "WebFetch(domain:shinzo.ai)",
+      "WebFetch(domain:composio.dev)",
+      "WebFetch(domain:github.com)",
+      "Bash(claude mcp add:*)",
+      "Bash(CLAUDECODE= claude mcp add:*)",
+      "Bash(claude mcp:*)",
+      "mcp__supabase__list_projects",
+      "mcp__supabase__list_organizations",
+      "mcp__supabase__list_tables",
+      "mcp__supabase__list_migrations",
+      "mcp__supabase__get_project_url",
+      "mcp__supabase__get_publishable_keys",
+      "mcp__supabase__get_project",
+      "mcp__supabase__list_extensions",
+      "mcp__supabase__search_docs",
+      "mcp__supabase__apply_migration",
+      "mcp__supabase__get_advisors",
+      "WebFetch(domain:cdn.jsdelivr.net)",
+      "WebFetch(domain:unpkg.com)",
+      "WebFetch(domain:app.unpkg.com)",
+      "mcp__supabase__execute_sql"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "supabase"
+  ]
 }

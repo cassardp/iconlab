@@ -243,29 +243,65 @@ App._adjustColor = function(hex, factor) {
     return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 };
 
-/* ---- Export Canvas PNG (multi-layer) ---- */
+/* ---- App Store icon sizes ---- */
+
+App.APP_ICON_SIZES = [
+    { size: 1024, name: 'AppStore' },
+    { size: 512,  name: 'iTunesArtwork' },
+    { size: 180,  name: 'iPhone@3x' },
+    { size: 167,  name: 'iPadPro' },
+    { size: 152,  name: 'iPad@2x' },
+    { size: 120,  name: 'iPhone@2x' },
+    { size: 87,   name: 'Spotlight@3x' },
+    { size: 80,   name: 'Spotlight@2x' },
+    { size: 76,   name: 'iPad' },
+    { size: 60,   name: 'iPhone' },
+    { size: 58,   name: 'Settings@2x' },
+    { size: 40,   name: 'Notification@2x' },
+    { size: 29,   name: 'Settings' },
+    { size: 20,   name: 'Notification' }
+];
+
+/* ---- Export ZIP with all App Store sizes ---- */
 
 App.editorExportPNG = function() {
     var s = App.state.editor;
     if (!s.layers || !s.layers.length) return;
 
-    // Sauvegarder l'etat courant sur la generation
     App._editorSave();
 
     var idx = s.generationIndex;
     var gen = App.state.generations[idx];
     if (!gen) return;
 
-    var size = s.exportSize;
+    var btn = document.getElementById('editorExportBtn');
+    if (btn) btn.classList.add('loading');
 
-    App._renderComposition(gen, size, true, null, function(canvas) {
-        var link = document.createElement('a');
-        link.download = 'icon-edited-' + size + '-' + Date.now() + '.png';
-        link.href = canvas.toDataURL('image/png');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    var zip = new JSZip();
+    var sizes = App.APP_ICON_SIZES;
+    var done = 0;
 
-        App.showToast('Exported ' + size + 'x' + size + ' PNG', 'success');
-    });
+    for (var i = 0; i < sizes.length; i++) {
+        (function(entry) {
+            App._renderComposition(gen, entry.size, true, null, function(canvas) {
+                var dataUrl = canvas.toDataURL('image/png');
+                var base64 = dataUrl.split(',')[1];
+                zip.file('AppIcon-' + entry.size + 'x' + entry.size + '-' + entry.name + '.png', base64, { base64: true });
+                done++;
+                if (done === sizes.length) {
+                    zip.generateAsync({ type: 'blob' }).then(function(blob) {
+                        var link = document.createElement('a');
+                        link.download = 'AppIcons-' + Date.now() + '.zip';
+                        link.href = URL.createObjectURL(blob);
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(link.href);
+                        if (btn) btn.classList.remove('loading');
+                        App.showToast('Exported ' + sizes.length + ' icon sizes as ZIP', 'success');
+                    });
+                }
+            });
+        })(sizes[i]);
+    }
 };

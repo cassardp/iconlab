@@ -12,14 +12,21 @@
     overflow: hidden;
 }
 
-.editor-view > .main-toolbar {
-    margin: 0;
-}
-
 .editor-content {
     flex: 1;
     display: flex;
     overflow: hidden;
+}
+
+.editor-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.editor-main > .main-toolbar {
+    margin: 0;
 }
 
 /* ---- Preview Area (centre) ---- */
@@ -32,6 +39,7 @@
     padding: 40px;
     overflow: auto;
     background: var(--background-subtle);
+    position: relative;
 }
 
 /* Loading state : spinner pendant le chargement de l'image */
@@ -50,14 +58,10 @@
     animation: spin 0.6s linear infinite;
 }
 
-.editor-preview-area {
-    position: relative;
-}
-
 .editor-canvas-wrap {
     width: 100%;
     max-width: 512px;
-    max-height: calc(100vh - var(--toolbar-height) - 80px);
+    max-height: calc(100vh - 120px);
     aspect-ratio: 1;
     display: flex;
     align-items: center;
@@ -193,8 +197,9 @@ body.panels-hidden .editor-canvas-wrap {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
+    height: var(--toolbar-height);
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border-subtle);
     font-size: 13px;
     font-weight: 500;
     color: var(--foreground);
@@ -206,11 +211,14 @@ body.panels-hidden .editor-canvas-wrap {
     padding: 16px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 8px;
+    grid-auto-rows: min-content;
+    gap: 16px;
 }
 
 .editor-layer-picker-item {
     aspect-ratio: 1;
+    width: 100%;
+    height: auto;
     border-radius: var(--radius);
     overflow: hidden;
     cursor: pointer;

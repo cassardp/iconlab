@@ -454,6 +454,11 @@ App._downloadCommunityIcon = function(icon) {
 /* ---- Tab switching ---- */
 
 App.switchTab = function(tab) {
+    // Si l'editeur est ouvert, le fermer d'abord
+    if (App.state.editor.active) {
+        App.closeEditor();
+    }
+
     App._activeTab = tab;
 
     var galleryWrapper = document.getElementById('galleryWrapper');

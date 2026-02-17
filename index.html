@@ -71,7 +71,7 @@
             <button class="mini-sidebar-btn" id="aboutBtn" title="About Icon Lab">
                 <i data-lucide="info"></i>
             </button>
-            <span class="version-number">0.24</span>
+            <span class="version-number">0.25</span>
         </div>
     </aside>
 
@@ -243,39 +243,42 @@
              ================================================ -->
         <div class="editor-view hidden" id="editorView">
 
-            <header class="main-toolbar">
-                <div class="toolbar-left">
-                    <button class="btn btn-ghost btn-sm" id="editorBackBtn">
-                        <i data-lucide="arrow-left"></i>
-                        Back
-                    </button>
-                </div>
-                <div class="toolbar-right">
-                    <button class="btn btn-primary btn-sm" id="editorExportBtn">
-                        <i data-lucide="download"></i>
-                        Export PNG
-                    </button>
-                </div>
-            </header>
-
-            <!-- Layer picker modal -->
-            <div class="editor-layer-picker hidden" id="editorLayerPicker">
-                <div class="editor-layer-picker-header">
-                    <span>Select an icon to add</span>
-                    <button class="btn-icon btn-sm" id="editorLayerPickerClose">
-                        <i data-lucide="x"></i>
-                    </button>
-                </div>
-                <div class="editor-layer-picker-grid" id="editorLayerPickerGrid"></div>
-            </div>
-
             <div class="editor-content">
 
-                <!-- Preview -->
-                <div class="editor-preview-area">
-                    <div class="editor-canvas-wrap">
-                        <div class="editor-icon-container" id="editorIconContainer">
-                            <!-- Layer images crees dynamiquement par JS -->
+                <!-- Zone centrale (toolbar + preview) -->
+                <div class="editor-main">
+                    <header class="main-toolbar">
+                        <div class="toolbar-left">
+                            <button class="btn btn-ghost btn-sm" id="editorBackBtn">
+                                <i data-lucide="arrow-left"></i>
+                                Back
+                            </button>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn btn-primary btn-sm" id="editorExportBtn">
+                                <i data-lucide="archive"></i>
+                                Export App Icons
+                            </button>
+                        </div>
+                    </header>
+
+                    <!-- Layer picker modal -->
+                    <div class="editor-layer-picker hidden" id="editorLayerPicker">
+                        <div class="editor-layer-picker-header">
+                            <span>Select an icon to add</span>
+                            <button class="btn-icon btn-sm" id="editorLayerPickerClose">
+                                <i data-lucide="x"></i>
+                            </button>
+                        </div>
+                        <div class="editor-layer-picker-grid" id="editorLayerPickerGrid"></div>
+                    </div>
+
+                    <!-- Preview -->
+                    <div class="editor-preview-area">
+                        <div class="editor-canvas-wrap">
+                            <div class="editor-icon-container" id="editorIconContainer">
+                                <!-- Layer images crees dynamiquement par JS -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -452,23 +455,6 @@
                         </div>
                     </div>
 
-                    <!-- Output -->
-                    <div class="settings-section">
-                        <div class="section-header">
-                            <span class="section-title">Output</span>
-                        </div>
-                        <div class="section-content">
-                            <div class="setting-row">
-                                <span class="setting-label">Export size</span>
-                                <select id="editorExportSize">
-                                    <option value="512">512 x 512</option>
-                                    <option value="1024" selected>1024 x 1024</option>
-                                    <option value="2048">2048 x 2048</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
                 </aside>
             </div>
         </div>
@@ -485,7 +471,7 @@
         </button>
         <img src="assets/light.png" alt="Icon Lab" class="about-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="about-logo logo-light">
-        <p class="about-version">Version <span class="version-number">0.24</span></p>
+        <p class="about-version">Version <span class="version-number">0.25</span></p>
         <p class="about-description">A free tool for generating and iterating on app icon designs using AI. Customize prompts, layers, and backgrounds — all in the browser.</p>
         <div class="about-links">
             <a href="https://github.com/cassardp/iconlab" target="_blank" rel="noopener">
@@ -533,6 +519,7 @@
 <div class="toast" id="toast"></div>
 
 <!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="js/config.js"></script>
 <script src="js/state.js"></script>
 <script src="js/prompt-builder.js"></script>

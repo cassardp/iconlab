@@ -122,21 +122,21 @@ body.panels-hidden .editor-sidebar {
     opacity: 1;
 }
 
-/* Theme toggle icons */
+/* Theme toggle icons: show target theme icon */
 .mini-sidebar-btn .icon-sun {
-    display: none;
+    display: block;
 }
 
 .mini-sidebar-btn .icon-moon {
-    display: block;
+    display: none;
 }
 
 :root.light .mini-sidebar-btn .icon-sun {
-    display: block;
+    display: none;
 }
 
 :root.light .mini-sidebar-btn .icon-moon {
-    display: none;
+    display: block;
 }
 
 /* ---- Settings Panel (gauche) ---- */
@@ -428,7 +428,7 @@ body.panels-hidden .editor-sidebar {
 .card-actions-right {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     margin-left: auto;
 }
 

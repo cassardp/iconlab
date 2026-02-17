@@ -319,31 +319,40 @@ App.editorExportPNG = function() {
     var btn = document.getElementById('editorExportBtn');
     if (btn) btn.classList.add('loading');
 
-    // Rendre une seule fois en 1024, puis downscale progressif
-    App._renderComposition(gen, 1024, true, null, function(masterCanvas) {
-        var zip = new JSZip();
-        var sizes = App.APP_ICON_SIZES;
+    // Rendre en 1024 avec fond, puis sans fond (transparent)
+    App._renderComposition(gen, 1024, true, null, function(masterWithBg) {
+        App._renderComposition(gen, 1024, false, null, function(masterNoBg) {
+            var zip = new JSZip();
+            var sizes = App.APP_ICON_SIZES;
 
-        for (var i = 0; i < sizes.length; i++) {
-            var entry = sizes[i];
-            var canvas = (entry.size === 1024)
-                ? masterCanvas
-                : App._downscaleCanvas(masterCanvas, entry.size);
-            var dataUrl = canvas.toDataURL('image/png');
-            var base64 = dataUrl.split(',')[1];
-            zip.file('AppIcon-' + entry.size + 'x' + entry.size + '-' + entry.name + '.png', base64, { base64: true });
-        }
+            for (var i = 0; i < sizes.length; i++) {
+                var entry = sizes[i];
+                // Version avec fond
+                var canvasBg = (entry.size === 1024)
+                    ? masterWithBg
+                    : App._downscaleCanvas(masterWithBg, entry.size);
+                var dataBg = canvasBg.toDataURL('image/png').split(',')[1];
+                zip.file('AppIcon-' + entry.size + 'x' + entry.size + '-' + entry.name + '.png', dataBg, { base64: true });
 
-        zip.generateAsync({ type: 'blob' }).then(function(blob) {
-            var link = document.createElement('a');
-            link.download = 'AppIcons-' + Date.now() + '.zip';
-            link.href = URL.createObjectURL(blob);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(link.href);
-            if (btn) btn.classList.remove('loading');
-            App.showToast('Exported ' + sizes.length + ' icon sizes as ZIP', 'success');
+                // Version transparente
+                var canvasNoBg = (entry.size === 1024)
+                    ? masterNoBg
+                    : App._downscaleCanvas(masterNoBg, entry.size);
+                var dataNoBg = canvasNoBg.toDataURL('image/png').split(',')[1];
+                zip.file('Transparent/AppIcon-' + entry.size + 'x' + entry.size + '-' + entry.name + '.png', dataNoBg, { base64: true });
+            }
+
+            zip.generateAsync({ type: 'blob' }).then(function(blob) {
+                var link = document.createElement('a');
+                link.download = 'AppIcons-' + Date.now() + '.zip';
+                link.href = URL.createObjectURL(blob);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(link.href);
+                if (btn) btn.classList.remove('loading');
+                App.showToast('Exported ' + sizes.length + ' icon sizes as ZIP', 'success');
+            });
         });
     });
 };

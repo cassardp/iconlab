@@ -164,7 +164,7 @@ App.createCardHTML = function(gen) {
         +   statsHtml
         +   '<div class="card-actions-right">'
         +     '<button class="btn-share" title="' + (gen._sharedToCommunity ? 'Remove from community' : 'Share to community') + '">'
-        +       '<i data-lucide="' + (gen._sharedToCommunity ? 'cloud-off' : 'cloud') + '"></i>'
+        +       '<i data-lucide="' + (gen._sharedToCommunity ? 'globe-off' : 'globe') + '"></i>'
         +     '</button>'
         +     '<input type="color" class="card-bg-color" value="' + pickerValue + '" title="Preview background color">'
         +   '</div>'
@@ -228,11 +228,11 @@ App.attachCardEvents = function(card, generation) {
         });
     }
 
-    // Telecharger l'image
+    // Telecharger le ZIP avec toutes les tailles
     var downloadBtn = card.querySelector('.btn-download');
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function() {
-            App.downloadImage(generation);
+            App.downloadZip(generation);
         });
     }
 
@@ -677,6 +677,49 @@ App.downloadImageWithBg = function(generation, bgColor) {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    });
+};
+
+/**
+ * Export ZIP avec toutes les tailles d'icones (avec fond + transparent).
+ * Fonctionne depuis la galerie, sans necessite d'ouvrir l'editeur.
+ */
+App.downloadZip = function(generation) {
+    // Rendre en 1024 avec fond
+    App._renderComposition(generation, 1024, true, null, function(masterWithBg) {
+        // Rendre en 1024 sans fond (transparent)
+        App._renderComposition(generation, 1024, false, null, function(masterNoBg) {
+            var zip = new JSZip();
+            var sizes = App.APP_ICON_SIZES;
+
+            for (var i = 0; i < sizes.length; i++) {
+                var entry = sizes[i];
+                // Version avec fond
+                var canvasBg = (entry.size === 1024)
+                    ? masterWithBg
+                    : App._downscaleCanvas(masterWithBg, entry.size);
+                var dataBg = canvasBg.toDataURL('image/png').split(',')[1];
+                zip.file('AppIcon-' + entry.size + 'x' + entry.size + '-' + entry.name + '.png', dataBg, { base64: true });
+
+                // Version transparente
+                var canvasNoBg = (entry.size === 1024)
+                    ? masterNoBg
+                    : App._downscaleCanvas(masterNoBg, entry.size);
+                var dataNoBg = canvasNoBg.toDataURL('image/png').split(',')[1];
+                zip.file('Transparent/AppIcon-' + entry.size + 'x' + entry.size + '-' + entry.name + '.png', dataNoBg, { base64: true });
+            }
+
+            zip.generateAsync({ type: 'blob' }).then(function(blob) {
+                var link = document.createElement('a');
+                link.download = 'AppIcons-' + Date.now() + '.zip';
+                link.href = URL.createObjectURL(blob);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(link.href);
+                App.showToast('Exported ' + sizes.length + ' icon sizes as ZIP', 'success');
+            });
+        });
     });
 };
 

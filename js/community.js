@@ -410,7 +410,7 @@ App._updateShareButton = function(generation) {
     var isShared = generation._sharedToCommunity;
     var icon = shareBtn.querySelector('[data-lucide]');
     if (icon) {
-        icon.setAttribute('data-lucide', isShared ? 'cloud-off' : 'cloud');
+        icon.setAttribute('data-lucide', isShared ? 'globe-off' : 'globe');
         lucide.createIcons({ nodes: [shareBtn] });
     }
 };

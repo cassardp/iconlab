@@ -32,6 +32,9 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Supabase SDK -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
     <!-- App CSS -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -47,19 +50,28 @@
             <button class="mini-sidebar-btn" id="togglePanels" title="Toggle panels">
                 <i data-lucide="columns-3"></i>
             </button>
+            <button class="mini-sidebar-btn active" id="tabLocal" data-tab="local" title="My Gallery">
+                <i data-lucide="house"></i>
+            </button>
+            <button class="mini-sidebar-btn" id="tabCommunity" data-tab="community" title="Community">
+                <i data-lucide="cloud"></i>
+            </button>
+        </div>
+        <div class="mini-sidebar-bottom">
+            <button class="mini-sidebar-btn" id="authButton" title="Sign in">
+                <i data-lucide="log-in"></i>
+            </button>
             <button class="mini-sidebar-btn" id="themeToggle" title="Toggle theme">
                 <i data-lucide="moon" class="icon-moon"></i>
                 <i data-lucide="sun" class="icon-sun"></i>
             </button>
-        </div>
-        <div class="mini-sidebar-bottom">
             <a href="https://github.com/cassardp/iconlab" class="mini-sidebar-btn" target="_blank" title="GitHub">
                 <i data-lucide="github"></i>
             </a>
             <button class="mini-sidebar-btn" id="aboutBtn" title="About Icon Lab">
                 <i data-lucide="info"></i>
             </button>
-            <span class="version-number">0.17</span>
+            <span class="version-number">0.18</span>
         </div>
     </aside>
 
@@ -179,6 +191,7 @@
 
             <header class="main-toolbar" id="galleryToolbar">
                 <div class="toolbar-left">
+                    <i data-lucide="house" style="color:var(--foreground-muted)"></i>
                     <span class="toolbar-count" id="galleryCount">0 generations</span>
                 </div>
                 <div class="toolbar-right">
@@ -196,6 +209,32 @@
                 <div class="gallery-empty" id="galleryEmpty">
                     <p>No generations yet</p>
                 </div>
+            </div>
+        </div>
+
+        <div class="community-wrapper hidden" id="communityWrapper">
+            <header class="community-toolbar">
+                <div class="toolbar-left">
+                    <i data-lucide="cloud" style="color:var(--foreground-muted)"></i>
+                    <span class="toolbar-count" id="communityCount">0 icons</span>
+                </div>
+                <div class="toolbar-right">
+                    <select class="community-sort-select" id="communitySort">
+                        <option value="recent">Most recent</option>
+                        <option value="popular">Most popular</option>
+                    </select>
+                </div>
+            </header>
+            <div class="community-gallery" id="communityGallery">
+                <div class="community-empty" id="communityEmpty">
+                    <p>No shared icons yet</p>
+                </div>
+            </div>
+            <div class="community-load-more">
+                <button class="btn btn-ghost btn-sm" id="communityLoadMore" style="display:none">
+                    <i data-lucide="chevron-down"></i>
+                    Load more
+                </button>
             </div>
         </div>
 
@@ -446,7 +485,7 @@
         </button>
         <img src="assets/light.png" alt="Icon Lab" class="about-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="about-logo logo-light">
-        <p class="about-version">Version <span class="version-number">0.17</span></p>
+        <p class="about-version">Version <span class="version-number">0.18</span></p>
         <p class="about-description">A free tool for generating and iterating on app icon designs using AI. Customize prompts, layers, and backgrounds — all in the browser.</p>
         <div class="about-links">
             <a href="https://github.com/cassardp/iconlab" target="_blank" rel="noopener">
@@ -454,6 +493,39 @@
             </a>
         </div>
         <p class="about-author">Made by <a href="https://x.com/patricecassard" target="_blank" rel="noopener">Patrice Cassard</a></p>
+    </div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal-overlay" id="loginModal">
+    <div class="modal-content auth-modal">
+        <button class="about-close" id="loginClose">
+            <i data-lucide="x"></i>
+        </button>
+        <div class="auth-modal-icon">
+            <i data-lucide="mail"></i>
+        </div>
+        <h3 class="auth-modal-title">Sign in</h3>
+        <p class="auth-modal-desc">Enter your email to receive a magic link.</p>
+        <input type="email" id="loginEmail" class="auth-modal-input" placeholder="you@example.com" autocomplete="email">
+        <button class="btn btn-primary btn-full" id="loginSendBtn">Send Magic Link</button>
+        <p class="auth-modal-status" id="loginStatus"></p>
+    </div>
+</div>
+
+<!-- Profile Modal -->
+<div class="modal-overlay" id="profileModal">
+    <div class="modal-content auth-modal">
+        <button class="about-close" id="profileClose">
+            <i data-lucide="x"></i>
+        </button>
+        <h3 class="auth-modal-title">Your profile</h3>
+        <p class="auth-modal-desc">Choose a display name for your shared icons.</p>
+        <label class="auth-modal-label">Display name *</label>
+        <input type="text" id="profileName" class="auth-modal-input" placeholder="Your name" maxlength="30">
+        <label class="auth-modal-label">Website or app URL</label>
+        <input type="url" id="profileUrl" class="auth-modal-input" placeholder="https://...">
+        <button class="btn btn-primary btn-full" id="profileSaveBtn">Save</button>
     </div>
 </div>
 
@@ -466,6 +538,8 @@
 <script src="js/prompt-builder.js"></script>
 <script src="js/api-openai.js"></script>
 <script src="js/gallery.js"></script>
+<script src="js/community.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/editor.js"></script>
 <script src="js/editor-layers.js"></script>
 <script src="js/editor-preview.js"></script>

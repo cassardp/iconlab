@@ -68,12 +68,34 @@ document.addEventListener('DOMContentLoaded', function() {
     // 4b. Init editor event listeners
     App.initEditorEvents();
 
+    // 4c. Init community
+    App.initCommunity();
+    App.initCommunityEvents();
+
+    // 4d. Init auth
+    App.initAuth();
+    App.initAuthEvents();
+
     // 5. Sync UI from state
     App.syncUIFromState();
 
     // 6. Init IndexedDB puis charger la galerie
     App.initDB().then(function() {
         App.loadGallery().then(function() {
+            // Nettoyer les flags de partage orphelins (pas de _sharedId)
+            var dirty = false;
+            for (var i = 0; i < App.state.generations.length; i++) {
+                var g = App.state.generations[i];
+                if (g._sharedToCommunity && !g._sharedId) {
+                    g._sharedToCommunity = false;
+                    dirty = true;
+                }
+            }
+            if (dirty) {
+                App.saveGallery();
+                App.renderFullGallery();
+            }
+
             var wrapper = document.getElementById('galleryWrapper');
             var loader = document.getElementById('galleryLoader');
             if (wrapper) wrapper.classList.remove('loading');

@@ -63,6 +63,9 @@ App.buildEnrichedPrompt = function(userPrompt, colorMode, subjectType, transpare
 
     // 8. Contraintes
     parts.push('Important constraints:');
+    if (!isLetter) {
+        parts.push('- Do NOT include any text, words, letters, numbers, or typography');
+    }
     parts.push('- Do NOT include any UI elements, borders, or rounded corners');
     parts.push('- Do NOT include any device frames or mockups');
     parts.push('- No cast shadows under or around the subject');

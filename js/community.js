@@ -140,41 +140,33 @@ App._renderCommunityCard = function(icon) {
     if (profile && profile.display_name) {
         var name = App.escapeHtml(profile.display_name);
         if (profile.url) {
-            creatorHtml = '<span class="community-card-creator">by <a href="' + App.escapeHtml(profile.url) + '" target="_blank" rel="noopener">' + name + '</a></span>';
+            creatorHtml = '<span class="community-card-creator">By <a href="' + App.escapeHtml(profile.url) + '" target="_blank" rel="noopener">' + name + '</a></span>';
         } else {
-            creatorHtml = '<span class="community-card-creator">by <strong>' + name + '</strong></span>';
+            creatorHtml = '<span class="community-card-creator">By <strong>' + name + '</strong></span>';
         }
     }
 
     card.innerHTML = ''
         + '<div class="community-card-image">'
         +   '<img src="' + App.escapeHtml(icon.image_url) + '" alt="Community icon" loading="lazy">'
-        + '</div>'
-        + '<div class="community-card-meta">'
-        +   '<div class="community-card-prompt">' + App.escapeHtml(icon.user_prompt || '') + '</div>'
-        +   '<div class="community-card-details">'
-        +     '<span class="community-card-time">' + timeAgo + '</span>'
-        +     creatorHtml
-        +     (icon.model ? '<span class="community-card-model">' + App.escapeHtml(icon.model) + '</span>' : '')
+        +   '<div class="gallery-card-overlay">'
+        +     '<button class="gallery-card-overlay-btn btn-copy-prompt" title="Copy enriched prompt">'
+        +       '<i data-lucide="copy"></i> Prompt'
+        +     '</button>'
+        +     '<button class="gallery-card-overlay-btn btn-community-download" title="Download">'
+        +       '<i data-lucide="download"></i>'
+        +     '</button>'
         +   '</div>'
         + '</div>'
-        + '<div class="community-card-actions">'
-        +   '<button class="btn btn-ghost btn-sm btn-copy-prompt" title="Copy enriched prompt">'
-        +     '<i data-lucide="copy"></i>'
-        +   '</button>'
-        +   '<button class="btn btn-ghost btn-sm btn-show-prompt" title="Show enriched prompt">'
-        +     '<i data-lucide="code-2"></i> Prompt'
-        +   '</button>'
-        +   '<button class="btn btn-ghost btn-sm btn-like' + likeClass + '" title="Like">'
-        +     '<i data-lucide="' + likeIcon + '"></i>'
-        +     '<span class="like-count">' + (icon.likes_count || 0) + '</span>'
-        +   '</button>'
-        +   '<button class="btn btn-ghost btn-sm btn-community-download" title="Download">'
-        +     '<i data-lucide="download"></i>'
-        +   '</button>'
-        + '</div>'
-        + '<div class="gallery-card-enriched">'
-        +   '<pre>' + App.escapeHtml(icon.enriched_prompt || '') + '</pre>'
+        + '<div class="gallery-card-actions">'
+        +   creatorHtml
+        +   '<span class="gallery-card-time">' + (creatorHtml ? ' · ' : '') + timeAgo + '</span>'
+        +   '<div class="card-actions-right">'
+        +     '<button class="btn-like' + likeClass + '" title="Like">'
+        +       '<span class="like-count">' + (icon.likes_count || 0) + '</span>'
+        +       '<i data-lucide="' + likeIcon + '"></i>'
+        +     '</button>'
+        +   '</div>'
         + '</div>';
 
     // Events
@@ -187,14 +179,6 @@ App._renderCommunityCard = function(icon) {
     dlBtn.addEventListener('click', function() {
         App._downloadCommunityIcon(icon);
     });
-
-    var showPromptBtn = card.querySelector('.btn-show-prompt');
-    var enrichedDiv = card.querySelector('.gallery-card-enriched');
-    if (showPromptBtn && enrichedDiv) {
-        showPromptBtn.addEventListener('click', function() {
-            enrichedDiv.classList.toggle('open');
-        });
-    }
 
     var copyPromptBtn = card.querySelector('.btn-copy-prompt');
     if (copyPromptBtn) {
@@ -426,7 +410,7 @@ App._updateShareButton = function(generation) {
     var isShared = generation._sharedToCommunity;
     var icon = shareBtn.querySelector('[data-lucide]');
     if (icon) {
-        icon.setAttribute('data-lucide', isShared ? 'cloud' : 'cloud-off');
+        icon.setAttribute('data-lucide', isShared ? 'cloud-off' : 'cloud');
         lucide.createIcons({ nodes: [shareBtn] });
     }
 };

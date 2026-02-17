@@ -18,10 +18,6 @@ App.addToGallery = function(generation) {
  * Cree le HTML d'une card de galerie.
  */
 App.createCardHTML = function(gen) {
-    var modelConfig = App.MODELS[gen.model] || {};
-    var modelName = modelConfig.name || gen.model;
-    var costStr = gen.cost ? '$' + gen.cost.toFixed(3) : '';
-    var durationStr = gen.duration ? (gen.duration / 1000).toFixed(1) + 's' : '';
     var es = gen.editorSettings;
     var hasSavedBg = gen.previewBg && gen.previewBg !== 'checkerboard';
     var bgClass = '';
@@ -127,6 +123,22 @@ App.createCardHTML = function(gen) {
 
     var pickerValue = hasSavedBg ? gen.previewBg : '#1a1a1a';
 
+    var durationStr = '';
+    if (gen.duration) {
+        durationStr = (gen.duration / 1000).toFixed(1) + 's';
+    }
+    var costStr = '';
+    if (gen.cost) {
+        costStr = '~\u2009$' + gen.cost.toFixed(3);
+    }
+    var statsHtml = '';
+    if (durationStr || costStr) {
+        var parts = [];
+        if (durationStr) parts.push(durationStr);
+        if (costStr) parts.push(costStr);
+        statsHtml = '<span class="gallery-card-stats"><i data-lucide="clock"></i> ' + parts.join(' ') + '</span>';
+    }
+
     var card = document.createElement('div');
     card.className = 'gallery-card';
     card.setAttribute('data-ts', gen.timestamp);
@@ -134,44 +146,28 @@ App.createCardHTML = function(gen) {
     card.innerHTML = ''
         + '<div class="gallery-card-image' + bgClass + '"' + bgStyle + '>'
         +   imgHtml
-        + '</div>'
-        + '<div class="gallery-card-meta">'
-        +   '<div class="gallery-card-prompt">' + App.escapeHtml(gen.userPrompt) + '</div>'
-        +   '<div class="gallery-card-details">'
-        +     '<span>'
-        +       (durationStr ? '<i data-lucide="clock" style="width:12px;height:12px"></i> ' + durationStr : '')
-        +       (costStr ? ' ~ ' + costStr : '')
-        +     '</span>'
+        +   '<div class="gallery-card-overlay">'
+        +     '<button class="gallery-card-overlay-btn btn-copy-prompt" title="Copy enriched prompt">'
+        +       '<i data-lucide="copy"></i> Prompt'
+        +     '</button>'
+        +     '<div class="gallery-card-overlay-right">'
+        +       '<button class="gallery-card-overlay-btn btn-download" title="Download image">'
+        +         '<i data-lucide="download"></i>'
+        +       '</button>'
+        +       '<button class="gallery-card-overlay-btn btn-delete" title="Delete">'
+        +         '<i data-lucide="trash-2"></i>'
+        +       '</button>'
+        +     '</div>'
         +   '</div>'
         + '</div>'
         + '<div class="gallery-card-actions">'
-        +   '<button class="btn btn-ghost btn-sm btn-copy-prompt" title="Copy enriched prompt">'
-        +     '<i data-lucide="copy"></i>'
-        +   '</button>'
-        +   '<button class="btn btn-ghost btn-sm btn-show-prompt" title="Show enriched prompt">'
-        +     '<i data-lucide="code-2"></i> Prompt'
-        +   '</button>'
-        +   '<button class="btn btn-ghost btn-sm btn-download" title="Download image">'
-        +     '<i data-lucide="download"></i>'
-        +   '</button>'
-        +   '<button class="btn btn-ghost btn-sm btn-download-bg" title="Download with background">'
-        +     '<i data-lucide="image-down"></i>'
-        +   '</button>'
-        +   '<button class="btn btn-ghost btn-sm btn-share" title="' + (gen._sharedToCommunity ? 'Remove from community' : 'Share to community') + '">'
-        +     '<i data-lucide="' + (gen._sharedToCommunity ? 'cloud' : 'cloud-off') + '"></i>'
-        +   '</button>'
-        +   '<div class="card-bg-picker">'
-        +     '<input type="color" class="card-bg-color" value="' + pickerValue + '" title="Preview background color">'
-        +     '<button class="btn-icon btn-sm btn-card-checkerboard" title="Transparent">'
-        +       '<i data-lucide="grid-3x3"></i>'
+        +   statsHtml
+        +   '<div class="card-actions-right">'
+        +     '<button class="btn-share" title="' + (gen._sharedToCommunity ? 'Remove from community' : 'Share to community') + '">'
+        +       '<i data-lucide="' + (gen._sharedToCommunity ? 'cloud-off' : 'cloud') + '"></i>'
         +     '</button>'
+        +     '<input type="color" class="card-bg-color" value="' + pickerValue + '" title="Preview background color">'
         +   '</div>'
-        +   '<button class="btn btn-danger btn-sm btn-delete" title="Delete">'
-        +     '<i data-lucide="trash-2"></i>'
-        +   '</button>'
-        + '</div>'
-        + '<div class="gallery-card-enriched">'
-        +   '<pre>' + App.escapeHtml(gen.enrichedPrompt) + '</pre>'
         + '</div>';
 
     return card;
@@ -224,15 +220,6 @@ App.renderGalleryCard = function(generation, prepend) {
  * Attache les events sur une card.
  */
 App.attachCardEvents = function(card, generation) {
-    // Toggle prompt enrichi
-    var showBtn = card.querySelector('.btn-show-prompt');
-    var enrichedDiv = card.querySelector('.gallery-card-enriched');
-    if (showBtn && enrichedDiv) {
-        showBtn.addEventListener('click', function() {
-            enrichedDiv.classList.toggle('open');
-        });
-    }
-
     // Copier le prompt enrichi
     var copyBtn = card.querySelector('.btn-copy-prompt');
     if (copyBtn) {
@@ -249,25 +236,8 @@ App.attachCardEvents = function(card, generation) {
         });
     }
 
-    // Telecharger l'image avec fond
-    var downloadBgBtn = card.querySelector('.btn-download-bg');
-    if (downloadBgBtn) {
-        downloadBgBtn.addEventListener('click', function() {
-            // Si editorSettings existe, _renderComposition utilise es.bgColor/bgType
-            // Sinon fallback sur previewBg ou #1a1a1a
-            var bgColor = null;
-            if (!generation.editorSettings || !generation.editorSettings.layers || !generation.editorSettings.layers.length) {
-                bgColor = generation.previewBg && generation.previewBg !== 'checkerboard'
-                    ? generation.previewBg
-                    : '#1a1a1a';
-            }
-            App.downloadImageWithBg(generation, bgColor);
-        });
-    }
-
     // Couleur de fond par card
     var cardBgColor = card.querySelector('.card-bg-color');
-    var cardCheckerboard = card.querySelector('.btn-card-checkerboard');
     var cardImageWrap = card.querySelector('.gallery-card-image');
 
     if (cardBgColor && cardImageWrap) {
@@ -278,20 +248,6 @@ App.attachCardEvents = function(card, generation) {
             if (generation.editorSettings) {
                 generation.editorSettings.bgType = 'solid';
                 generation.editorSettings.bgColor = this.value;
-            }
-            App.saveGallery();
-        });
-    }
-
-    if (cardCheckerboard && cardImageWrap) {
-        cardCheckerboard.addEventListener('click', function() {
-            cardImageWrap.classList.add('checkerboard');
-            cardImageWrap.style.backgroundColor = '';
-            if (cardBgColor) cardBgColor.value = '#808080';
-            generation.previewBg = 'checkerboard';
-            if (generation.editorSettings) {
-                generation.editorSettings.bgType = 'none';
-                generation.editorSettings.bgColor = 'checkerboard';
             }
             App.saveGallery();
         });
@@ -316,6 +272,14 @@ App.attachCardEvents = function(card, generation) {
     if (deleteBtn) {
         deleteBtn.addEventListener('click', function() {
             App.deleteGeneration(generation, card);
+        });
+    }
+
+    // Empecher les clics sur l'overlay de propager vers l'editeur
+    var overlay = card.querySelector('.gallery-card-overlay');
+    if (overlay) {
+        overlay.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
     }
 
@@ -349,12 +313,6 @@ App.addLoadingCard = function() {
         +   '<div class="gallery-card-loading-content">'
         +     '<div class="spinner"></div>'
         +     '<span>Generating...</span>'
-        +   '</div>'
-        + '</div>'
-        + '<div class="gallery-card-meta">'
-        +   '<div class="gallery-card-prompt text-muted">' + App.escapeHtml(App.state.prompt || '...') + '</div>'
-        +   '<div class="gallery-card-details">'
-        +     '<span>' + (App.MODELS[App.state.model] ? App.MODELS[App.state.model].name : App.state.model) + '</span>'
         +   '</div>'
         + '</div>';
 

@@ -12,11 +12,18 @@ App.updateEditorPreview = function() {
     if (!canvasWrap) return;
 
     // Calque fond
-    if (s.bgType === 'solid') {
-        canvasWrap.style.background = s.bgColor;
+    if (s.bgType === 'none') {
+        canvasWrap.style.background = '';
+        canvasWrap.style.backgroundColor = '#a0a0a0';
+        canvasWrap.classList.add('checkerboard');
     } else {
-        canvasWrap.style.background =
-            'radial-gradient(circle, ' + s.gradientCenter + ', ' + s.gradientEdge + ')';
+        canvasWrap.classList.remove('checkerboard');
+        if (s.bgType === 'solid') {
+            canvasWrap.style.background = s.bgColor;
+        } else {
+            canvasWrap.style.background =
+                'radial-gradient(circle, ' + s.gradientCenter + ', ' + s.gradientEdge + ')';
+        }
     }
 
     // Appliquer transforms et shadow a chaque layer
@@ -173,7 +180,10 @@ App._editorToggleBgType = function() {
     var solidRow = document.getElementById('editorBgSolidRow');
     var gradientRows = document.getElementById('editorBgGradientRows');
 
-    if (s.bgType === 'solid') {
+    if (s.bgType === 'none') {
+        if (solidRow) solidRow.classList.add('hidden');
+        if (gradientRows) gradientRows.classList.add('hidden');
+    } else if (s.bgType === 'solid') {
         if (solidRow) solidRow.classList.remove('hidden');
         if (gradientRows) gradientRows.classList.add('hidden');
     } else {

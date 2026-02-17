@@ -35,9 +35,18 @@ App.openEditor = function(generation) {
         App.state.editor[key] = (saved && saved.hasOwnProperty(key)) ? saved[key] : defaults[key];
     }
 
+    // Si le fond est en mode checkerboard, passer en mode 'none'
+    if (App.state.editor.bgColor === 'checkerboard') {
+        App.state.editor.bgType = 'none';
+        App.state.editor.bgColor = defaults.bgColor;
+    }
+
     // Fallback : couleur de fond depuis previewBg si pas de reglages sauvegardes
     if (!saved && generation.previewBg && generation.previewBg !== 'checkerboard') {
         App.state.editor.bgColor = generation.previewBg;
+    }
+    if (!saved && generation.previewBg === 'checkerboard') {
+        App.state.editor.bgType = 'none';
     }
 
     // Restaurer les layers
@@ -104,12 +113,15 @@ App._editorSave = function() {
     var s = App.state.editor;
     var settings = {
         bgType: s.bgType,
-        bgColor: s.bgColor,
+        bgColor: s.bgType === 'none' ? 'checkerboard' : s.bgColor,
         gradientCenter: s.gradientCenter,
         gradientEdge: s.gradientEdge,
         exportSize: s.exportSize,
         activeLayerIndex: s.activeLayerIndex
     };
+
+    // Synchroniser previewBg avec le type de fond
+    gen.previewBg = (s.bgType === 'none') ? 'checkerboard' : s.bgColor;
 
     // Deep copy layers
     if (s.layers && s.layers.length) {
@@ -170,10 +182,15 @@ App.resetEditor = function() {
     var gen = App.state.generations[idx];
     var baseImage = gen ? gen.imageBase64 : layers[0].imageBase64;
 
-    // Reset fond
+    // Reset fond (preserver le mode transparent si la generation est en checkerboard)
     var defaults = App.EDITOR_DEFAULTS;
-    s.bgType = defaults.bgType;
-    s.bgColor = defaults.bgColor;
+    if (gen && gen.previewBg === 'checkerboard') {
+        s.bgType = 'none';
+        s.bgColor = defaults.bgColor;
+    } else {
+        s.bgType = defaults.bgType;
+        s.bgColor = (gen && gen.previewBg && gen.previewBg !== 'checkerboard') ? gen.previewBg : defaults.bgColor;
+    }
     s.gradientCenter = defaults.gradientCenter;
     s.gradientEdge = defaults.gradientEdge;
 

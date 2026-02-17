@@ -37,6 +37,7 @@ label .hint {
     color: var(--foreground-muted);
     min-width: 76px;
     flex-shrink: 0;
+    cursor: default;
 }
 
 .setting-row select,

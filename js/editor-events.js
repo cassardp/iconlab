@@ -92,6 +92,12 @@ App.initEditorEvents = function() {
             }
 
             s.bgType = newType;
+
+            // Mettre a jour previewBg de la generation
+            var gen = App.state.generations[App.state.editor.generationIndex];
+            if (gen) {
+                gen.previewBg = (newType === 'none') ? 'checkerboard' : s.bgColor;
+            }
             App._editorSyncControls();
             App.updateEditorPreview();
         });
@@ -112,6 +118,11 @@ App.initEditorEvents = function() {
                 el.addEventListener('input', function() {
                     App.state.editor[cfg.key] = this.value;
                     if (labelEl) labelEl.textContent = this.value;
+                    // Si on change le fond dans l'editeur, sortir du mode checkerboard
+                    if (cfg.key === 'bgColor') {
+                        var gen = App.state.generations[App.state.editor.generationIndex];
+                        if (gen) gen.previewBg = this.value;
+                    }
                     App.updateEditorPreview();
                 });
             }

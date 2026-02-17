@@ -30,7 +30,9 @@ App.createCardHTML = function(gen, index) {
 
     if (es) {
         // Utiliser les reglages editeur pour le fond
-        if (es.bgType === 'gradient') {
+        if (es.bgType === 'none' || es.bgColor === 'checkerboard') {
+            bgClass = ' checkerboard';
+        } else if (es.bgType === 'gradient') {
             bgStyle = ' style="background:radial-gradient(circle, ' + es.gradientCenter + ', ' + es.gradientEdge + ')"';
         } else {
             bgStyle = ' style="background-color:' + es.bgColor + '"';
@@ -287,6 +289,10 @@ App.attachCardEvents = function(card, generation) {
             cardImageWrap.style.backgroundColor = '';
             if (cardBgColor) cardBgColor.value = '#808080';
             generation.previewBg = 'checkerboard';
+            if (generation.editorSettings) {
+                generation.editorSettings.bgType = 'none';
+                generation.editorSettings.bgColor = 'checkerboard';
+            }
             App.saveGallery();
         });
     }
@@ -592,7 +598,7 @@ App._renderComposition = function(generation, size, withBg, bgColor, callback) {
         var ctx = canvas.getContext('2d');
 
         // Fond
-        if (withBg) {
+        if (withBg && es.bgType !== 'none') {
             if (es.bgType === 'gradient') {
                 var cx = exportSize / 2;
                 var cy = exportSize / 2;

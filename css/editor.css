@@ -63,7 +63,7 @@
     align-items: center;
     justify-content: center;
     transition: background var(--transition-fast);
-    background: #1a1a1a;
+    background-color: #1a1a1a;
     overflow: hidden;
     cursor: grab;
     border-radius: 22.5%;

@@ -243,26 +243,68 @@ App._adjustColor = function(hex, factor) {
     return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 };
 
-/* ---- App Store icon sizes ---- */
+/* ---- App icon sizes (iOS, iPadOS, macOS) ---- */
 
 App.APP_ICON_SIZES = [
-    { size: 1024, name: 'AppStore' },
-    { size: 512,  name: 'iTunesArtwork' },
-    { size: 180,  name: 'iPhone@3x' },
-    { size: 167,  name: 'iPadPro' },
-    { size: 152,  name: 'iPad@2x' },
-    { size: 120,  name: 'iPhone@2x' },
-    { size: 87,   name: 'Spotlight@3x' },
-    { size: 80,   name: 'Spotlight@2x' },
-    { size: 76,   name: 'iPad' },
-    { size: 60,   name: 'iPhone' },
-    { size: 58,   name: 'Settings@2x' },
-    { size: 40,   name: 'Notification@2x' },
-    { size: 29,   name: 'Settings' },
-    { size: 20,   name: 'Notification' }
+    // App Store
+    { size: 1024, name: 'AppStore-1024' },
+    // macOS
+    { size: 512,  name: 'macOS-512' },
+    { size: 256,  name: 'macOS-256' },
+    // iOS
+    { size: 180,  name: 'iOS-iPhone@3x-60pt' },
+    { size: 167,  name: 'iOS-iPadPro@2x-83.5pt' },
+    { size: 152,  name: 'iOS-iPad@2x-76pt' },
+    { size: 128,  name: 'macOS-128' },
+    { size: 120,  name: 'iOS-iPhone@2x-60pt' },
+    { size: 87,   name: 'iOS-Settings@3x-29pt' },
+    { size: 80,   name: 'iOS-Spotlight@2x-40pt' },
+    { size: 76,   name: 'iOS-iPad@1x-76pt' },
+    { size: 60,   name: 'iOS-Notification@3x-20pt' },
+    { size: 58,   name: 'iOS-Settings@2x-29pt' },
+    { size: 40,   name: 'iOS-Notification@2x-20pt' },
+    { size: 32,   name: 'macOS-32' },
+    { size: 29,   name: 'iOS-Settings@1x-29pt' },
+    { size: 20,   name: 'iOS-Notification@1x-20pt' },
+    { size: 16,   name: 'macOS-16' }
 ];
 
-/* ---- Export ZIP with all App Store sizes ---- */
+/* ---- Progressive downscale (halving steps for quality) ---- */
+
+App._downscaleCanvas = function(source, targetSize) {
+    var current = source;
+    var w = current.width;
+
+    // Reduire par moitie jusqu'a ce qu'on soit proche de la taille cible
+    while (w / 2 >= targetSize) {
+        var half = document.createElement('canvas');
+        var hw = Math.round(w / 2);
+        half.width = hw;
+        half.height = hw;
+        var ctx = half.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(current, 0, 0, hw, hw);
+        current = half;
+        w = hw;
+    }
+
+    // Derniere etape vers la taille exacte
+    if (w !== targetSize) {
+        var final = document.createElement('canvas');
+        final.width = targetSize;
+        final.height = targetSize;
+        var fctx = final.getContext('2d');
+        fctx.imageSmoothingEnabled = true;
+        fctx.imageSmoothingQuality = 'high';
+        fctx.drawImage(current, 0, 0, targetSize, targetSize);
+        return final;
+    }
+
+    return current;
+};
+
+/* ---- Export ZIP with all app icon sizes ---- */
 
 App.editorExportPNG = function() {
     var s = App.state.editor;
@@ -277,31 +319,31 @@ App.editorExportPNG = function() {
     var btn = document.getElementById('editorExportBtn');
     if (btn) btn.classList.add('loading');
 
-    var zip = new JSZip();
-    var sizes = App.APP_ICON_SIZES;
-    var done = 0;
+    // Rendre une seule fois en 1024, puis downscale progressif
+    App._renderComposition(gen, 1024, true, null, function(masterCanvas) {
+        var zip = new JSZip();
+        var sizes = App.APP_ICON_SIZES;
 
-    for (var i = 0; i < sizes.length; i++) {
-        (function(entry) {
-            App._renderComposition(gen, entry.size, true, null, function(canvas) {
-                var dataUrl = canvas.toDataURL('image/png');
-                var base64 = dataUrl.split(',')[1];
-                zip.file('AppIcon-' + entry.size + 'x' + entry.size + '-' + entry.name + '.png', base64, { base64: true });
-                done++;
-                if (done === sizes.length) {
-                    zip.generateAsync({ type: 'blob' }).then(function(blob) {
-                        var link = document.createElement('a');
-                        link.download = 'AppIcons-' + Date.now() + '.zip';
-                        link.href = URL.createObjectURL(blob);
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                        URL.revokeObjectURL(link.href);
-                        if (btn) btn.classList.remove('loading');
-                        App.showToast('Exported ' + sizes.length + ' icon sizes as ZIP', 'success');
-                    });
-                }
-            });
-        })(sizes[i]);
-    }
+        for (var i = 0; i < sizes.length; i++) {
+            var entry = sizes[i];
+            var canvas = (entry.size === 1024)
+                ? masterCanvas
+                : App._downscaleCanvas(masterCanvas, entry.size);
+            var dataUrl = canvas.toDataURL('image/png');
+            var base64 = dataUrl.split(',')[1];
+            zip.file('AppIcon-' + entry.size + 'x' + entry.size + '-' + entry.name + '.png', base64, { base64: true });
+        }
+
+        zip.generateAsync({ type: 'blob' }).then(function(blob) {
+            var link = document.createElement('a');
+            link.download = 'AppIcons-' + Date.now() + '.zip';
+            link.href = URL.createObjectURL(blob);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+            if (btn) btn.classList.remove('loading');
+            App.showToast('Exported ' + sizes.length + ' icon sizes as ZIP', 'success');
+        });
+    });
 };

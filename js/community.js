@@ -468,9 +468,13 @@ App.switchTab = function(tab) {
     if (tab === 'local') {
         if (galleryWrapper) galleryWrapper.classList.remove('hidden');
         if (communityWrapper) communityWrapper.classList.add('hidden');
+        // Restore settings panel
+        document.body.classList.remove('panels-hidden');
     } else {
         if (galleryWrapper) galleryWrapper.classList.add('hidden');
         if (communityWrapper) communityWrapper.classList.remove('hidden');
+        // Hide settings panel — useless in community view
+        document.body.classList.add('panels-hidden');
 
         // Lazy load au premier acces
         if (!App._communityState.loaded) {

@@ -168,7 +168,7 @@ App._updateAuthUI = function() {
         btn.title = 'Complete profile';
         lucide.createIcons({ nodes: [btn] });
     } else {
-        btn.innerHTML = '<i data-lucide="log-in"></i>';
+        btn.innerHTML = '<i data-lucide="user"></i>';
         btn.title = 'Sign in';
         lucide.createIcons({ nodes: [btn] });
     }

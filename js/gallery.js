@@ -501,6 +501,13 @@ App.deleteGeneration = function(generation, cardEl) {
     var idx = App.state.generations.indexOf(generation);
     if (idx === -1) return;
 
+    // Unshare from community if shared
+    if (generation._sharedToCommunity && generation._sharedId) {
+        App.unshareToCommunity(generation).catch(function() {
+            // Best effort — delete locally even if unshare fails
+        });
+    }
+
     App.state.generations.splice(idx, 1);
 
     // Retirer la card du DOM avec une petite animation

@@ -41,11 +41,8 @@ App.buildEnrichedPrompt = function(userPrompt, colorMode, subjectType, transpare
     if (subjectType === 'animal') subjectWord = 'character mascot with minimal facial traits';
     else if (subjectType === 'human') subjectWord = 'human character with minimal facial traits';
 
-    if (isLetter) {
-        parts.push('Style: semi-bold rounded letterform, ' + colorModeKeywords + ', no hard edges, no textures, extremely clean and modern, beautiful shading that gives subtle volume without any 3D rendering, Apple-design-language aesthetic');
-    } else {
-        parts.push('Style: simplified flat ' + subjectWord + ' with very few details, bold rounded silhouette, ' + colorModeKeywords + ', no hard edges, no outlines, no textures, shapes blend softly into each other, extremely clean and modern, almost abstract simplicity, beautiful gradient shading that gives subtle volume without any 3D rendering, vector-illustration feel, Apple-design-language aesthetic');
-    }
+    var preset = App.STYLE_PRESETS[App.state.stylePreset] || App.STYLE_PRESETS['illustration'];
+    parts.push(preset.buildStyle(subjectWord, colorModeKeywords, isLetter));
 
     // 5. Material + couleur
     var material = App.MATERIALS[App.state.material];

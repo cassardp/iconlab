@@ -50,6 +50,29 @@ App.COLOR_MODES = {
     }
 };
 
+/* ---- Style Presets ---- */
+
+App.STYLE_PRESETS = {
+    'illustration': {
+        name: 'Illustration',
+        buildStyle: function(subjectWord, colorModeKeywords, isLetter) {
+            if (isLetter) {
+                return 'Style: semi-bold rounded letterform, ' + colorModeKeywords + ', no hard edges, no textures, extremely clean and modern, beautiful shading that gives subtle volume without any 3D rendering, Apple-design-language aesthetic';
+            }
+            return 'Style: simplified flat ' + subjectWord + ' with very few details, bold rounded silhouette, ' + colorModeKeywords + ', no hard edges, no outlines, no textures, shapes blend softly into each other, extremely clean and modern, almost abstract simplicity, beautiful gradient shading that gives subtle volume without any 3D rendering, vector-illustration feel, Apple-design-language aesthetic';
+        }
+    },
+    'blender': {
+        name: 'Blender',
+        buildStyle: function(subjectWord, colorModeKeywords, isLetter) {
+            if (isLetter) {
+                return 'Style: soft 3D rendered letterform, ' + colorModeKeywords + ', Blender-quality render, warm diffused studio lighting, gentle rounded edges, smooth subsurface scattering, natural material textures, soft ambient occlusion, subtle gaussian blur on background';
+            }
+            return 'Style: soft 3D rendered ' + subjectWord + ' with smooth rounded geometry and gentle bevels, ' + colorModeKeywords + ', Blender-quality render, warm diffused studio lighting, no harsh specular highlights, smooth subsurface scattering, natural material textures, soft ambient occlusion, subtle gaussian blur on background';
+        }
+    }
+};
+
 /* ---- Subject Types ---- */
 
 App.SUBJECT_TYPES = {
@@ -173,6 +196,7 @@ App.COMMUNITY_PAGE_SIZE = 20;
 App.STORAGE_KEYS = {
     apiKey: 'icon-openai-api-key',
     model: 'icon-model',
+    stylePreset: 'icon-style-preset',
     colorMode: 'icon-color-mode',
     subjectType: 'icon-subject-type',
     material: 'icon-material',

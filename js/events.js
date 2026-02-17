@@ -54,6 +54,17 @@ App.initEventListeners = function() {
         });
     }
 
+    /* ---- Style Preset Select ---- */
+
+    var stylePresetSelect = document.getElementById('stylePresetSelect');
+    if (stylePresetSelect) {
+        stylePresetSelect.addEventListener('change', function() {
+            App.state.stylePreset = this.value;
+            App.resetEnrichedPrompt();
+            App.saveState();
+        });
+    }
+
     /* ---- Color Mode Select ---- */
 
     var colorModeSelect = document.getElementById('colorModeSelect');
@@ -279,6 +290,21 @@ App.syncUIFromState = function() {
     // Quality
     var qualitySelect = document.getElementById('qualitySelect');
     if (qualitySelect) qualitySelect.value = App.state.quality;
+
+    // Style Preset
+    var stylePresetSelect = document.getElementById('stylePresetSelect');
+    if (stylePresetSelect) {
+        stylePresetSelect.innerHTML = '';
+        for (var spid in App.STYLE_PRESETS) {
+            var spopt = document.createElement('option');
+            spopt.value = spid;
+            spopt.textContent = App.STYLE_PRESETS[spid].name;
+            stylePresetSelect.appendChild(spopt);
+        }
+        if (App.STYLE_PRESETS[App.state.stylePreset]) {
+            stylePresetSelect.value = App.state.stylePreset;
+        }
+    }
 
     // Color Mode
     var colorModeSelect = document.getElementById('colorModeSelect');

@@ -9,6 +9,7 @@ var App = window.App || {};
 App.state = {
     model: 'gpt-image-1.5',
     prompt: '',
+    stylePreset: 'illustration',
     colorMode: 'gradient',
     subjectType: 'object',
     material: 'none',
@@ -69,6 +70,7 @@ App.estimateCost = function(modelId, quality) {
 
 App.saveState = function() {
     localStorage.setItem(App.STORAGE_KEYS.model, App.state.model);
+    localStorage.setItem(App.STORAGE_KEYS.stylePreset, App.state.stylePreset);
     localStorage.setItem(App.STORAGE_KEYS.color, App.state.color);
     localStorage.setItem(App.STORAGE_KEYS.quality, App.state.quality);
 };
@@ -77,6 +79,11 @@ App.loadSavedState = function() {
     // Model and quality are locked to gpt-image-1.5 / medium
     App.state.model = 'gpt-image-1.5';
     App.state.quality = 'medium';
+
+    var stylePreset = localStorage.getItem(App.STORAGE_KEYS.stylePreset);
+    if (stylePreset && App.STYLE_PRESETS[stylePreset]) {
+        App.state.stylePreset = stylePreset;
+    }
 
     var color = localStorage.getItem(App.STORAGE_KEYS.color);
     if (color) {

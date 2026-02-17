@@ -92,12 +92,6 @@ App.initEditorEvents = function() {
             }
 
             s.bgType = newType;
-
-            // Mettre a jour previewBg de la generation
-            var gen = App.state.generations[App.state.editor.generationIndex];
-            if (gen) {
-                gen.previewBg = (newType === 'none') ? 'checkerboard' : s.bgColor;
-            }
             App._editorSyncControls();
             App.updateEditorPreview();
         });
@@ -118,11 +112,6 @@ App.initEditorEvents = function() {
                 el.addEventListener('input', function() {
                     App.state.editor[cfg.key] = this.value;
                     if (labelEl) labelEl.textContent = this.value;
-                    // Si on change le fond dans l'editeur, sortir du mode checkerboard
-                    if (cfg.key === 'bgColor') {
-                        var gen = App.state.generations[App.state.editor.generationIndex];
-                        if (gen) gen.previewBg = this.value;
-                    }
                     App.updateEditorPreview();
                 });
             }
@@ -244,6 +233,15 @@ App.initEditorEvents = function() {
         var startOffsetY = 0;
 
         canvasWrap.addEventListener('mousedown', function(e) {
+            // Detecter le layer sous le curseur et le selectionner
+            var layerWrap = e.target.closest('.editor-layer-wrap');
+            if (layerWrap) {
+                var clickedIndex = parseInt(layerWrap.getAttribute('data-layer-index'), 10);
+                if (!isNaN(clickedIndex) && clickedIndex !== App.state.editor.activeLayerIndex) {
+                    App.selectEditorLayer(clickedIndex);
+                }
+            }
+
             var layer = App._editorActiveLayer();
             if (!layer) return;
             e.preventDefault();

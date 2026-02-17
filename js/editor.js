@@ -146,7 +146,7 @@ App._editorSave = function() {
 
 App.closeEditor = function() {
     App._editorSave();
-    var editedIndex = App.state.editor.generationIndex;
+    var gen = App.state.generations[App.state.editor.generationIndex];
     App.state.editor.active = false;
 
     // Reafficher la galerie
@@ -155,8 +155,8 @@ App.closeEditor = function() {
     if (galleryToolbar) galleryToolbar.classList.remove('hidden');
     if (galleryWrapper) galleryWrapper.classList.remove('hidden');
 
-    // Rafraichir la card editee dans la galerie
-    App.refreshGalleryCard(editedIndex);
+    // Rafraichir la card editee
+    App.refreshGalleryCard(gen);
 
     // Cacher l'editeur
     var editorView = document.getElementById('editorView');

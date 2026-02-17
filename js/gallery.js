@@ -17,7 +17,7 @@ App.addToGallery = function(generation) {
 /**
  * Cree le HTML d'une card de galerie.
  */
-App.createCardHTML = function(gen, index) {
+App.createCardHTML = function(gen) {
     var modelConfig = App.MODELS[gen.model] || {};
     var modelName = modelConfig.name || gen.model;
     var costStr = gen.cost ? '$' + gen.cost.toFixed(3) : '';
@@ -129,7 +129,7 @@ App.createCardHTML = function(gen, index) {
 
     var card = document.createElement('div');
     card.className = 'gallery-card';
-    card.setAttribute('data-index', index);
+    card.setAttribute('data-ts', gen.timestamp);
 
     card.innerHTML = ''
         + '<div class="gallery-card-image' + bgClass + '"' + bgStyle + '>'
@@ -178,15 +178,14 @@ App.createCardHTML = function(gen, index) {
 /**
  * Rafraichit une card existante apres edition.
  */
-App.refreshGalleryCard = function(generationIndex) {
-    var generation = App.state.generations[generationIndex];
+App.refreshGalleryCard = function(generation) {
     if (!generation) return;
 
     var gallery = document.getElementById('gallery');
-    var oldCard = gallery.querySelector('.gallery-card[data-index="' + generationIndex + '"]');
+    var oldCard = gallery.querySelector('.gallery-card[data-ts="' + generation.timestamp + '"]');
     if (!oldCard) return;
 
-    var newCard = App.createCardHTML(generation, generationIndex);
+    var newCard = App.createCardHTML(generation);
     App.attachCardEvents(newCard, generation);
     gallery.replaceChild(newCard, oldCard);
     lucide.createIcons({ nodes: [newCard] });
@@ -204,8 +203,7 @@ App.renderGalleryCard = function(generation, prepend) {
         emptyState.style.display = 'none';
     }
 
-    var index = App.state.generations.indexOf(generation);
-    var card = App.createCardHTML(generation, index);
+    var card = App.createCardHTML(generation);
 
     // Event listeners sur la card
     App.attachCardEvents(card, generation);

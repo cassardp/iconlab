@@ -251,10 +251,10 @@ App._showAuthMenu = function(anchorEl) {
     document.body.appendChild(menu);
     lucide.createIcons({ nodes: [menu] });
 
-    // Position near anchor
+    // Position near anchor (top-aligned since button is at top of sidebar)
     var rect = anchorEl.getBoundingClientRect();
     menu.style.left = (rect.right + 8) + 'px';
-    menu.style.bottom = (window.innerHeight - rect.bottom) + 'px';
+    menu.style.top = rect.top + 'px';
 
     // Event listeners
     menu.querySelector('#authMenuProfile').addEventListener('click', function() {

@@ -9,70 +9,52 @@ var App = window.App || {};
  * et du style selectionne. Le resultat est editable par l'utilisateur
  * dans le textarea avant envoi.
  */
-App.buildEnrichedPrompt = function(userPrompt, colorMode, subjectType, transparentBg) {
+App.buildEnrichedPrompt = function(userPrompt, transparentBg) {
     if (!userPrompt || !userPrompt.trim()) {
         return '';
     }
 
-    var parts = [];
-    var isLetter = subjectType === 'letter';
+    var sections = [];
+    var subject = userPrompt.trim();
 
-    // 1. Intention + cadrage
-    if (isLetter) {
-        parts.push('Create a single stylized letter render suitable for use as a mobile app icon.');
+    // 1. Subject
+    if (App.state.stylePreset === 'typography') {
+        sections.push('Subject: the letter "' + subject + '", a single typographic letter or character.');
     } else {
-        parts.push('Create a single illustration suitable for use as a mobile app icon.');
-    }
-    parts.push('The subject should be centered in the frame, filling approximately 70-80% of the canvas.');
-    parts.push('Clean, minimal design with a single focal point.');
-
-    // 2. Sujet (integre le subject type)
-    if (isLetter) {
-        parts.push('Subject: the letter "' + userPrompt.trim() + '", a single typographic letter or character');
-    } else {
-        parts.push('Subject: ' + userPrompt.trim());
+        sections.push('Subject: app icon of ' + subject + '.');
     }
 
-    // 3. Style de base (flat tonal) + color mode variable
-    var colorModeObj = App.COLOR_MODES[colorMode];
-    var colorModeKeywords = colorModeObj ? colorModeObj.keywords : App.COLOR_MODES['gradient'].keywords;
-
-    var subjectWord = 'illustration';
-    if (subjectType === 'animal') subjectWord = 'character mascot with minimal facial traits';
-    else if (subjectType === 'human') subjectWord = 'human character with minimal facial traits';
-
+    // 2. Style (style preset)
     var preset = App.STYLE_PRESETS[App.state.stylePreset] || App.STYLE_PRESETS['illustration'];
-    parts.push(preset.buildStyle(subjectWord, colorModeKeywords, isLetter));
+    if (preset.keywords) {
+        sections.push('Style: ' + preset.keywords);
+    }
 
-    // 5. Material + couleur
+    // 3. Color (color mode from toggles)
+    var colorKey = (App.state.colorGradient ? 'gradient' : 'flat') + (App.state.colorMulti ? '-multi' : '');
+    var colorModeObj = App.COLOR_MODES[colorKey];
+    if (colorModeObj) {
+        sections.push('Color: ' + colorModeObj.keywords);
+    }
+
+    // 4. Material (material select)
     var material = App.MATERIALS[App.state.material];
     if (material && material.keywords) {
-        parts.push('Material: ' + material.keywords);
+        sections.push('Material: ' + material.keywords);
     }
 
+    // 5. Dominant color (color picker) — ajoute monochrome si couleur choisie
     if (App.state.color) {
-        parts.push('Dominant color: ' + App.state.color);
+        sections.push('Monochrome palette. Dominant color: ' + App.state.color);
     }
 
-    // 6. Fond
-    if (transparentBg) {
-        parts.push('The subject should be rendered on a fully transparent background. No shadows, halos, or glows.');
-    } else {
-        parts.push('The subject should be rendered on a clean, uncluttered background.');
-    }
+    // 6. Constraints
+    var constraints = [];
+    constraints.push('No text or lettering.');
+    constraints.push('No frame. No shadows, no glows, no holes or cutouts.');
+    sections.push(constraints.join('\n'));
 
-    // 8. Contraintes
-    parts.push('Important constraints:');
-    if (!isLetter) {
-        parts.push('- Do NOT include any text, words, letters, numbers, or typography');
-    }
-    parts.push('- Do NOT include any UI elements, borders, or rounded corners');
-    parts.push('- Do NOT include any device frames or mockups');
-    parts.push('- No cast shadows under or around the subject');
-    parts.push('- The illustration must be self-contained and work at small sizes');
-    parts.push('- Use professional quality rendering with crisp edges');
-
-    return parts.join('\n');
+    return sections.join('\n\n');
 };
 
 /**
@@ -93,8 +75,6 @@ App.updateEnrichedPrompt = function() {
 
     var enriched = App.buildEnrichedPrompt(
         App.state.prompt,
-        App.state.colorMode,
-        App.state.subjectType,
         App.state.transparentBg
     );
 

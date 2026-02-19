@@ -65,24 +65,24 @@ App.initEventListeners = function() {
         });
     }
 
-    /* ---- Color Mode Select ---- */
+    /* ---- Color Toggles ---- */
 
-    var colorModeSelect = document.getElementById('colorModeSelect');
-    if (colorModeSelect) {
-        colorModeSelect.addEventListener('change', function() {
-            App.state.colorMode = this.value;
-            App.toggleColorRow();
+    var colorGradientToggle = document.getElementById('colorGradientToggle');
+    if (colorGradientToggle) {
+        colorGradientToggle.addEventListener('change', function() {
+            App.state.colorGradient = this.checked;
+            App._updateColorLabels();
             App.resetEnrichedPrompt();
             App.saveState();
         });
     }
 
-    /* ---- Subject Type Select ---- */
-
-    var subjectTypeSelect = document.getElementById('subjectTypeSelect');
-    if (subjectTypeSelect) {
-        subjectTypeSelect.addEventListener('change', function() {
-            App.state.subjectType = this.value;
+    var colorMultiToggle = document.getElementById('colorMultiToggle');
+    if (colorMultiToggle) {
+        colorMultiToggle.addEventListener('change', function() {
+            App.state.colorMulti = this.checked;
+            App._updateColorLabels();
+            App.toggleColorRow();
             App.resetEnrichedPrompt();
             App.saveState();
         });
@@ -233,8 +233,8 @@ App.handleGenerate = function() {
             model: model,
             userPrompt: userPrompt,
             enrichedPrompt: finalPrompt,
-            colorMode: App.state.colorMode,
-            subjectType: App.state.subjectType,
+            colorGradient: App.state.colorGradient,
+            colorMulti: App.state.colorMulti,
             quality: App.state.quality,
             transparent: App.state.transparentBg,
             duration: duration,
@@ -259,10 +259,23 @@ App.handleGenerate = function() {
     });
 };
 
+/* ---- Update Color Toggle Labels ---- */
+
+App._updateColorLabels = function() {
+    // Labels fixes, pas de changement dynamique
+};
+
 /* ---- Toggle Color Row ---- */
 
 App.toggleColorRow = function() {
-    // Color row always visible regardless of color mode
+    var row = document.getElementById('colorRow');
+    if (!row) return;
+    if (!App.state.colorMulti) {
+        row.classList.remove('hidden');
+    } else {
+        row.classList.add('hidden');
+        App.state.color = '';
+    }
 };
 
 /* ---- Sync UI from State ---- */
@@ -306,38 +319,15 @@ App.syncUIFromState = function() {
         }
     }
 
-    // Color Mode
-    var colorModeSelect = document.getElementById('colorModeSelect');
-    if (colorModeSelect) {
-        colorModeSelect.innerHTML = '';
-        for (var cmid in App.COLOR_MODES) {
-            var cmopt = document.createElement('option');
-            cmopt.value = cmid;
-            cmopt.textContent = App.COLOR_MODES[cmid].name;
-            colorModeSelect.appendChild(cmopt);
-        }
-        if (App.COLOR_MODES[App.state.colorMode]) {
-            colorModeSelect.value = App.state.colorMode;
-        }
-    }
+    // Color Toggles
+    var colorGradientToggle = document.getElementById('colorGradientToggle');
+    if (colorGradientToggle) colorGradientToggle.checked = App.state.colorGradient;
+    var colorMultiToggle = document.getElementById('colorMultiToggle');
+    if (colorMultiToggle) colorMultiToggle.checked = App.state.colorMulti;
 
-    // Show/hide color row
+    // Sync color toggle labels and show/hide color row
+    App._updateColorLabels();
     App.toggleColorRow();
-
-    // Subject Type
-    var subjectTypeSelect = document.getElementById('subjectTypeSelect');
-    if (subjectTypeSelect) {
-        subjectTypeSelect.innerHTML = '';
-        for (var stid in App.SUBJECT_TYPES) {
-            var stopt = document.createElement('option');
-            stopt.value = stid;
-            stopt.textContent = App.SUBJECT_TYPES[stid].name;
-            subjectTypeSelect.appendChild(stopt);
-        }
-        if (App.SUBJECT_TYPES[App.state.subjectType]) {
-            subjectTypeSelect.value = App.state.subjectType;
-        }
-    }
 
     // Material
     var materialSelect = document.getElementById('materialSelect');

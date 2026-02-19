@@ -36,18 +36,10 @@ App.MODELS = {
 /* ---- Color Modes ---- */
 
 App.COLOR_MODES = {
-    'gradient': {
-        name: 'Classic',
-        keywords: 'smooth rich gradients across the surface, no multicolor gradients'
-    },
-    'multicolor-gradient': {
-        name: 'Multicolor',
-        keywords: 'smooth rich color gradients from warm to cool tones across the surface'
-    },
-    'monochrome': {
-        name: 'Monochrome',
-        keywords: 'monochrome palette'
-    }
+    'gradient':       { keywords: 'smooth rich gradients across the surface' },
+    'gradient-multi': { keywords: 'smooth rich color gradients from warm to cool tones across the surface' },
+    'flat':           { keywords: 'flat solid colors, no gradients' },
+    'flat-multi':     { keywords: 'multiple bold flat colors, no gradients, solid color fills, vibrant contrasting hues' }
 };
 
 /* ---- Style Presets ---- */
@@ -57,34 +49,17 @@ App.STYLE_PRESETS = {
         name: 'Illustration',
         keywords: 'simplified flat illustration with very few details, bold rounded silhouette, no hard edges, no outlines, no textures, shapes blend softly into each other, extremely clean and modern, almost abstract simplicity, subtle volume without any 3D rendering, vector-illustration feel, Apple-design-language aesthetic'
     },
-    'flat': {
-        name: 'Flat',
-        keywords: 'flat geometric illustration, no shadows, no textures, no outlines, bold minimal vector graphic'
-    },
     'blender': {
         name: 'Blender',
         keywords: 'soft 3D render with smooth rounded geometry and gentle bevels, Blender-quality render, warm diffused studio lighting, no harsh specular highlights, smooth subsurface scattering, natural material textures, soft ambient occlusion, subtle gaussian blur on background'
-    }
-};
-
-/* ---- Subject Types ---- */
-
-App.SUBJECT_TYPES = {
-    'object': {
-        name: 'Object',
-        keywords: ''
     },
-    'animal': {
-        name: 'Animal',
-        keywords: ''
+    'logo': {
+        name: 'Logo',
+        keywords: 'logo, modern, Paul Rand style'
     },
-    'human': {
-        name: 'Human',
-        keywords: ''
-    },
-    'letter': {
-        name: 'Letter',
-        keywords: ''
+    'typography': {
+        name: 'Typography',
+        keywords: 'semi-bold rounded letterform, no hard edges, no textures, extremely clean and modern, beautiful shading that gives subtle volume without any 3D rendering, Apple-design-language aesthetic'
     }
 };
 
@@ -191,8 +166,8 @@ App.STORAGE_KEYS = {
     apiKey: 'icon-openai-api-key',
     model: 'icon-model',
     stylePreset: 'icon-style-preset',
-    colorMode: 'icon-color-mode',
-    subjectType: 'icon-subject-type',
+    colorGradient: 'icon-color-gradient',
+    colorMulti: 'icon-color-multi',
     material: 'icon-material',
     color: 'icon-color',
     quality: 'icon-quality',

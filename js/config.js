@@ -10,7 +10,6 @@ App.MODELS = {
     'gpt-image-1.5': {
         name: 'GPT Image 1.5',
         description: 'Latest model, faster, 20% cheaper than 1.0',
-        pricing: { low: 0.009, medium: 0.034, high: 0.133 },
         capabilities: { transparentBg: true, edits: true, referenceImages: 10 },
         defaultQuality: 'medium',
         recommendedBackground: 'transparent'
@@ -18,7 +17,6 @@ App.MODELS = {
     'gpt-image-1': {
         name: 'GPT Image 1',
         description: 'Stable, native transparent background',
-        pricing: { low: 0.011, medium: 0.042, high: 0.167 },
         capabilities: { transparentBg: true, edits: true, referenceImages: 10 },
         defaultQuality: 'medium',
         recommendedBackground: 'transparent'
@@ -26,7 +24,6 @@ App.MODELS = {
     'gpt-image-1-mini': {
         name: 'GPT Image 1 Mini',
         description: 'Budget-friendly, 55-78% cheaper',
-        pricing: { low: 0.005, medium: 0.011, high: 0.036 },
         capabilities: { transparentBg: true, edits: true, referenceImages: 10 },
         defaultQuality: 'low',
         recommendedBackground: 'transparent'

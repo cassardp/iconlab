@@ -65,12 +65,6 @@ App.getActiveModel = function() {
     return App.MODELS[App.state.model] || null;
 };
 
-App.estimateCost = function(modelId, quality) {
-    var model = App.MODELS[modelId];
-    if (!model) return 0;
-    return model.pricing[quality || 'medium'] || 0;
-};
-
 /* ---- Persistence ---- */
 
 App.saveState = function() {

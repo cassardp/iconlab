@@ -242,7 +242,6 @@ App.handleGenerate = function() {
     })
     .then(function(result) {
         var duration = Date.now() - startTime;
-        var cost = App.estimateCost(model, App.state.quality);
 
         App.removeLoadingCard();
 
@@ -256,7 +255,6 @@ App.handleGenerate = function() {
             quality: App.state.quality,
             transparent: App.state.transparentBg,
             duration: duration,
-            cost: cost,
             timestamp: Date.now()
         });
     })

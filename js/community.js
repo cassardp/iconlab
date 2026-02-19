@@ -413,6 +413,9 @@ App._updateShareButton = function(generation) {
         icon.setAttribute('data-lucide', isShared ? 'globe-off' : 'globe');
         lucide.createIcons({ nodes: [shareBtn] });
     }
+    var label = shareBtn.querySelector('.btn-share-label');
+    if (label) label.textContent = isShared ? 'Shared' : 'Share';
+    shareBtn.classList.toggle('shared', isShared);
 };
 
 /* ---- Download community icon ---- */

@@ -131,16 +131,9 @@ App.createCardHTML = function(gen) {
     if (gen.duration) {
         durationStr = (gen.duration / 1000).toFixed(1) + 's';
     }
-    var costStr = '';
-    if (gen.cost) {
-        costStr = '~\u2009$' + gen.cost.toFixed(3);
-    }
     var statsHtml = '';
-    if (durationStr || costStr) {
-        var parts = [];
-        if (durationStr) parts.push(durationStr);
-        if (costStr) parts.push(costStr);
-        statsHtml = '<span class="gallery-card-stats"><i data-lucide="clock"></i> ' + parts.join(' ') + '</span>';
+    if (durationStr) {
+        statsHtml = '<span class="gallery-card-stats"><i data-lucide="clock"></i> ' + durationStr + '</span>';
     }
 
     var card = document.createElement('div');
@@ -167,8 +160,9 @@ App.createCardHTML = function(gen) {
         + '<div class="gallery-card-actions">'
         +   statsHtml
         +   '<div class="card-actions-right">'
-        +     '<button class="btn-share" title="' + (gen._sharedToCommunity ? 'Remove from community' : 'Share to community') + '">'
+        +     '<button class="btn-share' + (gen._sharedToCommunity ? ' shared' : '') + '">'
         +       '<i data-lucide="' + (gen._sharedToCommunity ? 'globe-off' : 'globe') + '"></i>'
+        +       '<span class="btn-share-label">' + (gen._sharedToCommunity ? 'Shared' : 'Share') + '</span>'
         +     '</button>'
         +     '<input type="color" class="card-bg-color" value="' + pickerValue + '" title="Preview background color">'
         +   '</div>'
@@ -265,11 +259,16 @@ App.attachCardEvents = function(card, generation) {
     if (shareBtn) {
         shareBtn.addEventListener('click', function() {
             shareBtn.disabled = true;
-            var action = generation._sharedToCommunity
+            var label = shareBtn.querySelector('.btn-share-label');
+            var isShared = generation._sharedToCommunity;
+            shareBtn.classList.add('loading');
+            if (label) label.textContent = isShared ? 'Removing…' : 'Sharing…';
+            var action = isShared
                 ? App.unshareToCommunity(generation)
                 : App.shareToCommunity(generation);
             action.finally(function() {
                 shareBtn.disabled = false;
+                shareBtn.classList.remove('loading');
             });
         });
     }

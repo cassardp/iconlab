@@ -672,21 +672,44 @@ body.panels-hidden .editor-sidebar {
 
 /* Community cards reuse .gallery-card-meta and .gallery-card-actions */
 
-/* Like button */
+/* Share button */
 .btn-share {
     display: flex;
     align-items: center;
+    gap: 4px;
     background: none;
-    border: none;
-    padding: 4px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 3px 8px;
     cursor: pointer;
     color: var(--foreground-muted);
+    font-size: 11px;
     outline: none;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.btn-share:hover {
+    color: var(--foreground);
+    border-color: var(--border-hover, var(--foreground-muted));
+}
+
+.btn-share.shared {
+    color: var(--primary, #5BC0EB);
+    border-color: var(--primary, #5BC0EB);
+}
+
+.btn-share.loading {
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 .btn-share svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
+}
+
+.btn-share-label {
+    line-height: 1;
 }
 
 .btn-like {

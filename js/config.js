@@ -63,7 +63,7 @@ App.STYLE_PRESETS = {
     },
     'sticker': {
         name: 'Sticker',
-        keywords: 'die-cut sticker style, thick white border outline around the shape, slightly puffy inflated look, clean vector art, vivid saturated colors, no background, no shadow, playful and bold, vinyl sticker aesthetic'
+        keywords: 'die-cut sticker style, thick white border outline around the shape, slightly puffy inflated look, flat solid colors with minimal shading, no shadow, playful and bold, vinyl sticker aesthetic'
     }
 };
 

@@ -632,12 +632,19 @@ App._renderComposition = function(generation, size, withBg, bgColor, callback) {
                 tmpCanvas.width = exportSize;
                 tmpCanvas.height = exportSize;
                 var tmpCtx = tmpCanvas.getContext('2d');
+                // Dessiner l'image avec opacity
+                tmpCtx.globalAlpha = ctx.globalAlpha;
                 tmpCtx.drawImage(img, 0, 0, exportSize, exportSize);
+                // Tint a pleine opacite (blend color sur l'image)
+                tmpCtx.globalAlpha = 1;
                 tmpCtx.globalCompositeOperation = 'color';
                 tmpCtx.fillStyle = layer.tintColor;
                 tmpCtx.fillRect(0, 0, exportSize, exportSize);
+                // Masquer avec la silhouette originale
                 tmpCtx.globalCompositeOperation = 'destination-in';
                 tmpCtx.drawImage(img, 0, 0, exportSize, exportSize);
+                // Dessiner le resultat sur le canvas principal a pleine opacite
+                ctx.globalAlpha = 1;
                 ctx.drawImage(tmpCanvas, -half, -half, exportSize, exportSize);
             } else {
                 ctx.drawImage(img, -half, -half, exportSize, exportSize);

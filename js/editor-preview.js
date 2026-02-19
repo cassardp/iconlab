@@ -50,8 +50,10 @@ App.updateEditorPreview = function() {
         }
         wrap.style.transform = transforms.length ? transforms.join(' ') : 'none';
 
-        // Opacity
-        wrap.style.opacity = (layer.opacity != null ? layer.opacity : 100) / 100;
+        // Opacity (sur l'image, pas le wrapper, pour que le tint blend reste intense)
+        var opacityVal = (layer.opacity != null ? layer.opacity : 100) / 100;
+        if (img) img.style.opacity = opacityVal;
+        wrap.style.opacity = '';
 
         // Drop-shadow
         if (layer.shadowEnabled) {

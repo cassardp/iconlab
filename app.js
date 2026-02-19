@@ -51,6 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // 4. Init event listeners
     App.initEventListeners();
 
+    // 4a. Init color picker wraps (clic wrapper ouvre le picker)
+    App._initColorPickerWraps();
+
     // 4b. Init editor event listeners
     App.initEditorEvents();
 

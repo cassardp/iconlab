@@ -351,6 +351,7 @@ select:focus {
     cursor: pointer;
     background: none;
     flex-shrink: 0;
+    pointer-events: none;
 }
 
 .color-picker-wrap input[type="color"].inactive {
@@ -383,6 +384,7 @@ select:focus {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    pointer-events: none;
 }
 
 .color-picker-label.active {

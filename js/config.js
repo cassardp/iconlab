@@ -207,3 +207,18 @@ App.STORAGE_KEYS = {
     gallery: 'icon-gallery',
     deviceId: 'icon-device-id'
 };
+
+/* ---- Color picker wrap : clic sur le wrapper ouvre le picker natif ---- */
+
+App._initColorPickerWraps = function(root) {
+    var wraps = (root || document).querySelectorAll('.color-picker-wrap');
+    for (var i = 0; i < wraps.length; i++) {
+        (function(wrap) {
+            wrap.addEventListener('click', function(e) {
+                if (e.target.closest('.color-picker-reset')) return;
+                var input = wrap.querySelector('input[type="color"]');
+                if (input) input.click();
+            });
+        })(wraps[i]);
+    }
+};

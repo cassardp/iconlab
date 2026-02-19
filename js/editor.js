@@ -41,12 +41,13 @@ App.openEditor = function(generation) {
         App.state.editor.bgColor = defaults.bgColor;
     }
 
-    // Fallback : couleur de fond depuis previewBg si pas de reglages sauvegardes
-    if (!saved && generation.previewBg && generation.previewBg !== 'checkerboard') {
-        App.state.editor.bgColor = generation.previewBg;
-    }
-    if (!saved && generation.previewBg === 'checkerboard') {
-        App.state.editor.bgType = 'none';
+    // Fallback : fond depuis previewBg ou transparent si pas de reglages sauvegardes
+    if (!saved) {
+        if (generation.previewBg === 'checkerboard' || (!generation.previewBg && generation.transparent)) {
+            App.state.editor.bgType = 'none';
+        } else if (generation.previewBg) {
+            App.state.editor.bgColor = generation.previewBg;
+        }
     }
 
     // Restaurer les layers
@@ -193,9 +194,9 @@ App.resetEditor = function() {
     var gen = App.state.generations[idx];
     var baseImage = gen ? gen.imageBase64 : layers[0].imageBase64;
 
-    // Reset fond (preserver le mode transparent si la generation est en checkerboard)
+    // Reset fond (preserver le mode transparent)
     var defaults = App.EDITOR_DEFAULTS;
-    if (gen && gen.previewBg === 'checkerboard') {
+    if (gen && (gen.previewBg === 'checkerboard' || (!gen.previewBg && gen.transparent))) {
         s.bgType = 'none';
         s.bgColor = defaults.bgColor;
     } else {

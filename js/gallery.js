@@ -127,13 +127,10 @@ App.createCardHTML = function(gen) {
 
     var pickerValue = hasSavedBg ? gen.previewBg : '#1a1a1a';
 
-    var durationStr = '';
-    if (gen.duration) {
-        durationStr = (gen.duration / 1000).toFixed(1) + 's';
-    }
+    var timeAgo = gen.timestamp ? App._timeAgo(gen.timestamp) : '';
     var statsHtml = '';
-    if (durationStr) {
-        statsHtml = '<span class="gallery-card-stats"><i data-lucide="clock"></i> ' + durationStr + '</span>';
+    if (timeAgo) {
+        statsHtml = '<span class="gallery-card-stats">' + timeAgo + '</span>';
     }
 
     var card = document.createElement('div');

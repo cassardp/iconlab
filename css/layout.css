@@ -169,6 +169,7 @@ body.panels-hidden .editor-sidebar {
 /* Sidebar header avec logo */
 .sidebar-header {
     height: var(--toolbar-height);
+    min-height: var(--toolbar-height);
     padding: 0 20px;
     border-bottom: 1px solid var(--border-subtle);
     display: flex;
@@ -694,8 +695,9 @@ body.panels-hidden .editor-sidebar {
 }
 
 .btn-share.shared {
-    color: var(--primary, #5BC0EB);
-    border-color: var(--primary, #5BC0EB);
+    background: var(--foreground);
+    color: var(--background);
+    border-color: var(--foreground);
 }
 
 .btn-share.loading {

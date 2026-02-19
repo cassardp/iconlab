@@ -10,8 +10,9 @@ App.state = {
     model: 'gpt-image-1.5',
     prompt: '',
     stylePreset: 'illustration',
+    rounded: true,
     colorGradient: true,
-    colorMulti: true,
+    colorMulti: false,
     material: 'none',
     color: '',
     transparentBg: true,
@@ -70,10 +71,6 @@ App.estimateCost = function(modelId, quality) {
 
 App.saveState = function() {
     localStorage.setItem(App.STORAGE_KEYS.model, App.state.model);
-    localStorage.setItem(App.STORAGE_KEYS.stylePreset, App.state.stylePreset);
-    localStorage.setItem(App.STORAGE_KEYS.colorGradient, App.state.colorGradient ? '1' : '0');
-    localStorage.setItem(App.STORAGE_KEYS.colorMulti, App.state.colorMulti ? '1' : '0');
-    localStorage.setItem(App.STORAGE_KEYS.color, App.state.color);
     localStorage.setItem(App.STORAGE_KEYS.quality, App.state.quality);
 };
 
@@ -82,18 +79,4 @@ App.loadSavedState = function() {
     App.state.model = 'gpt-image-1.5';
     App.state.quality = 'medium';
 
-    var stylePreset = localStorage.getItem(App.STORAGE_KEYS.stylePreset);
-    if (stylePreset && App.STYLE_PRESETS[stylePreset]) {
-        App.state.stylePreset = stylePreset;
-    }
-
-    var cg = localStorage.getItem(App.STORAGE_KEYS.colorGradient);
-    if (cg !== null) App.state.colorGradient = cg === '1';
-    var cm = localStorage.getItem(App.STORAGE_KEYS.colorMulti);
-    if (cm !== null) App.state.colorMulti = cm === '1';
-
-    var color = localStorage.getItem(App.STORAGE_KEYS.color);
-    if (color) {
-        App.state.color = color;
-    }
 };

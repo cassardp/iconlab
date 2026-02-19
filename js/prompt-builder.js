@@ -30,7 +30,11 @@ App.buildEnrichedPrompt = function(userPrompt, transparentBg) {
     var styleKey = App.state.stylePreset === 'logo' ? 'illustration' : App.state.stylePreset;
     var preset = App.STYLE_PRESETS[styleKey] || App.STYLE_PRESETS['illustration'];
     if (preset.keywords) {
-        sections.push('Style: ' + preset.keywords);
+        var styleKw = preset.keywords;
+        if (!App.state.rounded) {
+            styleKw = App._applyAngularStyle(styleKw);
+        }
+        sections.push('Style: ' + styleKw);
     }
 
     // 3. Color (color mode from toggles)
@@ -58,6 +62,18 @@ App.buildEnrichedPrompt = function(userPrompt, transparentBg) {
     sections.push(constraints.join('\n'));
 
     return sections.join('\n\n');
+};
+
+/**
+ * Remplace les termes arrondis par des termes anguleux/geometriques dans les keywords.
+ */
+App._applyAngularStyle = function(keywords) {
+    return keywords
+        .replace('bold rounded silhouette', 'bold angular silhouette with sharp geometric edges')
+        .replace('no hard edges', 'crisp hard edges')
+        .replace('shapes blend softly into each other', 'shapes meet at clean sharp angles')
+        .replace('smooth rounded geometry and gentle bevels', 'sharp angular geometry with hard chamfered edges')
+        .replace('semi-bold rounded letterform', 'semi-bold angular letterform with sharp geometric edges');
 };
 
 /**

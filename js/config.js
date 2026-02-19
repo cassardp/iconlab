@@ -165,11 +165,6 @@ App.COMMUNITY_PAGE_SIZE = 20;
 App.STORAGE_KEYS = {
     apiKey: 'icon-openai-api-key',
     model: 'icon-model',
-    stylePreset: 'icon-style-preset',
-    colorGradient: 'icon-color-gradient',
-    colorMulti: 'icon-color-multi',
-    material: 'icon-material',
-    color: 'icon-color',
     quality: 'icon-quality',
     transparentBg: 'icon-transparent-bg',
     theme: 'icon-theme',

@@ -72,6 +72,17 @@ App.initEventListeners = function() {
         });
     }
 
+    /* ---- Rounded Toggle ---- */
+
+    var roundedToggle = document.getElementById('roundedToggle');
+    if (roundedToggle) {
+        roundedToggle.addEventListener('change', function() {
+            App.state.rounded = this.checked;
+            App.resetEnrichedPrompt();
+            App.saveState();
+        });
+    }
+
     /* ---- Color Toggles ---- */
 
     var colorGradientToggle = document.getElementById('colorGradientToggle');
@@ -343,6 +354,10 @@ App.syncUIFromState = function() {
             stylePresetSelect.value = App.state.stylePreset;
         }
     }
+
+    // Rounded Toggle
+    var roundedToggle = document.getElementById('roundedToggle');
+    if (roundedToggle) roundedToggle.checked = App.state.rounded;
 
     // Color Toggles
     var colorGradientToggle = document.getElementById('colorGradientToggle');

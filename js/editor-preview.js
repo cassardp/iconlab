@@ -37,7 +37,7 @@ App.updateEditorPreview = function() {
         var img = wrap.querySelector('.editor-layer-image');
         var tint = wrap.querySelector('.editor-layer-tint');
 
-        // Transform : scale, rotation, offset (sur le wrapper)
+        // Transform : scale, rotation, offset
         var transforms = [];
         if (layer.offsetX !== 0 || layer.offsetY !== 0) {
             transforms.push('translate(' + layer.offsetX + '%, ' + layer.offsetY + '%)');
@@ -48,27 +48,36 @@ App.updateEditorPreview = function() {
         if (layer.rotation !== 0) {
             transforms.push('rotate(' + layer.rotation + 'deg)');
         }
-        wrap.style.transform = transforms.length ? transforms.join(' ') : 'none';
+        var transformStr = transforms.length ? transforms.join(' ') : 'none';
 
-        // Opacity (sur l'image, pas le wrapper, pour que le tint blend reste intense)
+        // Opacity
         var opacityVal = (layer.opacity != null ? layer.opacity : 100) / 100;
-        if (img) img.style.opacity = opacityVal;
-        wrap.style.opacity = '';
 
-        // Drop-shadow
+        // Drop-shadow filter
+        var filterStr = 'none';
         if (layer.shadowEnabled) {
             var rgba = App._hexToRgba(layer.shadowColor, layer.shadowOpacity / 100);
-            wrap.style.filter =
-                'drop-shadow(0 ' + layer.shadowOffsetY + 'px ' + layer.shadowBlur + 'px ' + rgba + ')';
-        } else {
-            wrap.style.filter = 'none';
+            filterStr = 'drop-shadow(0 ' + layer.shadowOffsetY + 'px ' + layer.shadowBlur + 'px ' + rgba + ')';
         }
 
-        // Tint overlay
+        // Appliquer sur le wrapper (pas de transform/filter pour eviter stacking context)
+        wrap.style.transform = 'none';
+        wrap.style.filter = 'none';
+        wrap.style.opacity = '';
+
+        // Appliquer transforms, opacity et filter sur l'image directement
+        if (img) {
+            img.style.transform = transformStr;
+            img.style.opacity = opacityVal;
+            img.style.filter = filterStr;
+        }
+
+        // Tint overlay : memes transforms, pas d'opacity ni filter
         if (tint) {
             if (layer.tintEnabled) {
                 tint.style.backgroundColor = layer.tintColor || '#FF0000';
                 tint.style.display = 'block';
+                tint.style.transform = transformStr;
             } else {
                 tint.style.display = 'none';
             }

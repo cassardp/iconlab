@@ -31,7 +31,7 @@ App.createCardHTML = function(gen) {
         } else if (es.bgType === 'gradient') {
             bgStyle = ' style="background:radial-gradient(circle, ' + es.gradientCenter + ', ' + es.gradientEdge + ')"';
         } else if (es.bgType === 'linear') {
-            bgStyle = ' style="background:linear-gradient(' + (es.linearAngle || 180) + 'deg, ' + es.linearStart + ', ' + es.linearEnd + ')"';
+            bgStyle = ' style="background:linear-gradient(' + (es.linearAngle != null ? es.linearAngle : 180) + 'deg, ' + es.linearStart + ', ' + es.linearEnd + ')"';
         } else if (es.bgType === 'mesh') {
             bgStyle = ' style="background:' + App._buildMeshCSS(es.meshColors) + '"';
         } else {
@@ -593,7 +593,7 @@ App._renderComposition = function(generation, size, withBg, bgColor, callback) {
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, exportSize, exportSize);
             } else if (es.bgType === 'linear') {
-                App._drawLinearGradient(ctx, exportSize, es.linearAngle || 180, es.linearStart, es.linearEnd);
+                App._drawLinearGradient(ctx, exportSize, es.linearAngle != null ? es.linearAngle : 180, es.linearStart, es.linearEnd);
             } else if (es.bgType === 'mesh') {
                 App._drawMeshGradient(ctx, exportSize, es.meshColors);
             } else {

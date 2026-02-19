@@ -46,7 +46,7 @@ App.COLOR_MODES = {
     },
     'monochrome': {
         name: 'Monochrome',
-        keywords: 'monochrome palette, smooth rich gradients across the surface using a single hue only, no other colors'
+        keywords: 'monochrome palette'
     }
 };
 
@@ -55,21 +55,15 @@ App.COLOR_MODES = {
 App.STYLE_PRESETS = {
     'illustration': {
         name: 'Illustration',
-        buildStyle: function(subjectWord, colorModeKeywords, isLetter) {
-            if (isLetter) {
-                return 'Style: semi-bold rounded letterform, ' + colorModeKeywords + ', no hard edges, no textures, extremely clean and modern, beautiful shading that gives subtle volume without any 3D rendering, Apple-design-language aesthetic';
-            }
-            return 'Style: simplified flat ' + subjectWord + ' with very few details, bold rounded silhouette, ' + colorModeKeywords + ', no hard edges, no outlines, no textures, shapes blend softly into each other, extremely clean and modern, almost abstract simplicity, beautiful gradient shading that gives subtle volume without any 3D rendering, vector-illustration feel, Apple-design-language aesthetic';
-        }
+        keywords: 'simplified flat illustration with very few details, bold rounded silhouette, no hard edges, no outlines, no textures, shapes blend softly into each other, extremely clean and modern, almost abstract simplicity, subtle volume without any 3D rendering, vector-illustration feel, Apple-design-language aesthetic'
+    },
+    'flat': {
+        name: 'Flat',
+        keywords: 'flat geometric illustration, no shadows, no textures, no outlines, bold minimal vector graphic'
     },
     'blender': {
         name: 'Blender',
-        buildStyle: function(subjectWord, colorModeKeywords, isLetter) {
-            if (isLetter) {
-                return 'Style: soft 3D rendered letterform, ' + colorModeKeywords + ', Blender-quality render, warm diffused studio lighting, gentle rounded edges, smooth subsurface scattering, natural material textures, soft ambient occlusion, subtle gaussian blur on background';
-            }
-            return 'Style: soft 3D rendered ' + subjectWord + ' with smooth rounded geometry and gentle bevels, ' + colorModeKeywords + ', Blender-quality render, warm diffused studio lighting, no harsh specular highlights, smooth subsurface scattering, natural material textures, soft ambient occlusion, subtle gaussian blur on background';
-        }
+        keywords: 'soft 3D render with smooth rounded geometry and gentle bevels, Blender-quality render, warm diffused studio lighting, no harsh specular highlights, smooth subsurface scattering, natural material textures, soft ambient occlusion, subtle gaussian blur on background'
     }
 };
 
@@ -155,21 +149,21 @@ App.LAYER_DEFAULTS = {
     offsetY: 0,
     opacity: 100,
     tintEnabled: false,
-    tintColor: '#FF0000',
+    tintColor: '#5A9FD4',
     shadowEnabled: false,
     shadowBlur: 20,
     shadowOffsetY: 8,
     shadowOpacity: 40,
-    shadowColor: '#000000'
+    shadowColor: '#1A1A2E'
 };
 
 /* ---- Editor defaults ---- */
 
 App.EDITOR_DEFAULTS = {
     bgType: 'solid',
-    bgColor: '#1a1a1a',
-    gradientCenter: '#2a2a4a',
-    gradientEdge: '#0a0a1a',
+    bgColor: '#2C2C3A',
+    gradientCenter: '#3D3D5C',
+    gradientEdge: '#1A1A2E',
     layers: null,
     activeLayerIndex: 0,
     exportSize: 1024,
@@ -182,7 +176,7 @@ App.EDITOR_DEFAULTS = {
     shadowBlur: 20,
     shadowOffsetY: 8,
     shadowOpacity: 40,
-    shadowColor: '#000000'
+    shadowColor: '#1A1A2E'
 };
 
 /* ---- Supabase ---- */

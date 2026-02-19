@@ -65,15 +65,14 @@ App.buildEnrichedPrompt = function(userPrompt, transparentBg) {
 };
 
 /**
- * Remplace les termes arrondis par des termes anguleux/geometriques dans les keywords.
+ * Retire les termes lies aux formes arrondies des keywords de style.
  */
 App._applyAngularStyle = function(keywords) {
     return keywords
-        .replace('bold rounded silhouette', 'bold angular silhouette with sharp geometric edges')
-        .replace('no hard edges', 'crisp hard edges')
-        .replace('shapes blend softly into each other', 'shapes meet at clean sharp angles')
-        .replace('smooth rounded geometry and gentle bevels', 'sharp angular geometry with hard chamfered edges')
-        .replace('semi-bold rounded letterform', 'semi-bold angular letterform with sharp geometric edges');
+        .replace('bold rounded silhouette, no hard edges, ', '')
+        .replace('shapes blend softly into each other, ', '')
+        .replace(' with smooth rounded geometry and gentle bevels', '')
+        .replace('semi-bold rounded letterform, no hard edges', 'semi-bold letterform');
 };
 
 /**

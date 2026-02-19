@@ -262,3 +262,62 @@ body.panels-hidden .editor-canvas-wrap {
 .editor-sidebar::-webkit-scrollbar {
     display: none;
 }
+
+/* ---- Direction picker (linear gradient) ---- */
+
+.direction-picker {
+    display: grid;
+    grid-template-columns: repeat(3, 28px);
+    grid-template-rows: repeat(3, 28px);
+    gap: 2px;
+}
+
+.dir-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--background);
+    color: var(--foreground-muted);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.dir-btn:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.dir-btn.active {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+}
+
+.dir-center {
+    width: 28px;
+    height: 28px;
+}
+
+/* ---- Mesh color rows ---- */
+
+.mesh-color-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.mesh-color-row .color-picker-wrap {
+    flex: 1;
+}
+
+.mesh-color-row .btn-icon {
+    flex-shrink: 0;
+}

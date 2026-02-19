@@ -30,6 +30,10 @@ App.createCardHTML = function(gen) {
             bgClass = ' checkerboard';
         } else if (es.bgType === 'gradient') {
             bgStyle = ' style="background:radial-gradient(circle, ' + es.gradientCenter + ', ' + es.gradientEdge + ')"';
+        } else if (es.bgType === 'linear') {
+            bgStyle = ' style="background:linear-gradient(' + (es.linearAngle || 180) + 'deg, ' + es.linearStart + ', ' + es.linearEnd + ')"';
+        } else if (es.bgType === 'mesh') {
+            bgStyle = ' style="background:' + App._buildMeshCSS(es.meshColors) + '"';
         } else {
             bgStyle = ' style="background-color:' + es.bgColor + '"';
         }
@@ -177,16 +181,19 @@ App.createCardHTML = function(gen) {
  * Rafraichit une card existante apres edition.
  */
 App.refreshGalleryCard = function(generation) {
+    console.log('[refreshGalleryCard] generation=' + !!generation + ', timestamp=' + (generation ? generation.timestamp : 'N/A'));
     if (!generation) return;
 
     var gallery = document.getElementById('gallery');
     var oldCard = gallery.querySelector('.gallery-card[data-ts="' + generation.timestamp + '"]');
+    console.log('[refreshGalleryCard] oldCard found=' + !!oldCard + ', total cards=' + gallery.querySelectorAll('.gallery-card').length);
     if (!oldCard) return;
 
     var newCard = App.createCardHTML(generation);
     App.attachCardEvents(newCard, generation);
     gallery.replaceChild(newCard, oldCard);
     lucide.createIcons({ nodes: [newCard] });
+    console.log('[refreshGalleryCard] replaced, total cards now=' + gallery.querySelectorAll('.gallery-card').length);
 };
 
 /**
@@ -345,6 +352,8 @@ App.updateGalleryCount = function() {
  * Rend toute la galerie depuis l'etat.
  */
 App.renderFullGallery = function() {
+    console.log('[renderFullGallery] called, generations=' + App.state.generations.length);
+    console.trace('[renderFullGallery] stack');
     var gallery = document.getElementById('gallery');
     var emptyState = document.getElementById('galleryEmpty');
 
@@ -587,6 +596,10 @@ App._renderComposition = function(generation, size, withBg, bgColor, callback) {
                 grad.addColorStop(1, es.gradientEdge);
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, exportSize, exportSize);
+            } else if (es.bgType === 'linear') {
+                App._drawLinearGradient(ctx, exportSize, es.linearAngle || 180, es.linearStart, es.linearEnd);
+            } else if (es.bgType === 'mesh') {
+                App._drawMeshGradient(ctx, exportSize, es.meshColors);
             } else {
                 ctx.fillStyle = bgColor || es.bgColor || '#1a1a1a';
                 ctx.fillRect(0, 0, exportSize, exportSize);
@@ -654,6 +667,51 @@ App._renderComposition = function(generation, size, withBg, bgColor, callback) {
         }
 
         callback(canvas);
+    }
+};
+
+/* ---- Canvas gradient helpers ---- */
+
+/**
+ * Dessine un gradient lineaire sur un canvas.
+ * Convention CSS : 0deg = bas->haut, 90deg = gauche->droite.
+ */
+App._drawLinearGradient = function(ctx, size, angleDeg, startColor, endColor) {
+    // Convertir angle CSS en radians math (CSS 0deg = to top = -90deg math)
+    var rad = (angleDeg - 90) * Math.PI / 180;
+    var half = size / 2;
+    var dx = Math.cos(rad) * half;
+    var dy = Math.sin(rad) * half;
+    var grad = ctx.createLinearGradient(half - dx, half - dy, half + dx, half + dy);
+    grad.addColorStop(0, startColor);
+    grad.addColorStop(1, endColor);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, size, size);
+};
+
+/**
+ * Dessine un gradient mesh sur un canvas.
+ * Derniere couleur = base, les autres = radial blobs aux positions d'ancre.
+ */
+App._drawMeshGradient = function(ctx, size, colors) {
+    if (!colors || !colors.length) return;
+    var anchors = App.MESH_ANCHORS;
+
+    // Base = derniere couleur
+    ctx.fillStyle = colors[colors.length - 1];
+    ctx.fillRect(0, 0, size, size);
+
+    // Overlay radial gradients
+    for (var i = 0; i < colors.length - 1; i++) {
+        var a = anchors[i % anchors.length];
+        var cx = size * a.x / 100;
+        var cy = size * a.y / 100;
+        var radius = size * 0.7;
+        var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+        grad.addColorStop(0, colors[i]);
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, size, size);
     }
 };
 

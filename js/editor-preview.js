@@ -20,9 +20,14 @@ App.updateEditorPreview = function() {
         canvasWrap.classList.remove('checkerboard');
         if (s.bgType === 'solid') {
             canvasWrap.style.background = s.bgColor;
-        } else {
+        } else if (s.bgType === 'gradient') {
             canvasWrap.style.background =
                 'radial-gradient(circle, ' + s.gradientCenter + ', ' + s.gradientEdge + ')';
+        } else if (s.bgType === 'linear') {
+            canvasWrap.style.background =
+                'linear-gradient(' + s.linearAngle + 'deg, ' + s.linearStart + ', ' + s.linearEnd + ')';
+        } else if (s.bgType === 'mesh') {
+            canvasWrap.style.background = App._buildMeshCSS(s.meshColors);
         }
     }
 
@@ -111,6 +116,27 @@ App._editorSyncControls = function() {
     if (gradEdge) gradEdge.value = s.gradientEdge;
     if (gradEdgeLabel) gradEdgeLabel.textContent = s.gradientEdge;
 
+    // Linear gradient controls
+    var linStart = document.getElementById('editorLinearStart');
+    var linStartLabel = document.getElementById('editorLinearStartLabel');
+    if (linStart) linStart.value = s.linearStart;
+    if (linStartLabel) linStartLabel.textContent = s.linearStart;
+
+    var linEnd = document.getElementById('editorLinearEnd');
+    var linEndLabel = document.getElementById('editorLinearEndLabel');
+    if (linEnd) linEnd.value = s.linearEnd;
+    if (linEndLabel) linEndLabel.textContent = s.linearEnd;
+
+    // Direction picker active state
+    var dirBtns = document.querySelectorAll('#editorLinearDirection .dir-btn');
+    for (var d = 0; d < dirBtns.length; d++) {
+        var angle = parseInt(dirBtns[d].getAttribute('data-angle'), 10);
+        dirBtns[d].classList.toggle('active', angle === s.linearAngle);
+    }
+
+    // Mesh color list
+    App._renderMeshColorList();
+
     // Layer controls (depuis le layer actif)
     if (layer) {
         var scale = document.getElementById('editorScale');
@@ -184,22 +210,43 @@ App._editorSyncControls = function() {
     App._editorToggleShadow();
 };
 
+/* ---- Build mesh gradient CSS ---- */
+
+App._buildMeshCSS = function(colors) {
+    if (!colors || !colors.length) return '#1a1a1a';
+    var anchors = App.MESH_ANCHORS;
+    var layers = [];
+    for (var i = 0; i < colors.length - 1; i++) {
+        var a = anchors[i % anchors.length];
+        layers.push('radial-gradient(circle at ' + a.x + '% ' + a.y + '%, ' + colors[i] + ', transparent 70%)');
+    }
+    // Derniere couleur comme fond de base
+    var base = colors[colors.length - 1];
+    return layers.join(', ') + ', ' + base;
+};
+
 /* ---- Toggle bg type rows ---- */
 
 App._editorToggleBgType = function() {
     var s = App.state.editor;
     var solidRow = document.getElementById('editorBgSolidRow');
     var gradientRows = document.getElementById('editorBgGradientRows');
+    var linearRows = document.getElementById('editorBgLinearRows');
+    var meshRows = document.getElementById('editorBgMeshRows');
 
-    if (s.bgType === 'none') {
-        if (solidRow) solidRow.classList.add('hidden');
-        if (gradientRows) gradientRows.classList.add('hidden');
-    } else if (s.bgType === 'solid') {
+    var containers = [solidRow, gradientRows, linearRows, meshRows];
+    for (var i = 0; i < containers.length; i++) {
+        if (containers[i]) containers[i].classList.add('hidden');
+    }
+
+    if (s.bgType === 'solid') {
         if (solidRow) solidRow.classList.remove('hidden');
-        if (gradientRows) gradientRows.classList.add('hidden');
-    } else {
-        if (solidRow) solidRow.classList.add('hidden');
+    } else if (s.bgType === 'gradient') {
         if (gradientRows) gradientRows.classList.remove('hidden');
+    } else if (s.bgType === 'linear') {
+        if (linearRows) linearRows.classList.remove('hidden');
+    } else if (s.bgType === 'mesh') {
+        if (meshRows) meshRows.classList.remove('hidden');
     }
 };
 
@@ -229,6 +276,76 @@ App._editorToggleShadow = function() {
             controls.classList.add('hidden');
         }
     }
+};
+
+/* ---- Render mesh color list ---- */
+
+App._renderMeshColorList = function() {
+    var container = document.getElementById('editorMeshColorList');
+    if (!container) return;
+    var colors = App.state.editor.meshColors || [];
+    container.innerHTML = '';
+
+    for (var i = 0; i < colors.length; i++) {
+        (function(idx) {
+            var row = document.createElement('div');
+            row.className = 'mesh-color-row';
+
+            var wrap = document.createElement('div');
+            wrap.className = 'color-picker-wrap';
+
+            var input = document.createElement('input');
+            input.type = 'color';
+            input.value = colors[idx];
+            input.className = 'mesh-color-input';
+            input.setAttribute('data-mesh-index', idx);
+
+            var label = document.createElement('span');
+            label.className = 'color-picker-label active';
+            label.textContent = colors[idx];
+
+            wrap.appendChild(input);
+            wrap.appendChild(label);
+            row.appendChild(wrap);
+
+            // Bouton remove (sauf si 2 couleurs min)
+            if (colors.length > 2) {
+                var removeBtn = document.createElement('button');
+                removeBtn.className = 'btn-icon btn-sm';
+                removeBtn.title = 'Remove';
+                removeBtn.innerHTML = '<i data-lucide="x"></i>';
+                removeBtn.addEventListener('click', function() {
+                    App.state.editor.meshColors.splice(idx, 1);
+                    App._renderMeshColorList();
+                    App._editorUpdateMeshAddBtn();
+                    App.updateEditorPreview();
+                });
+                row.appendChild(removeBtn);
+            }
+
+            // Color input event
+            input.addEventListener('input', function() {
+                App.state.editor.meshColors[idx] = this.value;
+                label.textContent = this.value;
+                App.updateEditorPreview();
+            });
+
+            container.appendChild(row);
+        })(i);
+    }
+
+    App._initColorPickerWraps(container);
+    lucide.createIcons({ nodes: [container] });
+    App._editorUpdateMeshAddBtn();
+};
+
+/* ---- Update mesh add button visibility ---- */
+
+App._editorUpdateMeshAddBtn = function() {
+    var btn = document.getElementById('editorMeshAddColor');
+    if (!btn) return;
+    var colors = App.state.editor.meshColors || [];
+    btn.style.display = colors.length >= 4 ? 'none' : '';
 };
 
 /* ---- Utilitaire couleur ---- */

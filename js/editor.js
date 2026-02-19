@@ -29,10 +29,17 @@ App.openEditor = function(generation) {
     var defaults = App.EDITOR_DEFAULTS;
 
     // Restaurer les props de fond et export
-    var bgKeys = ['bgType', 'bgColor', 'gradientCenter', 'gradientEdge', 'exportSize'];
+    var bgKeys = ['bgType', 'bgColor', 'gradientCenter', 'gradientEdge', 'linearAngle', 'linearStart', 'linearEnd', 'exportSize'];
     for (var i = 0; i < bgKeys.length; i++) {
         var key = bgKeys[i];
         App.state.editor[key] = (saved && saved.hasOwnProperty(key)) ? saved[key] : defaults[key];
+    }
+
+    // Restaurer meshColors (array, copie)
+    if (saved && saved.meshColors && saved.meshColors.length) {
+        App.state.editor.meshColors = saved.meshColors.slice();
+    } else {
+        App.state.editor.meshColors = defaults.meshColors.slice();
     }
 
     // Si le fond est en mode checkerboard, passer en mode 'none'
@@ -119,6 +126,10 @@ App._editorSave = function() {
         bgColor: s.bgType === 'none' ? 'checkerboard' : s.bgColor,
         gradientCenter: s.gradientCenter,
         gradientEdge: s.gradientEdge,
+        linearAngle: s.linearAngle,
+        linearStart: s.linearStart,
+        linearEnd: s.linearEnd,
+        meshColors: s.meshColors ? s.meshColors.slice() : App.EDITOR_DEFAULTS.meshColors.slice(),
         exportSize: s.exportSize,
         activeLayerIndex: s.activeLayerIndex
     };
@@ -148,8 +159,10 @@ App._editorSave = function() {
 /* ---- Fermer l'editeur ---- */
 
 App.closeEditor = function() {
+    console.log('[closeEditor] generationIndex=' + App.state.editor.generationIndex + ', generations.length=' + App.state.generations.length);
     App._editorSave();
     var gen = App.state.generations[App.state.editor.generationIndex];
+    console.log('[closeEditor] gen exists=' + !!gen + ', gen.timestamp=' + (gen ? gen.timestamp : 'N/A'));
     App.state.editor.active = false;
 
     // Reafficher le bon wrapper
@@ -205,6 +218,10 @@ App.resetEditor = function() {
     }
     s.gradientCenter = defaults.gradientCenter;
     s.gradientEdge = defaults.gradientEdge;
+    s.linearAngle = defaults.linearAngle;
+    s.linearStart = defaults.linearStart;
+    s.linearEnd = defaults.linearEnd;
+    s.meshColors = defaults.meshColors.slice();
 
     // Reset layers : un seul layer avec valeurs par defaut
     var layerDefaults = App.LAYER_DEFAULTS;

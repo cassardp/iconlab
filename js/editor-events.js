@@ -80,15 +80,58 @@ App.initEditorEvents = function() {
         bgTypeSelect.addEventListener('change', function() {
             var newType = this.value;
             var s = App.state.editor;
+            var oldType = s.bgType;
 
-            // Quand on passe en gradient, initialiser les couleurs depuis bgColor
-            if (newType === 'gradient' && s.bgType === 'solid') {
-                s.gradientCenter = s.bgColor;
-                s.gradientEdge = App._adjustColor(s.bgColor, 0.4);
-            }
-            // Quand on repasse en solid, utiliser le centre du gradient
-            if (newType === 'solid' && s.bgType === 'gradient') {
-                s.bgColor = s.gradientCenter;
+            // Conversion intelligente entre types
+            if (newType === 'solid') {
+                if (oldType === 'gradient') s.bgColor = s.gradientCenter;
+                else if (oldType === 'linear') s.bgColor = s.linearStart;
+                else if (oldType === 'mesh') s.bgColor = s.meshColors[0];
+            } else if (newType === 'gradient') {
+                if (oldType === 'solid') {
+                    s.gradientCenter = s.bgColor;
+                    s.gradientEdge = App._adjustColor(s.bgColor, 0.4);
+                } else if (oldType === 'linear') {
+                    s.gradientCenter = s.linearStart;
+                    s.gradientEdge = s.linearEnd;
+                } else if (oldType === 'mesh') {
+                    s.gradientCenter = s.meshColors[0];
+                    s.gradientEdge = s.meshColors[1] || App._adjustColor(s.meshColors[0], 0.4);
+                }
+            } else if (newType === 'linear') {
+                if (oldType === 'solid') {
+                    s.linearStart = s.bgColor;
+                    s.linearEnd = App._adjustColor(s.bgColor, 0.4);
+                } else if (oldType === 'gradient') {
+                    s.linearStart = s.gradientCenter;
+                    s.linearEnd = s.gradientEdge;
+                } else if (oldType === 'mesh') {
+                    s.linearStart = s.meshColors[0];
+                    s.linearEnd = s.meshColors[1] || App._adjustColor(s.meshColors[0], 0.4);
+                }
+            } else if (newType === 'mesh') {
+                if (oldType === 'solid') {
+                    s.meshColors = [
+                        s.bgColor,
+                        App._adjustColor(s.bgColor, 0.5),
+                        App._adjustColor(s.bgColor, 1.3),
+                        App._adjustColor(s.bgColor, 0.8)
+                    ];
+                } else if (oldType === 'gradient') {
+                    s.meshColors = [
+                        s.gradientCenter,
+                        s.gradientEdge,
+                        App._adjustColor(s.gradientCenter, 1.3),
+                        App._adjustColor(s.gradientEdge, 1.5)
+                    ];
+                } else if (oldType === 'linear') {
+                    s.meshColors = [
+                        s.linearStart,
+                        s.linearEnd,
+                        App._adjustColor(s.linearStart, 1.3),
+                        App._adjustColor(s.linearEnd, 1.5)
+                    ];
+                }
             }
 
             s.bgType = newType;
@@ -101,7 +144,9 @@ App.initEditorEvents = function() {
     var bgColorInputs = [
         { id: 'editorBgColor',       key: 'bgColor',       label: 'editorBgColorLabel' },
         { id: 'editorGradientCenter', key: 'gradientCenter', label: 'editorGradientCenterLabel' },
-        { id: 'editorGradientEdge',   key: 'gradientEdge',   label: 'editorGradientEdgeLabel' }
+        { id: 'editorGradientEdge',   key: 'gradientEdge',   label: 'editorGradientEdgeLabel' },
+        { id: 'editorLinearStart',    key: 'linearStart',    label: 'editorLinearStartLabel' },
+        { id: 'editorLinearEnd',      key: 'linearEnd',      label: 'editorLinearEndLabel' }
     ];
 
     for (var i = 0; i < bgColorInputs.length; i++) {
@@ -199,6 +244,38 @@ App.initEditorEvents = function() {
                 App._editorToggleShadow();
                 App.updateEditorPreview();
             }
+        });
+    }
+
+    // Direction picker (linear gradient)
+    var dirPicker = document.getElementById('editorLinearDirection');
+    if (dirPicker) {
+        dirPicker.addEventListener('click', function(e) {
+            var btn = e.target.closest('.dir-btn');
+            if (!btn) return;
+            var angle = parseInt(btn.getAttribute('data-angle'), 10);
+            App.state.editor.linearAngle = angle;
+            // Update active state
+            var all = dirPicker.querySelectorAll('.dir-btn');
+            for (var i = 0; i < all.length; i++) {
+                all[i].classList.toggle('active', parseInt(all[i].getAttribute('data-angle'), 10) === angle);
+            }
+            App.updateEditorPreview();
+        });
+    }
+
+    // Mesh add color
+    var meshAddBtn = document.getElementById('editorMeshAddColor');
+    if (meshAddBtn) {
+        meshAddBtn.addEventListener('click', function() {
+            var colors = App.state.editor.meshColors;
+            if (colors.length >= 4) return;
+            // Derive une nouvelle couleur depuis la derniere
+            var last = colors[colors.length - 1] || '#3D3D5C';
+            colors.push(App._adjustColor(last, 1.3));
+            App._renderMeshColorList();
+            App._editorUpdateMeshAddBtn();
+            App.updateEditorPreview();
         });
     }
 

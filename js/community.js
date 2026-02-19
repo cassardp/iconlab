@@ -272,7 +272,7 @@ App.shareToCommunity = function(generation) {
         var bgColor = null;
         if (es && es.bgType === 'solid') {
             bgColor = es.bgColor;
-        } else if (es && es.bgType === 'gradient') {
+        } else if (es && (es.bgType === 'gradient' || es.bgType === 'linear' || es.bgType === 'mesh')) {
             bgColor = null; // gere par _renderComposition
         } else if (!es || !es.layers || !es.layers.length) {
             bgColor = (generation.previewBg && generation.previewBg !== 'checkerboard')
@@ -438,9 +438,16 @@ App._downloadCommunityIcon = function(icon) {
 /* ---- Tab switching ---- */
 
 App.switchTab = function(tab) {
+    // DEBUG: count gallery cards before
+    var _dbgGallery = document.getElementById('gallery');
+    var _dbgBefore = _dbgGallery ? _dbgGallery.querySelectorAll('.gallery-card').length : -1;
+    console.log('[switchTab] to=' + tab + ', cards before=' + _dbgBefore + ', editor.active=' + App.state.editor.active);
+
     // Si l'editeur est ouvert, le fermer d'abord
     if (App.state.editor.active) {
         App.closeEditor();
+        var _dbgAfterClose = _dbgGallery ? _dbgGallery.querySelectorAll('.gallery-card').length : -1;
+        console.log('[switchTab] after closeEditor, cards=' + _dbgAfterClose);
     }
 
     App._activeTab = tab;
@@ -471,6 +478,10 @@ App.switchTab = function(tab) {
             App.loadCommunityIcons(true);
         }
     }
+
+    // DEBUG: count gallery cards after
+    var _dbgAfter = _dbgGallery ? _dbgGallery.querySelectorAll('.gallery-card').length : -1;
+    console.log('[switchTab] end, cards after=' + _dbgAfter + ', generations=' + App.state.generations.length);
 };
 
 /* ---- Update community count ---- */

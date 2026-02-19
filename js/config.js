@@ -139,6 +139,10 @@ App.EDITOR_DEFAULTS = {
     bgColor: '#2C2C3A',
     gradientCenter: '#3D3D5C',
     gradientEdge: '#1A1A2E',
+    linearAngle: 180,
+    linearStart: '#3D3D5C',
+    linearEnd: '#1A1A2E',
+    meshColors: ['#3D3D5C', '#1A1A2E', '#5C3D5C', '#2E3D1A'],
     layers: null,
     activeLayerIndex: 0,
     exportSize: 1024,
@@ -153,6 +157,15 @@ App.EDITOR_DEFAULTS = {
     shadowOpacity: 40,
     shadowColor: '#1A1A2E'
 };
+
+/* ---- Mesh gradient anchor positions (% x, % y) ---- */
+
+App.MESH_ANCHORS = [
+    { x: 20, y: 20 },   // top-left
+    { x: 80, y: 80 },   // bottom-right
+    { x: 80, y: 20 },   // top-right
+    { x: 20, y: 80 }    // bottom-left
+];
 
 /* ---- Supabase ---- */
 

@@ -71,7 +71,7 @@
             <button class="mini-sidebar-btn" id="aboutBtn" title="About Icon Lab">
                 <i data-lucide="info"></i>
             </button>
-            <span class="version-number">0.38</span>
+            <span class="version-number">0.39</span>
         </div>
     </aside>
 
@@ -315,6 +315,8 @@
                                     <option value="none">None (transparent)</option>
                                     <option value="solid">Solid color</option>
                                     <option value="gradient">Radial gradient</option>
+                                    <option value="linear">Linear gradient</option>
+                                    <option value="mesh">Mesh gradient</option>
                                 </select>
                             </div>
                             <div class="setting-row" id="editorBgSolidRow">
@@ -339,6 +341,43 @@
                                         <span class="color-picker-label active" id="editorGradientEdgeLabel">#0a0a1a</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div id="editorBgLinearRows" class="hidden">
+                                <div class="setting-row">
+                                    <span class="setting-label">Direction</span>
+                                    <div class="direction-picker" id="editorLinearDirection">
+                                        <button class="dir-btn" data-angle="315" title="Top-left">&#x2196;</button>
+                                        <button class="dir-btn" data-angle="0" title="Up">&#x2191;</button>
+                                        <button class="dir-btn" data-angle="45" title="Top-right">&#x2197;</button>
+                                        <button class="dir-btn" data-angle="270" title="Left">&#x2190;</button>
+                                        <span class="dir-center"></span>
+                                        <button class="dir-btn" data-angle="90" title="Right">&#x2192;</button>
+                                        <button class="dir-btn" data-angle="225" title="Bottom-left">&#x2199;</button>
+                                        <button class="dir-btn" data-angle="180" title="Down">&#x2193;</button>
+                                        <button class="dir-btn" data-angle="135" title="Bottom-right">&#x2198;</button>
+                                    </div>
+                                </div>
+                                <div class="setting-row">
+                                    <span class="setting-label">Start</span>
+                                    <div class="color-picker-wrap">
+                                        <input type="color" id="editorLinearStart" value="#3D3D5C">
+                                        <span class="color-picker-label active" id="editorLinearStartLabel">#3D3D5C</span>
+                                    </div>
+                                </div>
+                                <div class="setting-row">
+                                    <span class="setting-label">End</span>
+                                    <div class="color-picker-wrap">
+                                        <input type="color" id="editorLinearEnd" value="#1A1A2E">
+                                        <span class="color-picker-label active" id="editorLinearEndLabel">#1A1A2E</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="editorBgMeshRows" class="hidden">
+                                <div id="editorMeshColorList"></div>
+                                <button class="btn btn-ghost btn-sm" id="editorMeshAddColor" style="margin-top:4px;width:100%">
+                                    <i data-lucide="plus"></i>
+                                    Add color
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -488,7 +527,7 @@
         </button>
         <img src="assets/light.png" alt="Icon Lab" class="about-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="about-logo logo-light">
-        <p class="about-version">Version <span class="version-number">0.38</span></p>
+        <p class="about-version">Version <span class="version-number">0.39</span></p>
         <p class="about-description">A free tool for generating and iterating on app icon designs using AI. Customize prompts, layers, and backgrounds — all in the browser.</p>
         <div class="about-links">
             <a href="https://github.com/cassardp/iconlab" target="_blank" rel="noopener">

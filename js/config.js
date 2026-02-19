@@ -55,7 +55,7 @@ App.STYLE_PRESETS = {
     },
     'logo': {
         name: 'Logo',
-        keywords: 'logo, modern, Paul Rand style'
+        keywords: ''
     },
     'typography': {
         name: 'Typography',

@@ -17,15 +17,18 @@ App.buildEnrichedPrompt = function(userPrompt, transparentBg) {
     var sections = [];
     var subject = userPrompt.trim();
 
-    // 1. Subject
+    // 1. Subject (adapte selon le style)
     if (App.state.stylePreset === 'typography') {
         sections.push('Subject: the letter "' + subject + '", a single typographic letter or character.');
+    } else if (App.state.stylePreset === 'logo') {
+        sections.push('Subject: logo, modern, Paul Rand style, ' + subject + '.');
     } else {
         sections.push('Subject: app icon of ' + subject + '.');
     }
 
-    // 2. Style (style preset)
-    var preset = App.STYLE_PRESETS[App.state.stylePreset] || App.STYLE_PRESETS['illustration'];
+    // 2. Style (style preset — logo utilise illustration comme base)
+    var styleKey = App.state.stylePreset === 'logo' ? 'illustration' : App.state.stylePreset;
+    var preset = App.STYLE_PRESETS[styleKey] || App.STYLE_PRESETS['illustration'];
     if (preset.keywords) {
         sections.push('Style: ' + preset.keywords);
     }

@@ -21,7 +21,7 @@ App.buildEnrichedPrompt = function(userPrompt, transparentBg) {
     if (App.state.stylePreset === 'typography') {
         sections.push('Subject: the letter "' + subject + '", a single typographic letter or character.');
     } else if (App.state.stylePreset === 'logo') {
-        sections.push('Subject: logo, modern, Paul Rand style, ' + subject + '.');
+        sections.push('Subject: ' + subject + ', logo, modern, Paul Rand style.');
     } else {
         sections.push('Subject: app icon of ' + subject + '.');
     }

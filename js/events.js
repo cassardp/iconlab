@@ -60,6 +60,13 @@ App.initEventListeners = function() {
     if (stylePresetSelect) {
         stylePresetSelect.addEventListener('change', function() {
             App.state.stylePreset = this.value;
+            if (this.value === 'logo') {
+                App.state.colorMulti = false;
+                var multiToggle = document.getElementById('colorMultiToggle');
+                if (multiToggle) multiToggle.checked = false;
+                App.toggleColorRow();
+                App._setColorPicker('#000000');
+            }
             App.resetEnrichedPrompt();
             App.saveState();
         });
@@ -257,6 +264,24 @@ App.handleGenerate = function() {
         App.updateGenerateButton();
         if (generateBtn) generateBtn.classList.remove('loading');
     });
+};
+
+/* ---- Set Color Picker programmatically ---- */
+
+App._setColorPicker = function(hex) {
+    App.state.color = hex;
+    var picker = document.getElementById('colorPicker');
+    var label = document.getElementById('colorPickerLabel');
+    var reset = document.getElementById('colorPickerReset');
+    if (picker) {
+        picker.value = hex;
+        picker.classList.remove('inactive');
+    }
+    if (label) {
+        label.textContent = hex;
+        label.classList.add('active');
+    }
+    if (reset) reset.classList.remove('hidden');
 };
 
 /* ---- Update Color Toggle Labels ---- */

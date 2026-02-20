@@ -37,17 +37,21 @@ App.buildEnrichedPrompt = function(userPrompt, transparentBg) {
         sections.push('Style: ' + styleKw);
     }
 
-    // 3. Color (color mode from toggles)
-    var colorKey = (App.state.colorGradient ? 'gradient' : 'flat') + (App.state.colorMulti ? '-multi' : '');
-    var colorModeObj = App.COLOR_MODES[colorKey];
-    if (colorModeObj) {
-        sections.push('Color: ' + colorModeObj.keywords);
+    // 3. Color (color mode from toggles — sticker forces flat)
+    if (App.state.stylePreset !== 'sticker') {
+        var colorKey = (App.state.colorGradient ? 'gradient' : 'flat') + (App.state.colorMulti ? '-multi' : '');
+        var colorModeObj = App.COLOR_MODES[colorKey];
+        if (colorModeObj) {
+            sections.push('Color: ' + colorModeObj.keywords);
+        }
     }
 
-    // 4. Material (material select)
-    var material = App.MATERIALS[App.state.material];
-    if (material && material.keywords) {
-        sections.push('Material: ' + material.keywords);
+    // 4. Material (material select — skipped for sticker)
+    if (App.state.stylePreset !== 'sticker') {
+        var material = App.MATERIALS[App.state.material];
+        if (material && material.keywords) {
+            sections.push('Material: ' + material.keywords);
+        }
     }
 
     // 5. Dominant color (color picker) — ajoute monochrome si couleur choisie
@@ -59,6 +63,9 @@ App.buildEnrichedPrompt = function(userPrompt, transparentBg) {
     var constraints = [];
     constraints.push('No text or lettering.');
     constraints.push('No frame. No shadows, no glows, no holes or cutouts.');
+    if (App.state.stylePreset === 'sticker') {
+        constraints.push('The sticker border must be off-white (#FAF9F7), never pure white. Every part of the sticker must be fully opaque — only the area outside the sticker should be transparent.');
+    }
     sections.push(constraints.join('\n'));
 
     return sections.join('\n\n');

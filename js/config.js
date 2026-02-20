@@ -57,6 +57,10 @@ App.STYLE_PRESETS = {
     'typography': {
         name: 'Typography',
         keywords: 'semi-bold rounded letterform, no hard edges, no textures, extremely clean and modern, beautiful shading that gives subtle volume without any 3D rendering, Apple-design-language aesthetic'
+    },
+    'sticker': {
+        name: 'Sticker',
+        keywords: 'flat die-cut sticker, bold flat colors with no gradients, very limited palette of 3-4 colors maximum, simple clean shapes, no textures, no shading, no 3D, solid opaque color fills, cartoon-simple, minimal detail, thick off-white (#FAF9F7) outline border around the entire sticker shape'
     }
 };
 

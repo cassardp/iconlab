@@ -49,7 +49,7 @@ App.STYLE_PRESETS = {
         name: 'Illustration',
         subject: 'app icon of {subject}.',
         base: 'simplified illustration, no outlines, no textures, extremely clean and modern, vector-illustration feel, Apple-design-language aesthetic',
-        constraints: ['No frame. No shadows, no glows, no holes or cutouts.'],
+        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.'],
         axes: {
             volume: ['completely flat, no volume, no shading', 'subtle volume without any 3D rendering, soft shading', 'soft 3D look, visible depth and lighting'],
             color:  ['monochrome palette, single hue', 'limited palette of 2-3 colors', 'rich vibrant multiple colors, smooth gradients'],
@@ -62,7 +62,7 @@ App.STYLE_PRESETS = {
         name: 'Blender',
         subject: 'app icon of {subject}.',
         base: 'Blender-quality render, warm diffused studio lighting, no harsh specular highlights, smooth subsurface scattering, soft ambient occlusion',
-        constraints: ['No frame. No shadows, no glows, no holes or cutouts.'],
+        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.'],
         axes: {
             volume: ['flat stylized render, minimal depth', 'soft 3D render with gentle bevels', 'full 3D render with smooth rounded geometry, deep bevels and strong depth'],
             color:  ['monochrome palette, single hue', 'limited palette of 2-3 colors, natural tones', 'rich vibrant colors, smooth color gradients from warm to cool tones'],
@@ -75,7 +75,7 @@ App.STYLE_PRESETS = {
         name: 'Logo',
         subject: '{subject}, logo, modern, Paul Rand style.',
         base: 'simplified flat illustration, no outlines, no textures, extremely clean and modern, Apple-design-language aesthetic',
-        constraints: ['No frame. No shadows, no glows, no holes or cutouts.'],
+        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.'],
         axes: {
             volume: ['completely flat, no volume, no shading', 'subtle volume, soft shading', 'soft 3D look, visible depth and lighting'],
             color:  ['monochrome black and white', 'limited palette of 2-3 colors', 'rich vibrant multiple colors'],
@@ -88,7 +88,7 @@ App.STYLE_PRESETS = {
         name: 'Typography',
         subject: 'the letter "{subject}", a single typographic letter or character.',
         base: 'extremely clean and modern, beautiful shading, Apple-design-language aesthetic',
-        constraints: ['No frame. No shadows, no glows, no holes or cutouts.'],
+        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.'],
         axes: {
             volume: ['completely flat letterform, no volume', 'subtle volume without any 3D rendering', 'strong 3D extruded letterform with depth'],
             color:  ['monochrome, single color', 'two-tone color scheme', 'rich colorful gradient letterform'],
@@ -102,7 +102,7 @@ App.STYLE_PRESETS = {
         subject: 'app icon of {subject}.',
         base: 'flat die-cut sticker, solid opaque color fills, cartoon-simple, thick off-white (#FAF9F7) outline border around the entire sticker shape',
         constraints: [
-            'No frame. No shadows, no glows, no holes or cutouts.',
+            'Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.',
             'The sticker border must be off-white (#FAF9F7), never pure white. Every part of the sticker must be fully opaque — only the area outside the sticker should be transparent.'
         ],
         axes: {

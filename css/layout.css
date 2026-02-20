@@ -678,19 +678,19 @@ body.panels-hidden .editor-sidebar {
     display: flex;
     align-items: center;
     gap: 4px;
-    background: none;
+    background: var(--background);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 3px 8px;
     cursor: pointer;
-    color: var(--foreground-muted);
+    color: var(--foreground);
     font-size: 11px;
     outline: none;
-    transition: color var(--transition-fast), border-color var(--transition-fast);
+    transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .btn-share:hover {
-    color: var(--foreground);
+    background: var(--muted);
     border-color: var(--border-hover, var(--foreground-muted));
 }
 

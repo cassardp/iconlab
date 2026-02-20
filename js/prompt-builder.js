@@ -61,7 +61,9 @@ App.buildEnrichedPrompt = function(userPrompt, transparentBg) {
 
     // 6. Constraints
     var constraints = [];
-    constraints.push('No text or lettering.');
+    if (!App.state.allowText) {
+        constraints.push('No text or lettering.');
+    }
     constraints.push('No frame. No shadows, no glows, no holes or cutouts.');
     if (App.state.stylePreset === 'sticker') {
         constraints.push('The sticker border must be off-white (#FAF9F7), never pure white. Every part of the sticker must be fully opaque — only the area outside the sticker should be transparent.');

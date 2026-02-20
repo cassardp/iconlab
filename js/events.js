@@ -106,6 +106,15 @@ App.initEventListeners = function() {
         });
     }
 
+    var allowTextToggle = document.getElementById('allowTextToggle');
+    if (allowTextToggle) {
+        allowTextToggle.addEventListener('change', function() {
+            App.state.allowText = this.checked;
+            App.resetEnrichedPrompt();
+            App.saveState();
+        });
+    }
+
     /* ---- Material Select ---- */
 
     var materialSelect = document.getElementById('materialSelect');
@@ -362,6 +371,8 @@ App.syncUIFromState = function() {
     if (colorGradientToggle) colorGradientToggle.checked = App.state.colorGradient;
     var colorMultiToggle = document.getElementById('colorMultiToggle');
     if (colorMultiToggle) colorMultiToggle.checked = App.state.colorMulti;
+    var allowTextToggle = document.getElementById('allowTextToggle');
+    if (allowTextToggle) allowTextToggle.checked = App.state.allowText;
 
     // Sync color toggle labels and show/hide color row
     App._updateColorLabels();

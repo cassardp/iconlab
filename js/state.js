@@ -13,6 +13,7 @@ App.state = {
     rounded: true,
     colorGradient: true,
     colorMulti: false,
+    allowText: false,
     material: 'none',
     color: '',
     transparentBg: true,

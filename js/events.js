@@ -60,59 +60,25 @@ App.initEventListeners = function() {
     if (stylePresetSelect) {
         stylePresetSelect.addEventListener('change', function() {
             App.state.stylePreset = this.value;
-            if (this.value === 'logo') {
-                App.state.colorMulti = false;
-                var multiToggle = document.getElementById('colorMultiToggle');
-                if (multiToggle) multiToggle.checked = false;
-                App.toggleColorRow();
-                App._setColorPicker('#000000');
+            App.resetEnrichedPrompt();
+            App.saveState();
+        });
+    }
+
+    /* ---- Axis Sliders ---- */
+
+    for (var _ai = 0; _ai < App.AXES.length; _ai++) {
+        (function(axis) {
+            var id = 'axis' + axis.key.charAt(0).toUpperCase() + axis.key.slice(1);
+            var slider = document.getElementById(id);
+            if (slider) {
+                slider.addEventListener('input', function() {
+                    App.state.axes[axis.key] = parseInt(this.value, 10);
+                    App.resetEnrichedPrompt();
+                    App.saveState();
+                });
             }
-            App.resetEnrichedPrompt();
-            App.saveState();
-        });
-    }
-
-    /* ---- Rounded Toggle ---- */
-
-    var roundedToggle = document.getElementById('roundedToggle');
-    if (roundedToggle) {
-        roundedToggle.addEventListener('change', function() {
-            App.state.rounded = this.checked;
-            App.resetEnrichedPrompt();
-            App.saveState();
-        });
-    }
-
-    /* ---- Color Toggles ---- */
-
-    var colorGradientToggle = document.getElementById('colorGradientToggle');
-    if (colorGradientToggle) {
-        colorGradientToggle.addEventListener('change', function() {
-            App.state.colorGradient = this.checked;
-            App._updateColorLabels();
-            App.resetEnrichedPrompt();
-            App.saveState();
-        });
-    }
-
-    var colorMultiToggle = document.getElementById('colorMultiToggle');
-    if (colorMultiToggle) {
-        colorMultiToggle.addEventListener('change', function() {
-            App.state.colorMulti = this.checked;
-            App._updateColorLabels();
-            App.toggleColorRow();
-            App.resetEnrichedPrompt();
-            App.saveState();
-        });
-    }
-
-    var allowTextToggle = document.getElementById('allowTextToggle');
-    if (allowTextToggle) {
-        allowTextToggle.addEventListener('change', function() {
-            App.state.allowText = this.checked;
-            App.resetEnrichedPrompt();
-            App.saveState();
-        });
+        })(App.AXES[_ai]);
     }
 
     /* ---- Material Select ---- */
@@ -259,8 +225,7 @@ App.handleGenerate = function() {
             model: model,
             userPrompt: userPrompt,
             enrichedPrompt: finalPrompt,
-            colorGradient: App.state.colorGradient,
-            colorMulti: App.state.colorMulti,
+            axes: JSON.parse(JSON.stringify(App.state.axes)),
             quality: App.state.quality,
             transparent: App.state.transparentBg,
             duration: duration,
@@ -300,25 +265,6 @@ App._setColorPicker = function(hex) {
         label.classList.add('active');
     }
     if (reset) reset.classList.remove('hidden');
-};
-
-/* ---- Update Color Toggle Labels ---- */
-
-App._updateColorLabels = function() {
-    // Labels fixes, pas de changement dynamique
-};
-
-/* ---- Toggle Color Row ---- */
-
-App.toggleColorRow = function() {
-    var row = document.getElementById('colorRow');
-    if (!row) return;
-    if (!App.state.colorMulti) {
-        row.classList.remove('hidden');
-    } else {
-        row.classList.add('hidden');
-        App.state.color = '';
-    }
 };
 
 /* ---- Sync UI from State ---- */
@@ -362,21 +308,13 @@ App.syncUIFromState = function() {
         }
     }
 
-    // Rounded Toggle
-    var roundedToggle = document.getElementById('roundedToggle');
-    if (roundedToggle) roundedToggle.checked = App.state.rounded;
-
-    // Color Toggles
-    var colorGradientToggle = document.getElementById('colorGradientToggle');
-    if (colorGradientToggle) colorGradientToggle.checked = App.state.colorGradient;
-    var colorMultiToggle = document.getElementById('colorMultiToggle');
-    if (colorMultiToggle) colorMultiToggle.checked = App.state.colorMulti;
-    var allowTextToggle = document.getElementById('allowTextToggle');
-    if (allowTextToggle) allowTextToggle.checked = App.state.allowText;
-
-    // Sync color toggle labels and show/hide color row
-    App._updateColorLabels();
-    App.toggleColorRow();
+    // Axis sliders
+    for (var _si = 0; _si < App.AXES.length; _si++) {
+        var ax = App.AXES[_si];
+        var axId = 'axis' + ax.key.charAt(0).toUpperCase() + ax.key.slice(1);
+        var axSlider = document.getElementById(axId);
+        if (axSlider) axSlider.value = App.state.axes[ax.key];
+    }
 
     // Material
     var materialSelect = document.getElementById('materialSelect');

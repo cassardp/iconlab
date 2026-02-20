@@ -30,37 +30,88 @@ App.MODELS = {
     }
 };
 
-/* ---- Color Modes ---- */
+/* ---- Axes semantiques ---- */
 
-App.COLOR_MODES = {
-    'gradient':       { keywords: 'smooth rich gradients across the surface' },
-    'gradient-multi': { keywords: 'smooth rich color gradients from warm to cool tones across the surface' },
-    'flat':           { keywords: 'flat solid colors, no gradients' },
-    'flat-multi':     { keywords: 'multiple bold flat colors, no gradients, solid color fills, vibrant contrasting hues' }
-};
+App.AXES = [
+    { key: 'volume', labelMin: 'Flat',    labelMax: '3D' },
+    { key: 'color',  labelMin: 'Mono',    labelMax: 'Colorful' },
+    { key: 'shape',  labelMin: 'Sharp',   labelMax: 'Rounded' },
+    { key: 'detail', labelMin: 'Minimal', labelMax: 'Detailed' },
+    { key: 'text',   labelMin: 'No Text', labelMax: 'Text' }
+];
+
+App.AXIS_DEFAULTS = { volume: 0, color: 100, shape: 100, detail: 0, text: 0 };
 
 /* ---- Style Presets ---- */
 
 App.STYLE_PRESETS = {
     'illustration': {
         name: 'Illustration',
-        keywords: 'simplified flat illustration with very few details, bold rounded silhouette, no hard edges, no outlines, no textures, shapes blend softly into each other, extremely clean and modern, almost abstract simplicity, subtle volume without any 3D rendering, vector-illustration feel, Apple-design-language aesthetic'
+        subject: 'app icon of {subject}.',
+        base: 'simplified illustration, no outlines, no textures, extremely clean and modern, vector-illustration feel, Apple-design-language aesthetic',
+        constraints: ['No frame. No shadows, no glows, no holes or cutouts.'],
+        axes: {
+            volume: ['completely flat, no volume, no shading', 'subtle volume without any 3D rendering, soft shading', 'soft 3D look, visible depth and lighting'],
+            color:  ['monochrome palette, single hue', 'limited palette of 2-3 colors', 'rich vibrant multiple colors, smooth gradients'],
+            shape:  ['sharp geometric edges, angular silhouette', 'balanced mix of straight and curved edges', 'bold rounded silhouette, no hard edges, shapes blend softly'],
+            detail: ['almost abstract simplicity, very few details', 'moderate detail, recognizable forms', 'rich details, intricate elements'],
+            text:   ['no text or lettering', 'minimal subtle text element', 'prominent text or lettering']
+        }
     },
     'blender': {
         name: 'Blender',
-        keywords: 'soft 3D render with smooth rounded geometry and gentle bevels, Blender-quality render, warm diffused studio lighting, no harsh specular highlights, smooth subsurface scattering, natural material textures, soft ambient occlusion, subtle gaussian blur on background'
+        subject: 'app icon of {subject}.',
+        base: 'Blender-quality render, warm diffused studio lighting, no harsh specular highlights, smooth subsurface scattering, soft ambient occlusion',
+        constraints: ['No frame. No shadows, no glows, no holes or cutouts.'],
+        axes: {
+            volume: ['flat stylized render, minimal depth', 'soft 3D render with gentle bevels', 'full 3D render with smooth rounded geometry, deep bevels and strong depth'],
+            color:  ['monochrome palette, single hue', 'limited palette of 2-3 colors, natural tones', 'rich vibrant colors, smooth color gradients from warm to cool tones'],
+            shape:  ['sharp angular geometry, hard edges', 'balanced geometry, some rounded elements', 'smooth rounded geometry, no hard edges, gentle bevels everywhere'],
+            detail: ['simple clean shapes, minimal detail', 'moderate detail, natural material textures', 'rich details, intricate textures, fine surface details'],
+            text:   ['no text or lettering', 'minimal subtle text element', 'prominent text or lettering']
+        }
     },
     'logo': {
         name: 'Logo',
-        keywords: ''
+        subject: '{subject}, logo, modern, Paul Rand style.',
+        base: 'simplified flat illustration, no outlines, no textures, extremely clean and modern, Apple-design-language aesthetic',
+        constraints: ['No frame. No shadows, no glows, no holes or cutouts.'],
+        axes: {
+            volume: ['completely flat, no volume, no shading', 'subtle volume, soft shading', 'soft 3D look, visible depth and lighting'],
+            color:  ['monochrome black and white', 'limited palette of 2-3 colors', 'rich vibrant multiple colors'],
+            shape:  ['sharp geometric edges, angular', 'balanced mix of straight and curved', 'bold rounded silhouette, no hard edges'],
+            detail: ['almost abstract, extreme simplicity', 'moderate detail, recognizable forms', 'rich details, intricate elements'],
+            text:   ['no text or lettering', 'minimal subtle text element', 'prominent text or lettering']
+        }
     },
     'typography': {
         name: 'Typography',
-        keywords: 'semi-bold rounded letterform, no hard edges, no textures, extremely clean and modern, beautiful shading that gives subtle volume without any 3D rendering, Apple-design-language aesthetic'
+        subject: 'the letter "{subject}", a single typographic letter or character.',
+        base: 'extremely clean and modern, beautiful shading, Apple-design-language aesthetic',
+        constraints: ['No frame. No shadows, no glows, no holes or cutouts.'],
+        axes: {
+            volume: ['completely flat letterform, no volume', 'subtle volume without any 3D rendering', 'strong 3D extruded letterform with depth'],
+            color:  ['monochrome, single color', 'two-tone color scheme', 'rich colorful gradient letterform'],
+            shape:  ['sharp angular letterform, geometric type', 'semi-bold letterform, balanced edges', 'semi-bold rounded letterform, no hard edges'],
+            detail: ['minimal clean letterform, no textures', 'moderate detail, subtle textures', 'rich detailed letterform, ornamental elements'],
+            text:   ['no extra text, just the letter', 'minimal decorative text element', 'prominent text or lettering around the letter']
+        }
     },
     'sticker': {
         name: 'Sticker',
-        keywords: 'flat die-cut sticker, bold flat colors with no gradients, very limited palette of 3-4 colors maximum, simple clean shapes, no textures, no shading, no 3D, solid opaque color fills, cartoon-simple, minimal detail, thick off-white (#FAF9F7) outline border around the entire sticker shape'
+        subject: 'app icon of {subject}.',
+        base: 'flat die-cut sticker, solid opaque color fills, cartoon-simple, thick off-white (#FAF9F7) outline border around the entire sticker shape',
+        constraints: [
+            'No frame. No shadows, no glows, no holes or cutouts.',
+            'The sticker border must be off-white (#FAF9F7), never pure white. Every part of the sticker must be fully opaque — only the area outside the sticker should be transparent.'
+        ],
+        axes: {
+            volume: ['completely flat, no shading, no 3D', 'subtle shading for slight depth', 'visible volume and shading on the sticker'],
+            color:  ['monochrome, single color fill', 'limited palette of 2-3 bold flat colors', 'very limited palette of 3-4 bold flat colors, vibrant contrasting hues'],
+            shape:  ['sharp geometric sticker shape', 'balanced mix of straight and curved edges', 'bold rounded simple clean shapes'],
+            detail: ['extreme simplicity, minimal detail, no textures', 'moderate detail, simple recognizable shapes', 'more detailed illustration, still clean'],
+            text:   ['no text or lettering', 'minimal subtle text element', 'prominent text or lettering']
+        }
     }
 };
 
@@ -183,7 +234,9 @@ App.STORAGE_KEYS = {
     transparentBg: 'icon-transparent-bg',
     theme: 'icon-theme',
     gallery: 'icon-gallery',
-    deviceId: 'icon-device-id'
+    deviceId: 'icon-device-id',
+    axes: 'icon-axes',
+    stylePreset: 'icon-style-preset'
 };
 
 /* ---- Color picker wrap : clic sur le wrapper ouvre le picker natif ---- */

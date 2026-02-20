@@ -16,72 +16,39 @@ App.buildEnrichedPrompt = function(userPrompt, transparentBg) {
 
     var sections = [];
     var subject = userPrompt.trim();
+    var preset = App.STYLE_PRESETS[App.state.stylePreset] || App.STYLE_PRESETS['illustration'];
 
-    // 1. Subject (adapte selon le style)
-    if (App.state.stylePreset === 'typography') {
-        sections.push('Subject: the letter "' + subject + '", a single typographic letter or character.');
-    } else if (App.state.stylePreset === 'logo') {
-        sections.push('Subject: ' + subject + ', logo, modern, Paul Rand style.');
-    } else {
-        sections.push('Subject: app icon of ' + subject + '.');
+    // 1. Subject
+    sections.push('Subject: ' + preset.subject.replace('{subject}', subject));
+
+    // 2. Style = base + axis keywords
+    var styleWords = [preset.base];
+    for (var i = 0; i < App.AXES.length; i++) {
+        var axis = App.AXES[i];
+        var val = App.state.axes[axis.key];
+        var stops = preset.axes[axis.key];
+        if (!stops) continue;
+        var stopIndex = val <= 0 ? 0 : (val <= 50 ? 1 : 2);
+        var kw = stops[stopIndex];
+        if (kw) styleWords.push(kw);
+    }
+    sections.push('Style: ' + styleWords.join(', '));
+
+    // 3. Material
+    var material = App.MATERIALS[App.state.material];
+    if (material && material.keywords) {
+        sections.push('Material: ' + material.keywords);
     }
 
-    // 2. Style (style preset — logo utilise illustration comme base)
-    var styleKey = App.state.stylePreset === 'logo' ? 'illustration' : App.state.stylePreset;
-    var preset = App.STYLE_PRESETS[styleKey] || App.STYLE_PRESETS['illustration'];
-    if (preset.keywords) {
-        var styleKw = preset.keywords;
-        if (!App.state.rounded) {
-            styleKw = App._applyAngularStyle(styleKw);
-        }
-        sections.push('Style: ' + styleKw);
-    }
-
-    // 3. Color (color mode from toggles — sticker forces flat)
-    if (App.state.stylePreset !== 'sticker') {
-        var colorKey = (App.state.colorGradient ? 'gradient' : 'flat') + (App.state.colorMulti ? '-multi' : '');
-        var colorModeObj = App.COLOR_MODES[colorKey];
-        if (colorModeObj) {
-            sections.push('Color: ' + colorModeObj.keywords);
-        }
-    }
-
-    // 4. Material (material select — skipped for sticker)
-    if (App.state.stylePreset !== 'sticker') {
-        var material = App.MATERIALS[App.state.material];
-        if (material && material.keywords) {
-            sections.push('Material: ' + material.keywords);
-        }
-    }
-
-    // 5. Dominant color (color picker) — ajoute monochrome si couleur choisie
+    // 4. Dominant color
     if (App.state.color) {
         sections.push('Monochrome palette. Dominant color: ' + App.state.color);
     }
 
-    // 6. Constraints
-    var constraints = [];
-    if (!App.state.allowText) {
-        constraints.push('No text or lettering.');
-    }
-    constraints.push('No frame. No shadows, no glows, no holes or cutouts.');
-    if (App.state.stylePreset === 'sticker') {
-        constraints.push('The sticker border must be off-white (#FAF9F7), never pure white. Every part of the sticker must be fully opaque — only the area outside the sticker should be transparent.');
-    }
-    sections.push(constraints.join('\n'));
+    // 5. Constraints
+    sections.push(preset.constraints.join('\n'));
 
     return sections.join('\n\n');
-};
-
-/**
- * Retire les termes lies aux formes arrondies des keywords de style.
- */
-App._applyAngularStyle = function(keywords) {
-    return keywords
-        .replace('bold rounded silhouette, no hard edges, ', '')
-        .replace('shapes blend softly into each other, ', '')
-        .replace(' with smooth rounded geometry and gentle bevels', '')
-        .replace('semi-bold rounded letterform, no hard edges', 'semi-bold letterform');
 };
 
 /**

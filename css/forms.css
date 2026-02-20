@@ -49,7 +49,7 @@ label .hint {
     min-height: 72px;
 }
 
-/* Grouped rows (toggles side by side) */
+/* Grouped rows (legacy) */
 .setting-row-group {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -66,6 +66,55 @@ label .hint {
 
 .setting-row-group > .setting-row .setting-label {
     min-width: unset;
+}
+
+/* ---- Axis slider row ---- */
+
+#axisSliders {
+    margin-bottom: 8px;
+}
+
+
+.axis-row {
+    gap: 8px;
+    padding: 0 12px;
+    min-height: 42px;
+}
+
+.axis-row .slider-row {
+    flex: 1;
+    min-width: 0;
+    max-width: 80px;
+    margin: 0 auto;
+}
+
+.axis-label-min,
+.axis-label-max {
+    width: 52px;
+    font-size: 13px;
+    color: var(--foreground-muted);
+    flex-shrink: 0;
+    cursor: default;
+}
+
+.axis-label-min {
+    text-align: left;
+}
+
+.axis-label-max {
+    text-align: right;
+}
+
+.axis-row .slider-track-wrap::before {
+    left: 0;
+    right: 0;
+    background-image:
+        radial-gradient(circle, color-mix(in srgb, var(--foreground-muted) 35%, transparent) 2px, transparent 2px),
+        radial-gradient(circle, color-mix(in srgb, var(--foreground-muted) 35%, transparent) 2px, transparent 2px),
+        radial-gradient(circle, color-mix(in srgb, var(--foreground-muted) 35%, transparent) 2px, transparent 2px);
+    background-size: 4px 4px;
+    background-position: 0% center, 50% center, 100% center;
+    background-repeat: no-repeat;
 }
 
 .setting-label {
@@ -320,10 +369,10 @@ select:focus {
 .range-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 3px;
+    width: 4px;
     height: 22px;
     background: var(--foreground-muted);
-    border-radius: 1.5px;
+    border-radius: 2px;
     cursor: pointer;
     transition: height var(--transition-fast);
 }
@@ -337,11 +386,11 @@ select:focus {
 }
 
 .range-slider::-moz-range-thumb {
-    width: 3px;
+    width: 4px;
     height: 22px;
     background: var(--foreground-muted);
     border: none;
-    border-radius: 1.5px;
+    border-radius: 2px;
     cursor: pointer;
 }
 

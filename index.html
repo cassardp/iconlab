@@ -71,7 +71,7 @@
             <button class="mini-sidebar-btn" id="aboutBtn" title="About Icon Lab">
                 <i data-lucide="info"></i>
             </button>
-            <span class="version-number">0.56</span>
+            <span class="version-number">0.57</span>
         </div>
     </aside>
 
@@ -133,34 +133,51 @@
                     <span class="setting-label">Style</span>
                     <select id="stylePresetSelect"></select>
                 </div>
-                <div class="setting-row-group">
-                    <div class="setting-row">
-                        <span class="setting-label">Gradient</span>
-                        <label class="toggle">
-                            <input type="checkbox" id="colorGradientToggle" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
+                <div id="axisSliders">
+                    <div class="setting-row axis-row">
+                        <span class="axis-label-min">Flat</span>
+                        <div class="slider-row">
+                            <div class="slider-track-wrap">
+                                <input type="range" id="axisVolume" class="range-slider" min="0" max="100" step="50" value="0">
+                            </div>
+                        </div>
+                        <span class="axis-label-max">3D</span>
                     </div>
-                    <div class="setting-row">
-                        <span class="setting-label">Rounded</span>
-                        <label class="toggle">
-                            <input type="checkbox" id="roundedToggle" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
+                    <div class="setting-row axis-row">
+                        <span class="axis-label-min">Mono</span>
+                        <div class="slider-row">
+                            <div class="slider-track-wrap">
+                                <input type="range" id="axisColor" class="range-slider" min="0" max="100" step="50" value="100">
+                            </div>
+                        </div>
+                        <span class="axis-label-max">Colorful</span>
                     </div>
-                    <div class="setting-row">
-                        <span class="setting-label">Multicolor</span>
-                        <label class="toggle">
-                            <input type="checkbox" id="colorMultiToggle">
-                            <span class="toggle-slider"></span>
-                        </label>
+                    <div class="setting-row axis-row">
+                        <span class="axis-label-min">Sharp</span>
+                        <div class="slider-row">
+                            <div class="slider-track-wrap">
+                                <input type="range" id="axisShape" class="range-slider" min="0" max="100" step="50" value="100">
+                            </div>
+                        </div>
+                        <span class="axis-label-max">Rounded</span>
                     </div>
-                    <div class="setting-row">
-                        <span class="setting-label">Text</span>
-                        <label class="toggle">
-                            <input type="checkbox" id="allowTextToggle">
-                            <span class="toggle-slider"></span>
-                        </label>
+                    <div class="setting-row axis-row">
+                        <span class="axis-label-min">Minimal</span>
+                        <div class="slider-row">
+                            <div class="slider-track-wrap">
+                                <input type="range" id="axisDetail" class="range-slider" min="0" max="100" step="50" value="0">
+                            </div>
+                        </div>
+                        <span class="axis-label-max">Detailed</span>
+                    </div>
+                    <div class="setting-row axis-row">
+                        <span class="axis-label-min">No Text</span>
+                        <div class="slider-row">
+                            <div class="slider-track-wrap">
+                                <input type="range" id="axisText" class="range-slider" min="0" max="100" step="50" value="0">
+                            </div>
+                        </div>
+                        <span class="axis-label-max">Text</span>
                     </div>
                 </div>
                 <div class="setting-row">
@@ -536,7 +553,7 @@
         </button>
         <img src="assets/light.png" alt="Icon Lab" class="about-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="about-logo logo-light">
-        <p class="about-version">Version <span class="version-number">0.56</span></p>
+        <p class="about-version">Version <span class="version-number">0.57</span></p>
         <p class="about-description">A free tool for generating and iterating on app icon designs using AI. Customize prompts, layers, and backgrounds — all in the browser.</p>
         <div class="about-links">
             <a href="https://github.com/cassardp/iconlab" target="_blank" rel="noopener">

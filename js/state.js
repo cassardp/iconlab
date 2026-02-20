@@ -10,10 +10,7 @@ App.state = {
     model: 'gpt-image-1.5',
     prompt: '',
     stylePreset: 'illustration',
-    rounded: true,
-    colorGradient: true,
-    colorMulti: false,
-    allowText: false,
+    axes: { volume: 0, color: 100, shape: 100, detail: 0, text: 0 },
     material: 'none',
     color: '',
     transparentBg: true,
@@ -71,11 +68,28 @@ App.getActiveModel = function() {
 App.saveState = function() {
     localStorage.setItem(App.STORAGE_KEYS.model, App.state.model);
     localStorage.setItem(App.STORAGE_KEYS.quality, App.state.quality);
+    localStorage.setItem(App.STORAGE_KEYS.axes, JSON.stringify(App.state.axes));
+    localStorage.setItem(App.STORAGE_KEYS.stylePreset, App.state.stylePreset);
 };
 
 App.loadSavedState = function() {
-    // Model and quality are locked to gpt-image-1.5 / medium
     App.state.model = 'gpt-image-1.5';
     App.state.quality = 'medium';
 
+    var savedPreset = localStorage.getItem(App.STORAGE_KEYS.stylePreset);
+    if (savedPreset && App.STYLE_PRESETS[savedPreset]) {
+        App.state.stylePreset = savedPreset;
+    }
+
+    var savedAxes = localStorage.getItem(App.STORAGE_KEYS.axes);
+    if (savedAxes) {
+        try {
+            var parsed = JSON.parse(savedAxes);
+            for (var k in App.AXIS_DEFAULTS) {
+                App.state.axes[k] = (parsed[k] !== undefined) ? parsed[k] : App.AXIS_DEFAULTS[k];
+            }
+        } catch (e) {
+            App.state.axes = JSON.parse(JSON.stringify(App.AXIS_DEFAULTS));
+        }
+    }
 };

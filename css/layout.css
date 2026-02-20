@@ -678,26 +678,25 @@ body.panels-hidden .editor-sidebar {
     display: flex;
     align-items: center;
     gap: 4px;
-    background: var(--background);
-    border: 1px solid var(--border);
+    background: var(--foreground);
+    border: 1px solid var(--foreground);
     border-radius: var(--radius-sm);
     padding: 3px 8px;
     cursor: pointer;
-    color: var(--foreground);
+    color: var(--background);
     font-size: 11px;
     outline: none;
     transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .btn-share:hover {
-    background: var(--muted);
-    border-color: var(--border-hover, var(--foreground-muted));
+    opacity: 0.85;
 }
 
 .btn-share.shared {
-    background: var(--foreground);
-    color: var(--background);
-    border-color: var(--foreground);
+    background: none;
+    color: var(--foreground-muted);
+    border-color: var(--border);
 }
 
 .btn-share.loading {

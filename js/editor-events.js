@@ -5,17 +5,85 @@
 
 var App = window.App || {};
 
+/* ---- Active right panel tracker ---- */
+
+App._activeRightPanel = null;
+
+/* ---- Toggle right panel ---- */
+
+App._toggleRightPanel = function(panelId) {
+    var container = document.getElementById('toolbarRightPanel');
+    var allPanels = document.querySelectorAll('.toolbar-right-panel .panel-float');
+    var allBtns = document.querySelectorAll('.toolbar-right-btn');
+
+    if (App._activeRightPanel === panelId) {
+        // Close current panel
+        container.classList.add('hidden');
+        for (var i = 0; i < allPanels.length; i++) allPanels[i].classList.add('hidden');
+        for (var j = 0; j < allBtns.length; j++) allBtns[j].classList.remove('active');
+        App._activeRightPanel = null;
+        return;
+    }
+
+    // Show container, hide all panels, show target
+    container.classList.remove('hidden');
+    for (var k = 0; k < allPanels.length; k++) allPanels[k].classList.add('hidden');
+    var target = document.getElementById(panelId);
+    if (target) target.classList.remove('hidden');
+
+    // Update button active state
+    var activeBtn = null;
+    for (var m = 0; m < allBtns.length; m++) {
+        var isActive = allBtns[m].getAttribute('data-panel') === panelId;
+        allBtns[m].classList.toggle('active', isActive);
+        if (isActive) activeBtn = allBtns[m];
+    }
+
+    // Init lucide icons in the panel
+    if (target) lucide.createIcons({ nodes: [target] });
+
+    // Position panel vertically centered on active button
+    App._positionRightPanel(activeBtn, container);
+
+    App._activeRightPanel = panelId;
+};
+
+App._positionRightPanel = function(btn, panel) {
+    if (!btn || !panel) return;
+    // Reset to measure natural height
+    panel.style.top = '0px';
+    var btnsContainer = btn.closest('.toolbar-right-btns');
+    var btnRect = btn.getBoundingClientRect();
+    var btnsRect = btnsContainer.getBoundingClientRect();
+    var panelHeight = panel.offsetHeight;
+
+    // Button center relative to btns container
+    var btnCenterY = (btnRect.top + btnRect.height / 2) - btnsRect.top;
+    // Panel top so it's centered on button
+    var panelTop = btnCenterY - panelHeight / 2;
+
+    // Clamp so panel stays within viewport
+    var mainEl = document.querySelector('.main');
+    var mainRect = mainEl.getBoundingClientRect();
+    var maxTop = mainRect.height - btnsRect.top + mainRect.top - panelHeight - 12;
+    var minTop = mainRect.top - btnsRect.top + 12;
+    panelTop = Math.max(minTop, Math.min(panelTop, maxTop));
+
+    panel.style.top = panelTop + 'px';
+};
+
 /* ---- Init event listeners ---- */
 
 App.initEditorEvents = function() {
-    // Bouton retour
-    var backBtn = document.getElementById('editorBackBtn');
-    if (backBtn) {
-        backBtn.addEventListener('click', function() {
-            App.closeEditor();
+
+    // Toolbar right buttons
+    var toolbarBtns = document.querySelectorAll('.toolbar-right-btn');
+    for (var tb = 0; tb < toolbarBtns.length; tb++) {
+        toolbarBtns[tb].addEventListener('click', function() {
+            var panelId = this.getAttribute('data-panel');
+            if (panelId) App._toggleRightPanel(panelId);
         });
     }
-
     // Bouton export
     var exportBtn = document.getElementById('editorExportBtn');
     if (exportBtn) {
@@ -40,13 +108,6 @@ App.initEditorEvents = function() {
         });
     }
 
-    // Fermer le picker
-    var pickerClose = document.getElementById('editorLayerPickerClose');
-    if (pickerClose) {
-        pickerClose.addEventListener('click', function() {
-            App._closeLayerPicker();
-        });
-    }
 
     // Event delegation sur la layer list
     var layerList = document.getElementById('editorLayerList');
@@ -193,6 +254,7 @@ App.initEditorEvents = function() {
         (function(cfg) {
             var el = document.getElementById(cfg.id);
             var labelEl = document.getElementById(cfg.label);
+            var rafId = 0;
             if (el) {
                 el.addEventListener('input', function() {
                     var val = parseInt(this.value, 10);
@@ -200,7 +262,12 @@ App.initEditorEvents = function() {
                     if (layer) {
                         layer[cfg.key] = val;
                         if (labelEl) labelEl.textContent = val + cfg.suffix;
-                        App.updateEditorPreview();
+                        if (!rafId) {
+                            rafId = requestAnimationFrame(function() {
+                                rafId = 0;
+                                App.updateEditorPreview();
+                            });
+                        }
                     }
                 });
             }
@@ -279,35 +346,56 @@ App.initEditorEvents = function() {
         });
     }
 
-    // Taille export
-    var exportSize = document.getElementById('editorExportSize');
-    if (exportSize) {
-        exportSize.addEventListener('change', function() {
-            App.state.editor.exportSize = parseInt(this.value, 10);
-        });
-    }
-
     // Escape pour fermer
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && App.state.editor.active) {
-            // Fermer le picker en priorite, sinon l'editeur
-            var picker = document.getElementById('editorLayerPicker');
-            if (picker && !picker.classList.contains('hidden')) {
-                App._closeLayerPicker();
-            } else {
-                App.closeEditor();
+        if (e.key === 'Escape') {
+            // Close popovers first
+            var openPopover = document.querySelector('.popover:not(.hidden)');
+            if (openPopover) {
+                App._closeAllPopovers();
+                return;
+            }
+            // Close gallery overlay (normal or picker mode)
+            var galleryOverlay = document.getElementById('galleryOverlay');
+            if (galleryOverlay && galleryOverlay.classList.contains('open')) {
+                if (App._galleryPickerMode) {
+                    App._closeLayerPicker();
+                } else {
+                    galleryOverlay.classList.remove('open');
+                    var galleryToggle = document.getElementById('galleryToggle');
+                    if (galleryToggle) galleryToggle.classList.remove('active');
+                }
+                return;
+            }
+            // Close editor panels
+            if (App.state.editor.active) {
+                if (App._activeRightPanel) {
+                    App._toggleRightPanel(App._activeRightPanel);
+                } else {
+                    App.closeEditor();
+                }
             }
         }
     });
 
+    // Click outside to close right panel
+    document.addEventListener('mousedown', function(e) {
+        if (!App._activeRightPanel) return;
+        var toolbar = document.getElementById('toolbarRight');
+        if (toolbar && !toolbar.contains(e.target)) {
+            App._toggleRightPanel(App._activeRightPanel);
+        }
+    });
+
     // Drag to move layer on canvas
-    var canvasWrap = document.querySelector('.editor-canvas-wrap');
+    var canvasWrap = document.getElementById('editorCanvasWrap');
     if (canvasWrap) {
         var dragging = false;
         var startX = 0;
         var startY = 0;
         var startOffsetX = 0;
         var startOffsetY = 0;
+        var dragRafId = 0;
 
         canvasWrap.addEventListener('mousedown', function(e) {
             // Detecter le layer sous le curseur et le selectionner
@@ -332,18 +420,31 @@ App.initEditorEvents = function() {
 
         document.addEventListener('mousemove', function(e) {
             if (!dragging) return;
-            var layer = App._editorActiveLayer();
-            if (!layer) return;
+            if (dragRafId) return;
 
-            var rect = canvasWrap.getBoundingClientRect();
-            var dx = ((e.clientX - startX) / rect.width) * 100;
-            var dy = ((e.clientY - startY) / rect.height) * 100;
+            dragRafId = requestAnimationFrame(function() {
+                dragRafId = 0;
+                var layer = App._editorActiveLayer();
+                if (!layer) return;
 
-            layer.offsetX = Math.max(-50, Math.min(50, Math.round(startOffsetX + dx)));
-            layer.offsetY = Math.max(-50, Math.min(50, Math.round(startOffsetY + dy)));
+                var rect = canvasWrap.getBoundingClientRect();
+                var dx = ((e.clientX - startX) / rect.width) * 100;
+                var dy = ((e.clientY - startY) / rect.height) * 100;
 
-            App.updateEditorPreview();
-            App._editorSyncControls();
+                layer.offsetX = Math.max(-50, Math.min(50, Math.round(startOffsetX + dx)));
+                layer.offsetY = Math.max(-50, Math.min(50, Math.round(startOffsetY + dy)));
+
+                App.updateEditorPreview();
+                // Update only offset labels, not full sync
+                var oxVal = document.getElementById('editorOffsetXValue');
+                var oyVal = document.getElementById('editorOffsetYValue');
+                var oxInput = document.getElementById('editorOffsetX');
+                var oyInput = document.getElementById('editorOffsetY');
+                if (oxVal) oxVal.textContent = layer.offsetX + '%';
+                if (oyVal) oyVal.textContent = layer.offsetY + '%';
+                if (oxInput) oxInput.value = layer.offsetX;
+                if (oyInput) oyInput.value = layer.offsetY;
+            });
         });
 
         document.addEventListener('mouseup', function() {

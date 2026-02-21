@@ -8,8 +8,10 @@ var App = window.App || {};
 
 App.updateEditorPreview = function() {
     var s = App.state.editor;
-    var canvasWrap = document.querySelector('.editor-canvas-wrap');
+    var canvasWrap = document.getElementById('editorCanvasWrap');
     if (!canvasWrap) return;
+
+    App._editorScheduleSave();
 
     // Calque fond
     if (s.bgType === 'none') {
@@ -199,10 +201,6 @@ App._editorSyncControls = function() {
         if (shadowColor) shadowColor.value = layer.shadowColor;
         if (shadowColorLabel) shadowColorLabel.textContent = layer.shadowColor;
     }
-
-    // Export size
-    var exportSize = document.getElementById('editorExportSize');
-    if (exportSize) exportSize.value = s.exportSize;
 
     // Visibilite conditionnelle
     App._editorToggleBgType();
@@ -438,6 +436,10 @@ App.editorExportPNG = function() {
     var s = App.state.editor;
     if (!s.layers || !s.layers.length) return;
 
+    if (App._editorSaveTimer) {
+        clearTimeout(App._editorSaveTimer);
+        App._editorSaveTimer = null;
+    }
     App._editorSave();
 
     var idx = s.generationIndex;

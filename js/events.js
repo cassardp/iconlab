@@ -23,26 +23,6 @@ App.initEventListeners = function() {
         });
     }
 
-    /* ---- Model ---- */
-
-    var modelSelect = document.getElementById('modelSelect');
-    if (modelSelect) {
-        modelSelect.addEventListener('change', function() {
-            App.state.model = this.value;
-            App.saveState();
-        });
-    }
-
-    /* ---- Quality ---- */
-
-    var qualitySelect = document.getElementById('qualitySelect');
-    if (qualitySelect) {
-        qualitySelect.addEventListener('change', function() {
-            App.state.quality = this.value;
-            App.saveState();
-        });
-    }
-
     /* ---- Prompt Input ---- */
 
     var promptInput = document.getElementById('promptInput');
@@ -54,31 +34,67 @@ App.initEventListeners = function() {
         });
     }
 
-    /* ---- Style Preset Select ---- */
+    /* ---- Style Cards (click delegation) ---- */
 
-    var stylePresetSelect = document.getElementById('stylePresetSelect');
-    if (stylePresetSelect) {
-        stylePresetSelect.addEventListener('change', function() {
-            App.state.stylePreset = this.value;
+    var styleCards = document.getElementById('styleCards');
+    if (styleCards) {
+        styleCards.addEventListener('click', function(e) {
+            var card = e.target.closest('.style-card');
+            if (!card) return;
+            var presetId = card.getAttribute('data-preset');
+            if (!presetId || !App.STYLE_PRESETS[presetId]) return;
+
+            App.state.stylePreset = presetId;
+            var preset = App.STYLE_PRESETS[presetId];
+
+            // Appliquer le placeholder du preset
+            var promptInput = document.getElementById('promptInput');
+            if (promptInput && preset.placeholder) {
+                promptInput.placeholder = preset.placeholder;
+            }
+
+            // Appliquer les axes par defaut du preset
+            if (preset.defaultAxes) {
+                for (var axKey in preset.defaultAxes) {
+                    App.state.axes[axKey] = preset.defaultAxes[axKey];
+                    var slider = document.getElementById('axis-' + axKey);
+                    if (slider) slider.value = preset.defaultAxes[axKey];
+                }
+            }
+
             App.resetEnrichedPrompt();
             App.saveState();
+
+            // Reset preview to placeholder
+            if (App.state.editor.active) App.closeEditor();
+            var ph = document.getElementById('previewPlaceholder');
+            var cw = document.getElementById('editorCanvasWrap');
+            if (ph) ph.classList.remove('hidden');
+            if (cw) cw.classList.add('hidden');
+
+            // Update active state on cards
+            var allCards = styleCards.querySelectorAll('.style-card');
+            for (var i = 0; i < allCards.length; i++) {
+                allCards[i].classList.toggle('active', allCards[i].getAttribute('data-preset') === presetId);
+            }
         });
     }
 
-    /* ---- Axis Sliders ---- */
+    /* ---- Axes Sliders ---- */
 
-    for (var _ai = 0; _ai < App.AXES.length; _ai++) {
-        (function(axis) {
-            var id = 'axis' + axis.key.charAt(0).toUpperCase() + axis.key.slice(1);
-            var slider = document.getElementById(id);
-            if (slider) {
-                slider.addEventListener('input', function() {
-                    App.state.axes[axis.key] = parseInt(this.value, 10);
-                    App.resetEnrichedPrompt();
-                    App.saveState();
-                });
-            }
-        })(App.AXES[_ai]);
+    var axesContainer = document.getElementById('axesSliders');
+    if (axesContainer) {
+        for (var ai = 0; ai < App.AXES.length; ai++) {
+            (function(axis) {
+                var slider = document.getElementById('axis-' + axis.key);
+                if (slider) {
+                    slider.addEventListener('input', function() {
+                        App.state.axes[axis.key] = parseInt(this.value, 10);
+                        App.resetEnrichedPrompt();
+                    });
+                }
+            })(App.AXES[ai]);
+        }
     }
 
     /* ---- Material Select ---- */
@@ -170,6 +186,49 @@ App.initEventListeners = function() {
         });
     }
 
+    /* ---- More Options Popover ---- */
+
+    var moreOptionsBtn = document.getElementById('moreOptionsBtn');
+    var moreOptionsPopover = document.getElementById('moreOptionsPopover');
+    if (moreOptionsBtn && moreOptionsPopover) {
+        moreOptionsBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var isOpen = !moreOptionsPopover.classList.contains('hidden');
+            // Close all popovers first
+            App._closeAllPopovers();
+            if (!isOpen) {
+                moreOptionsPopover.classList.remove('hidden');
+                moreOptionsBtn.classList.add('active');
+                lucide.createIcons({ nodes: [moreOptionsPopover] });
+            }
+        });
+    }
+
+    /* ---- Enriched Prompt Popover ---- */
+
+    var enrichedPromptToggle = document.getElementById('enrichedPromptToggle');
+    var enrichedPromptPopover = document.getElementById('enrichedPromptPopover');
+    if (enrichedPromptToggle && enrichedPromptPopover) {
+        enrichedPromptToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var isOpen = !enrichedPromptPopover.classList.contains('hidden');
+            App._closeAllPopovers();
+            if (!isOpen) {
+                enrichedPromptPopover.classList.remove('hidden');
+                enrichedPromptToggle.classList.add('active');
+                lucide.createIcons({ nodes: [enrichedPromptPopover] });
+            }
+        });
+    }
+
+    /* ---- Close popovers on outside click ---- */
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.popover') && !e.target.closest('.prompt-bar-btn')) {
+            App._closeAllPopovers();
+        }
+    });
+
     /* ---- Keyboard Shortcut: Cmd+Enter ---- */
 
     document.addEventListener('keydown', function(e) {
@@ -180,6 +239,19 @@ App.initEventListeners = function() {
             }
         }
     });
+};
+
+/* ---- Close all popovers ---- */
+
+App._closeAllPopovers = function() {
+    var popovers = document.querySelectorAll('.popover');
+    for (var i = 0; i < popovers.length; i++) {
+        popovers[i].classList.add('hidden');
+    }
+    var btns = document.querySelectorAll('.prompt-bar-btn');
+    for (var j = 0; j < btns.length; j++) {
+        btns[j].classList.remove('active');
+    }
 };
 
 /* ---- UI Helpers ---- */
@@ -203,6 +275,16 @@ App.handleGenerate = function() {
     var generateBtn = document.getElementById('generateBtn');
     if (generateBtn) generateBtn.classList.add('loading');
 
+    // Close editor if active, show loading placeholder
+    if (App.state.editor.active) App.closeEditor();
+    var placeholder = document.getElementById('previewPlaceholder');
+    var canvasWrap = document.getElementById('editorCanvasWrap');
+    if (placeholder) {
+        placeholder.classList.remove('hidden');
+        placeholder.classList.add('loading');
+    }
+    if (canvasWrap) canvasWrap.classList.add('hidden');
+
     var finalPrompt = App.getFinalPrompt();
     var model = App.state.model;
     var userPrompt = App.state.prompt;
@@ -219,8 +301,10 @@ App.handleGenerate = function() {
         var duration = Date.now() - startTime;
 
         App.removeLoadingCard();
+        var ph = document.getElementById('previewPlaceholder');
+        if (ph) ph.classList.remove('loading');
 
-        App.addToGallery({
+        var generation = {
             imageBase64: result.imageBase64,
             model: model,
             userPrompt: userPrompt,
@@ -231,10 +315,17 @@ App.handleGenerate = function() {
             transparent: App.state.transparentBg,
             duration: duration,
             timestamp: Date.now()
-        });
+        };
+
+        App.addToGallery(generation);
+
+        // Load the generated image into the preview frame
+        App.openEditor(generation);
     })
     .catch(function(error) {
         App.removeLoadingCard();
+        var ph = document.getElementById('previewPlaceholder');
+        if (ph) ph.classList.remove('loading');
         App.showToast(error.message || 'Generation failed', 'error');
         console.error('Generation error:', error);
 
@@ -250,24 +341,6 @@ App.handleGenerate = function() {
     });
 };
 
-/* ---- Set Color Picker programmatically ---- */
-
-App._setColorPicker = function(hex) {
-    App.state.color = hex;
-    var picker = document.getElementById('colorPicker');
-    var label = document.getElementById('colorPickerLabel');
-    var reset = document.getElementById('colorPickerReset');
-    if (picker) {
-        picker.value = hex;
-        picker.classList.remove('inactive');
-    }
-    if (label) {
-        label.textContent = hex;
-        label.classList.add('active');
-    }
-    if (reset) reset.classList.remove('hidden');
-};
-
 /* ---- Sync UI from State ---- */
 
 App.syncUIFromState = function() {
@@ -275,46 +348,19 @@ App.syncUIFromState = function() {
     var apiKeyInput = document.getElementById('apiKeyInput');
     if (apiKeyInput) apiKeyInput.value = App.getApiKey();
 
-    // Model
-    var modelSelect = document.getElementById('modelSelect');
-    if (modelSelect) {
-        modelSelect.innerHTML = '';
-        for (var id in App.MODELS) {
-            var option = document.createElement('option');
-            option.value = id;
-            option.textContent = App.MODELS[id].name;
-            modelSelect.appendChild(option);
-        }
-        if (App.MODELS[App.state.model]) {
-            modelSelect.value = App.state.model;
+    // Style cards active state
+    var styleCards = document.getElementById('styleCards');
+    if (styleCards) {
+        var cards = styleCards.querySelectorAll('.style-card');
+        for (var ci = 0; ci < cards.length; ci++) {
+            cards[ci].classList.toggle('active', cards[ci].getAttribute('data-preset') === App.state.stylePreset);
         }
     }
 
-    // Quality
-    var qualitySelect = document.getElementById('qualitySelect');
-    if (qualitySelect) qualitySelect.value = App.state.quality;
-
-    // Style Preset
-    var stylePresetSelect = document.getElementById('stylePresetSelect');
-    if (stylePresetSelect) {
-        stylePresetSelect.innerHTML = '';
-        for (var spid in App.STYLE_PRESETS) {
-            var spopt = document.createElement('option');
-            spopt.value = spid;
-            spopt.textContent = App.STYLE_PRESETS[spid].name;
-            stylePresetSelect.appendChild(spopt);
-        }
-        if (App.STYLE_PRESETS[App.state.stylePreset]) {
-            stylePresetSelect.value = App.state.stylePreset;
-        }
-    }
-
-    // Axis sliders
-    for (var _si = 0; _si < App.AXES.length; _si++) {
-        var ax = App.AXES[_si];
-        var axId = 'axis' + ax.key.charAt(0).toUpperCase() + ax.key.slice(1);
-        var axSlider = document.getElementById(axId);
-        if (axSlider) axSlider.value = App.state.axes[ax.key];
+    // Axes sliders
+    for (var ai = 0; ai < App.AXES.length; ai++) {
+        var axSlider = document.getElementById('axis-' + App.AXES[ai].key);
+        if (axSlider) axSlider.value = App.state.axes[App.AXES[ai].key];
     }
 
     // Material
@@ -348,6 +394,16 @@ App.syncUIFromState = function() {
             colorPickerLabel.textContent = 'None';
             colorPickerLabel.classList.remove('active');
             if (colorPickerReset) colorPickerReset.classList.add('hidden');
+        }
+    }
+
+    // Prompt input
+    var promptInput = document.getElementById('promptInput');
+    if (promptInput) {
+        if (App.state.prompt) promptInput.value = App.state.prompt;
+        var activePreset = App.STYLE_PRESETS[App.state.stylePreset];
+        if (activePreset && activePreset.placeholder) {
+            promptInput.placeholder = activePreset.placeholder;
         }
     }
 

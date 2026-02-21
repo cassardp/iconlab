@@ -86,31 +86,37 @@ App.openEditor = function(generation) {
         App.state.editor.activeLayerIndex = 0;
     }
 
-    // Cacher la galerie et la communaute
-    var galleryToolbar = document.getElementById('galleryToolbar');
-    var galleryWrapper = document.querySelector('.gallery-wrapper');
-    var communityWrapper = document.getElementById('communityWrapper');
-    if (galleryToolbar) galleryToolbar.classList.add('hidden');
-    if (galleryWrapper) galleryWrapper.classList.add('hidden');
-    if (communityWrapper) communityWrapper.classList.add('hidden');
+    // Show the canvas wrap, hide placeholder
+    var placeholder = document.getElementById('previewPlaceholder');
+    var canvasWrap = document.getElementById('editorCanvasWrap');
+    if (placeholder) placeholder.classList.add('hidden');
+    if (canvasWrap) canvasWrap.classList.remove('hidden');
 
-    // Afficher l'editeur avec loader
-    var editorView = document.getElementById('editorView');
-    var previewArea = editorView.querySelector('.editor-preview-area');
-    editorView.classList.remove('hidden');
-    previewArea.classList.add('loading');
-
-    // Init Lucide icons dans l'editeur
-    lucide.createIcons({ nodes: [editorView] });
+    // Enable toolbar right (no panel open by default)
+    var toolbarRight = document.getElementById('toolbarRight');
+    if (toolbarRight) {
+        toolbarRight.classList.remove('disabled');
+    }
 
     // Render les images et la layer list
     App._renderLayerImages(function() {
-        previewArea.classList.remove('loading');
         App.updateEditorPreview();
     });
     App._renderLayerList();
     App._editorSyncControls();
     App._editorUpdateAddBtn();
+};
+
+/* ---- Debounced save (evite IndexedDB writes a chaque frame) ---- */
+
+App._editorSaveTimer = null;
+
+App._editorScheduleSave = function() {
+    if (App._editorSaveTimer) return;
+    App._editorSaveTimer = setTimeout(function() {
+        App._editorSaveTimer = null;
+        App._editorSave();
+    }, 300);
 };
 
 /* ---- Sauvegarder les reglages sur la generation ---- */
@@ -153,46 +159,46 @@ App._editorSave = function() {
     }
 
     gen.editorSettings = settings;
-    App.saveGallery();
+    App._editorSaveGeneration(gen);
+};
+
+/* ---- Save ciblé : un seul record IndexedDB ---- */
+
+App._editorSaveGeneration = function(gen) {
+    if (!App._db || !gen) return;
+    var tx = App._db.transaction(App._DB_STORE, 'readwrite');
+    tx.objectStore(App._DB_STORE).put(gen);
 };
 
 /* ---- Fermer l'editeur ---- */
 
 App.closeEditor = function() {
-    console.log('[closeEditor] generationIndex=' + App.state.editor.generationIndex + ', generations.length=' + App.state.generations.length);
+    if (App._editorSaveTimer) {
+        clearTimeout(App._editorSaveTimer);
+        App._editorSaveTimer = null;
+    }
     App._editorSave();
     var gen = App.state.generations[App.state.editor.generationIndex];
-    console.log('[closeEditor] gen exists=' + !!gen + ', gen.timestamp=' + (gen ? gen.timestamp : 'N/A'));
     App.state.editor.active = false;
 
-    // Reafficher le bon wrapper
-    var galleryToolbar = document.getElementById('galleryToolbar');
-    var galleryWrapper = document.querySelector('.gallery-wrapper');
-    var communityWrapper = document.getElementById('communityWrapper');
+    // Disable toolbar right and reset active panel
+    var toolbarRight = document.getElementById('toolbarRight');
+    if (toolbarRight) toolbarRight.classList.add('disabled');
+    App._activeRightPanel = null;
+    var panel = document.getElementById('toolbarRightPanel');
+    if (panel) panel.classList.add('hidden');
+    var allBtns = document.querySelectorAll('.toolbar-right-btn');
+    for (var i = 0; i < allBtns.length; i++) allBtns[i].classList.remove('active');
+    var allPanels = document.querySelectorAll('.toolbar-right-panel .panel-float');
+    for (var j = 0; j < allPanels.length; j++) allPanels[j].classList.add('hidden');
 
-    if (App._activeTab === 'community') {
-        if (galleryToolbar) galleryToolbar.classList.add('hidden');
-        if (galleryWrapper) galleryWrapper.classList.add('hidden');
-        if (communityWrapper) communityWrapper.classList.remove('hidden');
-    } else {
-        if (galleryToolbar) galleryToolbar.classList.remove('hidden');
-        if (galleryWrapper) galleryWrapper.classList.remove('hidden');
-        if (communityWrapper) communityWrapper.classList.add('hidden');
-    }
-
-    // Rafraichir la card editee
-    App.refreshGalleryCard(gen);
-
-    // Cacher l'editeur
-    var editorView = document.getElementById('editorView');
-    editorView.classList.add('hidden');
+    // Rafraichir la card editee dans la galerie
+    if (gen) App.refreshGalleryCard(gen);
 
     // Fermer le picker si ouvert
     App._closeLayerPicker();
 
-    // Liberer la memoire
-    var container = document.getElementById('editorIconContainer');
-    if (container) container.innerHTML = '';
+    // Keep the preview showing the last image (don't go back to placeholder)
 };
 
 /* ---- Reset : revenir a un seul layer avec params par defaut ---- */

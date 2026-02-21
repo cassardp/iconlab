@@ -32,9 +32,6 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Supabase SDK -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
 
@@ -43,506 +40,410 @@
 </head>
 <body>
 
-<div class="app">
-
-    <!-- ================================================
-         MINI SIDEBAR (icones)
-         ================================================ -->
-    <aside class="mini-sidebar">
-        <div class="mini-sidebar-top">
-            <button class="mini-sidebar-btn" id="authButton" title="Sign in">
-                <i data-lucide="key-round"></i>
+<!-- ================================================
+     TOPBAR
+     ================================================ -->
+<header class="topbar">
+    <div class="topbar-left">
+        <img src="assets/light.png" alt="Icon Lab" class="topbar-logo logo-dark">
+        <img src="assets/dark.png" alt="Icon Lab" class="topbar-logo logo-light">
+    </div>
+    <div class="topbar-right">
+        <div class="topbar-size-wrap" id="sizeDropdownWrap">
+            <button class="topbar-size-btn" id="sizeDropdownBtn">
+                <span id="sizeDropdownLabel">512px</span>
+                <i data-lucide="chevron-down" class="topbar-size-chevron"></i>
             </button>
-            <button class="mini-sidebar-btn active" id="tabLocal" data-tab="local" title="My Gallery">
-                <i data-lucide="house"></i>
-            </button>
-            <button class="mini-sidebar-btn" id="tabCommunity" data-tab="community" title="Community">
-                <i data-lucide="globe"></i>
-            </button>
-        </div>
-        <div class="mini-sidebar-bottom">
-            <button class="mini-sidebar-btn" id="themeToggle" title="Toggle theme">
-                <i data-lucide="moon" class="icon-moon"></i>
-                <i data-lucide="sun" class="icon-sun"></i>
-            </button>
-            <a href="https://github.com/cassardp/iconlab" class="mini-sidebar-btn" target="_blank" title="GitHub">
-                <i data-lucide="github"></i>
-            </a>
-            <button class="mini-sidebar-btn" id="aboutBtn" title="About Icon Lab">
-                <i data-lucide="info"></i>
-            </button>
-            <span class="version-number">0.62</span>
-        </div>
-    </aside>
-
-    <!-- ================================================
-         SETTINGS PANEL (gauche)
-         ================================================ -->
-    <aside class="settings-panel">
-
-        <!-- Contenu scrollable -->
-        <div class="settings-scroll">
-
-        <!-- Header avec logo -->
-        <div class="sidebar-header">
-            <img src="assets/light.png" alt="Icon Lab" class="app-logo logo-dark">
-            <img src="assets/dark.png" alt="Icon Lab" class="app-logo logo-light">
-        </div>
-
-        <!-- Section : API Key + Model -->
-        <div class="settings-section">
-            <div class="section-header">
-                <span class="section-title">OpenAI</span>
+            <div class="topbar-size-menu hidden" id="sizeDropdownMenu">
+                <button class="topbar-size-option" data-size="64">64px</button>
+                <button class="topbar-size-option" data-size="128">128px</button>
+                <button class="topbar-size-option" data-size="256">256px</button>
+                <button class="topbar-size-option active" data-size="512">512px</button>
             </div>
-            <div class="section-content">
-                <div class="setting-row">
-                    <span class="setting-label">API Key</span>
-                    <div class="api-key-wrap">
-                        <input type="password" id="apiKeyInput" placeholder="sk-..." autocomplete="off">
-                        <button type="button" id="apiKeyToggle" title="Show/hide key">
-                            <i data-lucide="eye"></i>
+        </div>
+        <div class="topbar-sep"></div>
+        <button class="topbar-btn" id="settingsBtn" title="Settings">
+            <i data-lucide="settings"></i>
+        </button>
+        <button class="topbar-btn" id="themeToggle" title="Toggle theme">
+            <i data-lucide="moon" class="icon-moon"></i>
+            <i data-lucide="sun" class="icon-sun"></i>
+        </button>
+        <button class="topbar-btn" id="aboutBtn" title="About Icon Lab">
+            <i data-lucide="info"></i>
+        </button>
+    </div>
+</header>
+
+<!-- ================================================
+     MAIN AREA
+     ================================================ -->
+<div class="main">
+
+    <!-- Left toolbar (floating) -->
+    <div class="toolbar-left">
+        <button class="toolbar-left-btn" id="galleryToggle" title="Gallery">
+            <i data-lucide="layout-grid"></i>
+        </button>
+    </div>
+
+    <!-- Canvas area (centre) -->
+    <div class="canvas-area">
+        <!-- Preview frame -->
+        <div class="preview-frame" id="previewFrame">
+            <div class="preview-placeholder" id="previewPlaceholder"></div>
+            <div class="editor-canvas-wrap hidden" id="editorCanvasWrap">
+                <div class="editor-icon-container" id="editorIconContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right toolbar + panels (editor controls) -->
+    <div class="toolbar-right disabled" id="toolbarRight">
+        <div class="toolbar-right-btns">
+            <button class="toolbar-right-btn" id="editorExportBtn" title="Export">
+                <i data-lucide="archive"></i>
+            </button>
+            <div class="toolbar-right-sep"></div>
+            <button class="toolbar-right-btn" data-panel="panelBackground" title="Background">
+                <i data-lucide="image"></i>
+            </button>
+            <button class="toolbar-right-btn" data-panel="panelLayers" title="Layers">
+                <i data-lucide="layers"></i>
+            </button>
+            <button class="toolbar-right-btn" data-panel="panelEffects" title="Effects">
+                <i data-lucide="sparkles"></i>
+            </button>
+            <div class="toolbar-right-panel hidden" id="toolbarRightPanel">
+
+            <!-- Background panel -->
+            <div class="panel-float hidden" id="panelBackground">
+                <div class="section-header">
+                    <span class="section-title">Background</span>
+                </div>
+                <div class="section-content">
+                    <div class="setting-row">
+                        <span class="setting-label">Type</span>
+                        <select id="editorBgType">
+                            <option value="none">None (transparent)</option>
+                            <option value="solid">Solid color</option>
+                            <option value="gradient">Radial gradient</option>
+                            <option value="linear">Linear gradient</option>
+                            <option value="mesh">Mesh gradient</option>
+                        </select>
+                    </div>
+                    <div class="setting-row" id="editorBgSolidRow">
+                        <span class="setting-label">Color</span>
+                        <div class="color-picker-wrap">
+                            <input type="color" id="editorBgColor" value="#4A90D9">
+                            <span class="color-picker-label active" id="editorBgColorLabel">#4A90D9</span>
+                        </div>
+                    </div>
+                    <div id="editorBgGradientRows" class="hidden">
+                        <div class="setting-row">
+                            <span class="setting-label">Center</span>
+                            <div class="color-picker-wrap">
+                                <input type="color" id="editorGradientCenter" value="#5BC0EB">
+                                <span class="color-picker-label active" id="editorGradientCenterLabel">#5BC0EB</span>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <span class="setting-label">Edge</span>
+                            <div class="color-picker-wrap">
+                                <input type="color" id="editorGradientEdge" value="#2E6EA6">
+                                <span class="color-picker-label active" id="editorGradientEdgeLabel">#2E6EA6</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="editorBgLinearRows" class="hidden">
+                        <div class="setting-row">
+                            <span class="setting-label">Direction</span>
+                            <div class="direction-picker" id="editorLinearDirection">
+                                <button class="dir-btn" data-angle="315" title="Top-left">&#x2196;</button>
+                                <button class="dir-btn" data-angle="0" title="Up">&#x2191;</button>
+                                <button class="dir-btn" data-angle="45" title="Top-right">&#x2197;</button>
+                                <button class="dir-btn" data-angle="270" title="Left">&#x2190;</button>
+                                <span class="dir-center"></span>
+                                <button class="dir-btn" data-angle="90" title="Right">&#x2192;</button>
+                                <button class="dir-btn" data-angle="225" title="Bottom-left">&#x2199;</button>
+                                <button class="dir-btn" data-angle="180" title="Down">&#x2193;</button>
+                                <button class="dir-btn" data-angle="135" title="Bottom-right">&#x2198;</button>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <span class="setting-label">Start</span>
+                            <div class="color-picker-wrap">
+                                <input type="color" id="editorLinearStart" value="#5BC0EB">
+                                <span class="color-picker-label active" id="editorLinearStartLabel">#5BC0EB</span>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <span class="setting-label">End</span>
+                            <div class="color-picker-wrap">
+                                <input type="color" id="editorLinearEnd" value="#2E6EA6">
+                                <span class="color-picker-label active" id="editorLinearEndLabel">#2E6EA6</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="editorBgMeshRows" class="hidden">
+                        <div id="editorMeshColorList"></div>
+                        <button class="btn btn-ghost btn-sm" id="editorMeshAddColor" style="margin-top:4px;width:100%">
+                            <i data-lucide="plus"></i>
+                            Add color
                         </button>
                     </div>
                 </div>
-                <div class="setting-row" style="display:none">
-                    <span class="setting-label">Model</span>
-                    <select id="modelSelect"></select>
-                </div>
-                <div class="setting-row" style="display:none">
-                    <span class="setting-label">Quality</span>
-                    <select id="qualitySelect">
-                        <option value="low">Low</option>
-                        <option value="medium" selected>Medium</option>
-                        <option value="high">High</option>
-                    </select>
-                </div>
             </div>
-        </div>
 
-        <!-- Section : Prompt -->
-        <div class="settings-section">
-            <div class="section-header">
-                <span class="section-title">Prompt</span>
-            </div>
-            <div class="section-content">
-                <div class="setting-row setting-row-stacked">
-                    <span class="setting-label">Description</span>
-                    <textarea id="promptInput" rows="3" placeholder="a paper plane"></textarea>
-                </div>
-                <div class="setting-row">
-                    <span class="setting-label">Style</span>
-                    <select id="stylePresetSelect"></select>
-                </div>
-                <div id="axisSliders">
-                    <div class="setting-row axis-row">
-                        <span class="axis-label-min">Flat</span>
-                        <div class="slider-row">
-                            <div class="slider-track-wrap">
-                                <input type="range" id="axisVolume" class="range-slider" min="0" max="100" step="50" value="0">
-                            </div>
-                        </div>
-                        <span class="axis-label-max">3D</span>
-                    </div>
-                    <div class="setting-row axis-row">
-                        <span class="axis-label-min">Mono</span>
-                        <div class="slider-row">
-                            <div class="slider-track-wrap">
-                                <input type="range" id="axisColor" class="range-slider" min="0" max="100" step="50" value="100">
-                            </div>
-                        </div>
-                        <span class="axis-label-max">Colorful</span>
-                    </div>
-                    <div class="setting-row axis-row">
-                        <span class="axis-label-min">Sharp</span>
-                        <div class="slider-row">
-                            <div class="slider-track-wrap">
-                                <input type="range" id="axisShape" class="range-slider" min="0" max="100" step="50" value="100">
-                            </div>
-                        </div>
-                        <span class="axis-label-max">Rounded</span>
-                    </div>
-                    <div class="setting-row axis-row">
-                        <span class="axis-label-min">Minimal</span>
-                        <div class="slider-row">
-                            <div class="slider-track-wrap">
-                                <input type="range" id="axisDetail" class="range-slider" min="0" max="100" step="50" value="0">
-                            </div>
-                        </div>
-                        <span class="axis-label-max">Detailed</span>
-                    </div>
-                    <div class="setting-row axis-row">
-                        <span class="axis-label-min">No Text</span>
-                        <div class="slider-row">
-                            <div class="slider-track-wrap">
-                                <input type="range" id="axisText" class="range-slider" min="0" max="100" step="50" value="0">
-                            </div>
-                        </div>
-                        <span class="axis-label-max">Text</span>
-                    </div>
-                </div>
-                <div class="setting-row">
-                    <span class="setting-label">Material</span>
-                    <select id="materialSelect"></select>
-                </div>
-                <div class="setting-row" id="colorRow">
-                    <span class="setting-label">Color</span>
-                    <div class="color-picker-wrap">
-                        <input type="color" id="colorPicker" value="#4A90D9" class="inactive">
-                        <span class="color-picker-label" id="colorPickerLabel">None</span>
-                        <button class="btn-icon btn-sm color-picker-reset hidden" id="colorPickerReset" title="Reset">
-                            <i data-lucide="x"></i>
+            <!-- Layers panel -->
+            <div class="panel-float hidden" id="panelLayers">
+                <div class="section-header">
+                    <span class="section-title">Layers</span>
+                    <div style="display:flex;gap:2px;">
+                        <button class="btn-icon btn-sm" id="editorResetBtn" title="Reset all">
+                            <i data-lucide="rotate-ccw"></i>
+                        </button>
+                        <button class="btn-icon btn-sm" id="editorAddLayerBtn" title="Add icon layer">
+                            <i data-lucide="plus"></i>
                         </button>
                     </div>
                 </div>
+                <div class="section-content">
+                    <div class="editor-layer-list" id="editorLayerList"></div>
+                    <div id="editorLayerControls">
+                        <div class="setting-row">
+                            <span class="setting-label">Scale</span>
+                            <div class="slider-row">
+                                <div class="slider-track-wrap">
+                                    <input type="range" id="editorScale" class="range-slider" min="10" max="150" value="100">
+                                </div>
+                                <span class="slider-value" id="editorScaleValue">100%</span>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <span class="setting-label">Rotation</span>
+                            <div class="slider-row">
+                                <div class="slider-track-wrap">
+                                    <input type="range" id="editorRotation" class="range-slider" min="-180" max="180" value="0">
+                                </div>
+                                <span class="slider-value" id="editorRotationValue">0°</span>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <span class="setting-label">Offset X</span>
+                            <div class="slider-row">
+                                <div class="slider-track-wrap">
+                                    <input type="range" id="editorOffsetX" class="range-slider" min="-50" max="50" value="0">
+                                </div>
+                                <span class="slider-value" id="editorOffsetXValue">0%</span>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <span class="setting-label">Offset Y</span>
+                            <div class="slider-row">
+                                <div class="slider-track-wrap">
+                                    <input type="range" id="editorOffsetY" class="range-slider" min="-50" max="50" value="0">
+                                </div>
+                                <span class="slider-value" id="editorOffsetYValue">0%</span>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <span class="setting-label">Opacity</span>
+                            <div class="slider-row">
+                                <div class="slider-track-wrap">
+                                    <input type="range" id="editorOpacity" class="range-slider" min="0" max="100" value="100">
+                                </div>
+                                <span class="slider-value" id="editorOpacityValue">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Effects panel -->
+            <div class="panel-float hidden" id="panelEffects">
+                <div class="section-header">
+                    <span class="section-title">Effects</span>
+                </div>
+                <div class="section-content">
+                    <div class="setting-row">
+                        <span class="setting-label">Tint</span>
+                        <label class="toggle">
+                            <input type="checkbox" id="editorTintEnabled">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div id="editorTintControls" class="hidden">
+                        <div class="setting-row">
+                            <span class="setting-label">Color</span>
+                            <div class="color-picker-wrap">
+                                <input type="color" id="editorTintColor" value="#FF0000">
+                                <span class="color-picker-label active" id="editorTintColorLabel">#FF0000</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Shadow</span>
+                        <label class="toggle">
+                            <input type="checkbox" id="editorShadowEnabled">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div id="editorShadowControls" class="hidden">
+                        <div class="setting-row">
+                            <span class="setting-label">Blur</span>
+                            <div class="slider-row">
+                                <div class="slider-track-wrap">
+                                    <input type="range" id="editorShadowBlur" class="range-slider" min="0" max="60" value="20">
+                                </div>
+                                <span class="slider-value" id="editorShadowBlurValue">20px</span>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <span class="setting-label">Offset Y</span>
+                            <div class="slider-row">
+                                <div class="slider-track-wrap">
+                                    <input type="range" id="editorShadowOffsetY" class="range-slider" min="0" max="40" value="8">
+                                </div>
+                                <span class="slider-value" id="editorShadowOffsetYValue">8px</span>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <span class="setting-label">Opacity</span>
+                            <div class="slider-row">
+                                <div class="slider-track-wrap">
+                                    <input type="range" id="editorShadowOpacity" class="range-slider" min="0" max="100" value="40">
+                                </div>
+                                <span class="slider-value" id="editorShadowOpacityValue">40%</span>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <span class="setting-label">Color</span>
+                            <div class="color-picker-wrap">
+                                <input type="color" id="editorShadowColor" value="#000000">
+                                <span class="color-picker-label active" id="editorShadowColorLabel">#000000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             </div>
         </div>
+    </div>
 
-        <!-- Section : Prompt enrichi EDITABLE -->
-        <div class="settings-section" style="flex:1; display:flex; flex-direction:column;">
-            <div class="section-header">
-                <span class="section-title">Final prompt <span class="hint">(editable)</span></span>
-                <button class="btn-icon btn-sm" id="copyPromptBtn" title="Copy">
-                    <i data-lucide="copy"></i>
+    <!-- Gallery overlay — hidden by default -->
+    <div class="gallery-overlay" id="galleryOverlay">
+        <header class="gallery-overlay-header">
+            <div class="gallery-overlay-title">
+                <i data-lucide="layout-grid"></i>
+                <span id="galleryCount">0 icons</span>
+                <span class="gallery-picker-title">Select an icon to add</span>
+            </div>
+            <div class="gallery-overlay-actions">
+                <button class="btn btn-ghost btn-sm" id="clearGalleryBtn">
+                    Clear
+                    <i data-lucide="trash-2"></i>
+                </button>
+                <button class="btn-icon btn-sm" id="galleryOverlayClose" title="Close gallery">
+                    <i data-lucide="x"></i>
                 </button>
             </div>
-            <div class="section-content" style="flex:1; display:flex; flex-direction:column;">
-                <textarea id="enrichedPrompt" class="enriched-prompt" placeholder="The enriched prompt will appear here. You can edit it before generating."></textarea>
+        </header>
+        <div class="gallery" id="gallery">
+            <div class="gallery-empty" id="galleryEmpty">
+                <p>No generations yet</p>
             </div>
         </div>
+    </div>
 
-        </div><!-- /settings-scroll -->
+</div>
 
-        <!-- Generate Button (fixe en bas) -->
-        <div class="generate-area">
-            <button class="btn btn-primary btn-full btn-lg" id="generateBtn" disabled>
-                <i data-lucide="wand-2"></i>
-                Generate
+<!-- ================================================
+     BOTTOM BLOCK
+     ================================================ -->
+<div class="bottom-block">
+
+    <!-- Style cards -->
+    <div class="style-cards" id="styleCards"></div>
+
+    <!-- Prompt bar -->
+    <div class="prompt-bar">
+        <button class="prompt-bar-btn" id="moreOptionsBtn" title="More options">
+            <i data-lucide="sliders-horizontal"></i>
+        </button>
+        <input type="text" id="promptInput" class="prompt-bar-input" placeholder="Describe your icon...">
+        <button class="prompt-bar-btn" id="enrichedPromptToggle" title="View full prompt">
+            <i data-lucide="file-text"></i>
+        </button>
+        <button class="btn btn-primary btn-sm" id="generateBtn" disabled>
+            Generate
+            <i data-lucide="arrow-up"></i>
+        </button>
+    </div>
+
+    <!-- Popover: enriched prompt -->
+    <div class="popover hidden" id="enrichedPromptPopover">
+        <div class="popover-header">
+            <span class="section-title">Final prompt <span class="hint">(editable)</span></span>
+            <button class="btn-icon btn-sm" id="copyPromptBtn" title="Copy">
+                <i data-lucide="copy"></i>
             </button>
-            <div class="generate-hint text-xs text-muted" style="text-align:center; margin-top:6px;">
-                ⌘+Enter to generate
-            </div>
         </div>
+        <textarea id="enrichedPrompt" class="enriched-prompt" placeholder="The enriched prompt will appear here. You can edit it before generating."></textarea>
+    </div>
 
-    </aside>
-
-    <!-- ================================================
-         MAIN CONTENT — Galerie
-         ================================================ -->
-    <main class="main-content">
-
-        <div class="gallery-wrapper loading" id="galleryWrapper">
-
-            <header class="main-toolbar" id="galleryToolbar">
-                <div class="toolbar-left">
-                    <i data-lucide="house" style="color:var(--foreground-muted)"></i>
-                    <span class="toolbar-count" id="galleryCount">0 generations</span>
-                </div>
-                <div class="toolbar-right">
-                    <button class="btn btn-ghost btn-sm" id="clearGalleryBtn">
-                        Clear
-                        <i data-lucide="trash-2"></i>
+    <!-- Popover: more options (axes, material, color) -->
+    <div class="popover hidden" id="moreOptionsPopover">
+        <div class="popover-header">
+            <span class="section-title">Options</span>
+        </div>
+        <div class="section-content">
+            <div id="axesSliders">
+                <!-- Generated dynamically by JS from App.AXES -->
+            </div>
+            <div class="setting-row">
+                <span class="setting-label">Material</span>
+                <select id="materialSelect"></select>
+            </div>
+            <div class="setting-row" id="colorRow">
+                <span class="setting-label">Color</span>
+                <div class="color-picker-wrap">
+                    <input type="color" id="colorPicker" value="#4A90D9" class="inactive">
+                    <span class="color-picker-label" id="colorPickerLabel">None</span>
+                    <button class="btn-icon btn-sm color-picker-reset hidden" id="colorPickerReset" title="Reset">
+                        <i data-lucide="x"></i>
                     </button>
                 </div>
-            </header>
-            <div class="gallery-loader" id="galleryLoader">
-                <div class="spinner"></div>
-                <span>Loading gallery...</span>
             </div>
-            <div class="gallery" id="gallery">
-                <div class="gallery-empty" id="galleryEmpty">
-                    <p>No generations yet</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- ================================================
+     SETTINGS MODAL
+     ================================================ -->
+<div class="modal-overlay" id="settingsModal">
+    <div class="modal-content settings-modal">
+        <div class="settings-modal-header">
+            <span>Settings</span>
+            <button class="btn-icon btn-sm" id="settingsModalClose">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="section-content">
+            <div class="setting-row">
+                <span class="setting-label">API Key</span>
+                <div class="api-key-wrap">
+                    <input type="password" id="apiKeyInput" placeholder="sk-..." autocomplete="off">
+                    <button type="button" id="apiKeyToggle" title="Show/hide key">
+                        <i data-lucide="eye"></i>
+                    </button>
                 </div>
             </div>
         </div>
-
-        <div class="community-wrapper hidden" id="communityWrapper">
-            <header class="community-toolbar">
-                <div class="toolbar-left">
-                    <i data-lucide="globe" style="color:var(--foreground-muted)"></i>
-                    <span class="toolbar-count" id="communityCount">0 icons</span>
-                </div>
-                <div class="toolbar-right">
-                    <select class="community-sort-select" id="communitySort">
-                        <option value="recent">Most recent</option>
-                        <option value="popular">Most popular</option>
-                    </select>
-                </div>
-            </header>
-            <div class="community-gallery" id="communityGallery">
-                <div class="community-empty" id="communityEmpty">
-                    <p>No shared icons yet</p>
-                </div>
-            </div>
-            <div class="community-load-more">
-                <button class="btn btn-ghost btn-sm" id="communityLoadMore" style="display:none">
-                    <i data-lucide="chevron-down"></i>
-                    Load more
-                </button>
-            </div>
-        </div>
-
-        <!-- ================================================
-             EDITOR VIEW (remplace la galerie quand actif)
-             ================================================ -->
-        <div class="editor-view hidden" id="editorView">
-
-            <div class="editor-content">
-
-                <!-- Zone centrale (toolbar + preview) -->
-                <div class="editor-main">
-                    <header class="main-toolbar">
-                        <div class="toolbar-left">
-                            <button class="btn btn-ghost btn-sm" id="editorBackBtn">
-                                <i data-lucide="arrow-left"></i>
-                                Back
-                            </button>
-                        </div>
-                        <div class="toolbar-right">
-                            <button class="btn btn-primary btn-sm" id="editorExportBtn">
-                                <i data-lucide="archive"></i>
-                                Export App Icons
-                            </button>
-                        </div>
-                    </header>
-
-                    <!-- Layer picker modal -->
-                    <div class="editor-layer-picker hidden" id="editorLayerPicker">
-                        <div class="editor-layer-picker-header">
-                            <span>Select an icon to add</span>
-                            <button class="btn-icon btn-sm" id="editorLayerPickerClose">
-                                <i data-lucide="x"></i>
-                            </button>
-                        </div>
-                        <div class="editor-layer-picker-grid" id="editorLayerPickerGrid"></div>
-                    </div>
-
-                    <!-- Preview -->
-                    <div class="editor-preview-area">
-                        <div class="editor-canvas-wrap">
-                            <div class="editor-icon-container" id="editorIconContainer">
-                                <!-- Layer images crees dynamiquement par JS -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sidebar controles -->
-                <aside class="editor-sidebar">
-
-                    <!-- Background -->
-                    <div class="settings-section">
-                        <div class="section-header">
-                            <span class="section-title">Background</span>
-                        </div>
-                        <div class="section-content">
-                            <div class="setting-row">
-                                <span class="setting-label">Type</span>
-                                <select id="editorBgType">
-                                    <option value="none">None (transparent)</option>
-                                    <option value="solid">Solid color</option>
-                                    <option value="gradient">Radial gradient</option>
-                                    <option value="linear">Linear gradient</option>
-                                    <option value="mesh">Mesh gradient</option>
-                                </select>
-                            </div>
-                            <div class="setting-row" id="editorBgSolidRow">
-                                <span class="setting-label">Color</span>
-                                <div class="color-picker-wrap">
-                                    <input type="color" id="editorBgColor" value="#4A90D9">
-                                    <span class="color-picker-label active" id="editorBgColorLabel">#4A90D9</span>
-                                </div>
-                            </div>
-                            <div id="editorBgGradientRows" class="hidden">
-                                <div class="setting-row">
-                                    <span class="setting-label">Center</span>
-                                    <div class="color-picker-wrap">
-                                        <input type="color" id="editorGradientCenter" value="#5BC0EB">
-                                        <span class="color-picker-label active" id="editorGradientCenterLabel">#5BC0EB</span>
-                                    </div>
-                                </div>
-                                <div class="setting-row">
-                                    <span class="setting-label">Edge</span>
-                                    <div class="color-picker-wrap">
-                                        <input type="color" id="editorGradientEdge" value="#2E6EA6">
-                                        <span class="color-picker-label active" id="editorGradientEdgeLabel">#2E6EA6</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="editorBgLinearRows" class="hidden">
-                                <div class="setting-row">
-                                    <span class="setting-label">Direction</span>
-                                    <div class="direction-picker" id="editorLinearDirection">
-                                        <button class="dir-btn" data-angle="315" title="Top-left">&#x2196;</button>
-                                        <button class="dir-btn" data-angle="0" title="Up">&#x2191;</button>
-                                        <button class="dir-btn" data-angle="45" title="Top-right">&#x2197;</button>
-                                        <button class="dir-btn" data-angle="270" title="Left">&#x2190;</button>
-                                        <span class="dir-center"></span>
-                                        <button class="dir-btn" data-angle="90" title="Right">&#x2192;</button>
-                                        <button class="dir-btn" data-angle="225" title="Bottom-left">&#x2199;</button>
-                                        <button class="dir-btn" data-angle="180" title="Down">&#x2193;</button>
-                                        <button class="dir-btn" data-angle="135" title="Bottom-right">&#x2198;</button>
-                                    </div>
-                                </div>
-                                <div class="setting-row">
-                                    <span class="setting-label">Start</span>
-                                    <div class="color-picker-wrap">
-                                        <input type="color" id="editorLinearStart" value="#5BC0EB">
-                                        <span class="color-picker-label active" id="editorLinearStartLabel">#5BC0EB</span>
-                                    </div>
-                                </div>
-                                <div class="setting-row">
-                                    <span class="setting-label">End</span>
-                                    <div class="color-picker-wrap">
-                                        <input type="color" id="editorLinearEnd" value="#2E6EA6">
-                                        <span class="color-picker-label active" id="editorLinearEndLabel">#2E6EA6</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="editorBgMeshRows" class="hidden">
-                                <div id="editorMeshColorList"></div>
-                                <button class="btn btn-ghost btn-sm" id="editorMeshAddColor" style="margin-top:4px;width:100%">
-                                    <i data-lucide="plus"></i>
-                                    Add color
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Layers -->
-                    <div class="settings-section">
-                        <div class="section-header">
-                            <span class="section-title">Layers</span>
-                            <div style="display:flex;gap:2px;">
-                                <button class="btn-icon btn-sm" id="editorResetBtn" title="Reset all">
-                                    <i data-lucide="rotate-ccw"></i>
-                                </button>
-                                <button class="btn-icon btn-sm" id="editorAddLayerBtn" title="Add icon layer">
-                                    <i data-lucide="plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="section-content">
-                            <!-- Layer list -->
-                            <div class="editor-layer-list" id="editorLayerList"></div>
-
-                            <!-- Controls du layer selectionne -->
-                            <div id="editorLayerControls">
-                                <div class="setting-row">
-                                    <span class="setting-label">Scale</span>
-                                    <div class="slider-row">
-                                        <div class="slider-track-wrap">
-                                            <input type="range" id="editorScale" class="range-slider" min="10" max="150" value="100">
-                                        </div>
-                                        <span class="slider-value" id="editorScaleValue">100%</span>
-                                    </div>
-                                </div>
-                                <div class="setting-row">
-                                    <span class="setting-label">Rotation</span>
-                                    <div class="slider-row">
-                                        <div class="slider-track-wrap">
-                                            <input type="range" id="editorRotation" class="range-slider" min="-180" max="180" value="0">
-                                        </div>
-                                        <span class="slider-value" id="editorRotationValue">0°</span>
-                                    </div>
-                                </div>
-                                <div class="setting-row">
-                                    <span class="setting-label">Offset X</span>
-                                    <div class="slider-row">
-                                        <div class="slider-track-wrap">
-                                            <input type="range" id="editorOffsetX" class="range-slider" min="-50" max="50" value="0">
-                                        </div>
-                                        <span class="slider-value" id="editorOffsetXValue">0%</span>
-                                    </div>
-                                </div>
-                                <div class="setting-row">
-                                    <span class="setting-label">Offset Y</span>
-                                    <div class="slider-row">
-                                        <div class="slider-track-wrap">
-                                            <input type="range" id="editorOffsetY" class="range-slider" min="-50" max="50" value="0">
-                                        </div>
-                                        <span class="slider-value" id="editorOffsetYValue">0%</span>
-                                    </div>
-                                </div>
-                                <div class="setting-row">
-                                    <span class="setting-label">Opacity</span>
-                                    <div class="slider-row">
-                                        <div class="slider-track-wrap">
-                                            <input type="range" id="editorOpacity" class="range-slider" min="0" max="100" value="100">
-                                        </div>
-                                        <span class="slider-value" id="editorOpacityValue">100%</span>
-                                    </div>
-                                </div>
-
-                                <div class="setting-row">
-                                    <span class="setting-label">Tint</span>
-                                    <label class="toggle">
-                                        <input type="checkbox" id="editorTintEnabled">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div id="editorTintControls" class="hidden">
-                                    <div class="setting-row">
-                                        <span class="setting-label">Color</span>
-                                        <div class="color-picker-wrap">
-                                            <input type="color" id="editorTintColor" value="#FF0000">
-                                            <span class="color-picker-label active" id="editorTintColorLabel">#FF0000</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="setting-row">
-                                    <span class="setting-label">Shadow</span>
-                                    <label class="toggle">
-                                        <input type="checkbox" id="editorShadowEnabled">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div id="editorShadowControls" class="hidden">
-                                    <div class="setting-row">
-                                        <span class="setting-label">Blur</span>
-                                        <div class="slider-row">
-                                            <div class="slider-track-wrap">
-                                                <input type="range" id="editorShadowBlur" class="range-slider" min="0" max="60" value="20">
-                                            </div>
-                                            <span class="slider-value" id="editorShadowBlurValue">20px</span>
-                                        </div>
-                                    </div>
-                                    <div class="setting-row">
-                                        <span class="setting-label">Offset Y</span>
-                                        <div class="slider-row">
-                                            <div class="slider-track-wrap">
-                                                <input type="range" id="editorShadowOffsetY" class="range-slider" min="0" max="40" value="8">
-                                            </div>
-                                            <span class="slider-value" id="editorShadowOffsetYValue">8px</span>
-                                        </div>
-                                    </div>
-                                    <div class="setting-row">
-                                        <span class="setting-label">Opacity</span>
-                                        <div class="slider-row">
-                                            <div class="slider-track-wrap">
-                                                <input type="range" id="editorShadowOpacity" class="range-slider" min="0" max="100" value="40">
-                                            </div>
-                                            <span class="slider-value" id="editorShadowOpacityValue">40%</span>
-                                        </div>
-                                    </div>
-                                    <div class="setting-row">
-                                        <span class="setting-label">Color</span>
-                                        <div class="color-picker-wrap">
-                                            <input type="color" id="editorShadowColor" value="#000000">
-                                            <span class="color-picker-label active" id="editorShadowColorLabel">#000000</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </aside>
-            </div>
-        </div>
-
-    </main>
-
+    </div>
 </div>
 
 <!-- About Modal -->
@@ -553,7 +454,7 @@
         </button>
         <img src="assets/light.png" alt="Icon Lab" class="about-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="about-logo logo-light">
-        <p class="about-version">Version <span class="version-number">0.62</span></p>
+        <p class="about-version">Version <span class="version-number">0.63</span></p>
         <p class="about-description">A free tool for generating and iterating on app icon designs using AI. Customize prompts, layers, and backgrounds — all in the browser.</p>
         <div class="about-links">
             <a href="https://github.com/cassardp/iconlab" target="_blank" rel="noopener">
@@ -561,39 +462,6 @@
             </a>
         </div>
         <p class="about-author">Made by <a href="https://x.com/patricecassard" target="_blank" rel="noopener">Patrice Cassard</a></p>
-    </div>
-</div>
-
-<!-- Login Modal -->
-<div class="modal-overlay" id="loginModal">
-    <div class="modal-content auth-modal">
-        <button class="about-close" id="loginClose">
-            <i data-lucide="x"></i>
-        </button>
-        <div class="auth-modal-icon">
-            <i data-lucide="mail"></i>
-        </div>
-        <h3 class="auth-modal-title">Sign in</h3>
-        <p class="auth-modal-desc">Enter your email to receive a magic link.</p>
-        <input type="email" id="loginEmail" class="auth-modal-input" placeholder="you@example.com" autocomplete="email">
-        <button class="btn btn-primary btn-full" id="loginSendBtn">Send Magic Link</button>
-        <p class="auth-modal-status" id="loginStatus"></p>
-    </div>
-</div>
-
-<!-- Profile Modal -->
-<div class="modal-overlay" id="profileModal">
-    <div class="modal-content auth-modal">
-        <button class="about-close" id="profileClose">
-            <i data-lucide="x"></i>
-        </button>
-        <h3 class="auth-modal-title">Your profile</h3>
-        <p class="auth-modal-desc">Choose a display name for your shared icons.</p>
-        <label class="auth-modal-label">Display name *</label>
-        <input type="text" id="profileName" class="auth-modal-input" placeholder="Your name" maxlength="30">
-        <label class="auth-modal-label">Website or app URL</label>
-        <input type="url" id="profileUrl" class="auth-modal-input" placeholder="https://...">
-        <button class="btn btn-primary btn-full" id="profileSaveBtn">Save</button>
     </div>
 </div>
 
@@ -607,8 +475,6 @@
 <script src="js/prompt-builder.js"></script>
 <script src="js/api-openai.js"></script>
 <script src="js/gallery.js"></script>
-<script src="js/community.js"></script>
-<script src="js/auth.js"></script>
 <script src="js/editor.js"></script>
 <script src="js/editor-layers.js"></script>
 <script src="js/editor-preview.js"></script>

@@ -37,86 +37,6 @@ label .hint {
     margin-bottom: 0;
 }
 
-/* Stacked row (textarea full-width) */
-.setting-row-stacked {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 12px 16px;
-    gap: 6px;
-}
-
-.setting-row-stacked textarea {
-    min-height: 72px;
-}
-
-/* Grouped rows (legacy) */
-.setting-row-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 8px;
-}
-
-.setting-row-group > .setting-row {
-    margin-bottom: 0;
-    min-height: 42px;
-    padding: 0 12px;
-    gap: 8px;
-}
-
-.setting-row-group > .setting-row .setting-label {
-    min-width: unset;
-}
-
-/* ---- Axis slider row ---- */
-
-#axisSliders {
-    margin-bottom: 8px;
-}
-
-
-.axis-row {
-    gap: 8px;
-    padding: 0 12px;
-    min-height: 42px;
-}
-
-.axis-row .slider-row {
-    flex: 1;
-    min-width: 0;
-    max-width: 80px;
-    margin: 0 auto;
-}
-
-.axis-label-min,
-.axis-label-max {
-    width: 52px;
-    font-size: 13px;
-    color: var(--foreground-muted);
-    flex-shrink: 0;
-    cursor: default;
-}
-
-.axis-label-min {
-    text-align: left;
-}
-
-.axis-label-max {
-    text-align: right;
-}
-
-.axis-row .slider-track-wrap::before {
-    left: 0;
-    right: 0;
-    background-image:
-        radial-gradient(circle, color-mix(in srgb, var(--foreground-muted) 35%, transparent) 2px, transparent 2px),
-        radial-gradient(circle, color-mix(in srgb, var(--foreground-muted) 35%, transparent) 2px, transparent 2px),
-        radial-gradient(circle, color-mix(in srgb, var(--foreground-muted) 35%, transparent) 2px, transparent 2px);
-    background-size: 4px 4px;
-    background-position: 0% center, 50% center, 100% center;
-    background-repeat: no-repeat;
-}
-
 .setting-label {
     font-size: 13px;
     color: var(--foreground-muted);
@@ -188,26 +108,6 @@ label .hint {
 .setting-row .color-picker-wrap {
     background: transparent;
     border-color: transparent;
-}
-
-/* ---- Legacy row layout ---- */
-
-.form-row {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-bottom: 10px;
-}
-
-.form-row:last-child {
-    margin-bottom: 0;
-}
-
-.form-row-inline {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
 }
 
 /* ---- Text inputs ---- */
@@ -567,4 +467,22 @@ select:focus {
 
 .color-picker-reset.hidden {
     display: none;
+}
+
+/* ---- Axis bound labels (min/max on sliders) ---- */
+
+.axis-bound-label {
+    font-size: 10px;
+    color: var(--foreground-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 32px;
+}
+
+.axis-bound-label:first-child {
+    text-align: left;
+}
+
+.axis-bound-label:last-child {
+    text-align: right;
 }

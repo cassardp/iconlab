@@ -47,6 +47,8 @@ App.AXIS_DEFAULTS = { volume: 0, color: 100, shape: 100, detail: 0, text: 0 };
 App.STYLE_PRESETS = {
     'illustration': {
         name: 'Illustration',
+        placeholder: 'a fox',
+        defaultAxes: { volume: 50, color: 50, shape: 100, detail: 50, text: 0 },
         subject: 'app icon of {subject}.',
         base: 'simplified illustration, no outlines, no textures, extremely clean and modern, vector-illustration feel, Apple-design-language aesthetic',
         constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.'],
@@ -60,6 +62,8 @@ App.STYLE_PRESETS = {
     },
     'blender': {
         name: 'Blender',
+        placeholder: 'a mushroom',
+        defaultAxes: { volume: 100, color: 50, shape: 100, detail: 50, text: 0 },
         subject: 'app icon of {subject}.',
         base: 'Blender-quality render, warm diffused studio lighting, no harsh specular highlights, smooth subsurface scattering, soft ambient occlusion',
         constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.'],
@@ -73,6 +77,8 @@ App.STYLE_PRESETS = {
     },
     'logo': {
         name: 'Logo',
+        placeholder: 'a bird',
+        defaultAxes: { volume: 0, color: 0, shape: 50, detail: 0, text: 0 },
         subject: '{subject}, logo, modern, Paul Rand style.',
         base: 'simplified flat illustration, no outlines, no textures, extremely clean and modern, Apple-design-language aesthetic',
         constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.'],
@@ -86,6 +92,8 @@ App.STYLE_PRESETS = {
     },
     'typography': {
         name: 'Typography',
+        placeholder: 'A',
+        defaultAxes: { volume: 50, color: 50, shape: 50, detail: 0, text: 0 },
         subject: 'the letter "{subject}", a single typographic letter or character.',
         base: 'extremely clean and modern, beautiful shading, Apple-design-language aesthetic',
         constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.'],
@@ -99,6 +107,8 @@ App.STYLE_PRESETS = {
     },
     'sticker': {
         name: 'Sticker',
+        placeholder: 'a rocket',
+        defaultAxes: { volume: 0, color: 50, shape: 100, detail: 0, text: 0 },
         subject: 'app icon of {subject}.',
         base: 'flat die-cut sticker, solid opaque color fills, cartoon-simple, thick off-white (#FAF9F7) outline border around the entire sticker shape',
         constraints: [
@@ -219,24 +229,13 @@ App.MESH_ANCHORS = [
     { x: 20, y: 80 }    // bottom-left
 ];
 
-/* ---- Supabase ---- */
-
-App.SUPABASE_URL = 'https://bisxrchfzahyiiwtxiof.supabase.co';
-App.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpc3hyY2hmemFoeWlpd3R4aW9mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzMTQzMzcsImV4cCI6MjA4Njg5MDMzN30.286OcvMVCJ8QcNgvZgWl7dOxKeS64LtJT97JHLfigJQ';
-App.COMMUNITY_PAGE_SIZE = 20;
-
 /* ---- Storage keys ---- */
 
 App.STORAGE_KEYS = {
     apiKey: 'icon-openai-api-key',
     model: 'icon-model',
     quality: 'icon-quality',
-    transparentBg: 'icon-transparent-bg',
-    theme: 'icon-theme',
-    gallery: 'icon-gallery',
-    deviceId: 'icon-device-id',
-    axes: 'icon-axes',
-    stylePreset: 'icon-style-preset'
+    theme: 'icon-theme'
 };
 
 /* ---- Color picker wrap : clic sur le wrapper ouvre le picker natif ---- */

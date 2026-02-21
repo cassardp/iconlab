@@ -72,7 +72,6 @@ App.updateEnrichedPrompt = function() {
         App.state.transparentBg
     );
 
-    App._lastGeneratedEnriched = enriched;
     textarea.value = enriched;
 };
 

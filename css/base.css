@@ -20,6 +20,11 @@ html, body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+}
+
 a {
     color: var(--foreground);
     text-decoration: none;
@@ -73,18 +78,6 @@ img {
 /* Utility */
 .hidden {
     display: none !important;
-}
-
-.text-muted {
-    color: var(--foreground-muted);
-}
-
-.text-sm {
-    font-size: 12px;
-}
-
-.text-xs {
-    font-size: 11px;
 }
 
 /* Spinner */

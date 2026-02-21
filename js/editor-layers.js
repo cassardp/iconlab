@@ -228,55 +228,26 @@ App._editorUpdateAddBtn = function() {
     btn.style.opacity = layers.length >= 5 ? '0.3' : '1';
 };
 
-/* ---- Layer picker ---- */
+/* ---- Layer picker (reuses gallery overlay) ---- */
 
 App._openLayerPicker = function() {
-    var picker = document.getElementById('editorLayerPicker');
-    var grid = document.getElementById('editorLayerPickerGrid');
-    if (!picker || !grid) return;
+    var galleryOverlay = document.getElementById('galleryOverlay');
+    var galleryToggle = document.getElementById('galleryToggle');
+    if (!galleryOverlay) return;
 
-    grid.innerHTML = '';
-
-    var generations = App.state.generations || [];
-    var currentLayers = App.state.editor.layers || [];
-
-    // Collecter les base64 deja utilises
-    var usedBase64 = {};
-    for (var i = 0; i < currentLayers.length; i++) {
-        usedBase64[currentLayers[i].imageBase64] = true;
-    }
-
-    var count = 0;
-    for (var j = 0; j < generations.length; j++) {
-        var gen = generations[j];
-        if (usedBase64[gen.imageBase64]) continue;
-
-        count++;
-        (function(generation) {
-            var item = document.createElement('div');
-            item.className = 'editor-layer-picker-item';
-            var img = document.createElement('img');
-            img.src = 'data:image/png;base64,' + generation.imageBase64;
-            img.alt = 'Icon';
-            item.appendChild(img);
-            item.addEventListener('click', function() {
-                App.addEditorLayer(generation);
-            });
-            grid.appendChild(item);
-        })(gen);
-    }
-
-    if (count === 0) {
-        var empty = document.createElement('div');
-        empty.className = 'editor-layer-picker-empty';
-        empty.textContent = 'No other icons available. Generate more icons first.';
-        grid.appendChild(empty);
-    }
-
-    picker.classList.remove('hidden');
+    App._galleryPickerMode = true;
+    galleryOverlay.classList.add('picker-mode');
+    galleryOverlay.classList.add('open');
+    if (galleryToggle) galleryToggle.classList.add('active');
 };
 
 App._closeLayerPicker = function() {
-    var picker = document.getElementById('editorLayerPicker');
-    if (picker) picker.classList.add('hidden');
+    var galleryOverlay = document.getElementById('galleryOverlay');
+    var galleryToggle = document.getElementById('galleryToggle');
+    if (!galleryOverlay) return;
+
+    App._galleryPickerMode = false;
+    galleryOverlay.classList.remove('picker-mode');
+    galleryOverlay.classList.remove('open');
+    if (galleryToggle) galleryToggle.classList.remove('active');
 };

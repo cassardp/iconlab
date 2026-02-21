@@ -4,6 +4,8 @@
 
 var App = window.App || {};
 
+App._galleryPickerMode = false;
+
 /**
  * Ajoute une generation a la galerie (en prepend).
  */
@@ -125,14 +127,6 @@ App.createCardHTML = function(gen) {
         imgHtml = '<img src="data:image/png;base64,' + gen.imageBase64 + '" alt="Generated icon">';
     }
 
-    var pickerValue = hasSavedBg ? gen.previewBg : '#1a1a1a';
-
-    var timeAgo = gen.timestamp ? App._timeAgo(gen.timestamp) : '';
-    var statsHtml = '';
-    if (timeAgo) {
-        statsHtml = '<span class="gallery-card-stats">' + timeAgo + '</span>';
-    }
-
     var card = document.createElement('div');
     card.className = 'gallery-card';
     card.setAttribute('data-ts', gen.timestamp);
@@ -153,16 +147,6 @@ App.createCardHTML = function(gen) {
         +       '</button>'
         +     '</div>'
         +   '</div>'
-        + '</div>'
-        + '<div class="gallery-card-actions">'
-        +   statsHtml
-        +   '<div class="card-actions-right">'
-        +     '<button class="btn-share' + (gen._sharedToCommunity ? ' shared' : '') + '">'
-        +       '<i data-lucide="' + (gen._sharedToCommunity ? 'globe-off' : 'globe') + '"></i>'
-        +       '<span class="btn-share-label">' + (gen._sharedToCommunity ? 'Shared' : 'Share') + '</span>'
-        +     '</button>'
-        +     '<input type="color" class="card-bg-color" value="' + pickerValue + '" title="Preview background color">'
-        +   '</div>'
         + '</div>';
 
     return card;
@@ -172,19 +156,16 @@ App.createCardHTML = function(gen) {
  * Rafraichit une card existante apres edition.
  */
 App.refreshGalleryCard = function(generation) {
-    console.log('[refreshGalleryCard] generation=' + !!generation + ', timestamp=' + (generation ? generation.timestamp : 'N/A'));
     if (!generation) return;
 
     var gallery = document.getElementById('gallery');
     var oldCard = gallery.querySelector('.gallery-card[data-ts="' + generation.timestamp + '"]');
-    console.log('[refreshGalleryCard] oldCard found=' + !!oldCard + ', total cards=' + gallery.querySelectorAll('.gallery-card').length);
     if (!oldCard) return;
 
     var newCard = App.createCardHTML(generation);
     App.attachCardEvents(newCard, generation);
     gallery.replaceChild(newCard, oldCard);
     lucide.createIcons({ nodes: [newCard] });
-    console.log('[refreshGalleryCard] replaced, total cards now=' + gallery.querySelectorAll('.gallery-card').length);
 };
 
 /**
@@ -234,42 +215,6 @@ App.attachCardEvents = function(card, generation) {
         });
     }
 
-    // Couleur de fond par card
-    var cardBgColor = card.querySelector('.card-bg-color');
-    var cardImageWrap = card.querySelector('.gallery-card-image');
-
-    if (cardBgColor && cardImageWrap) {
-        cardBgColor.addEventListener('input', function() {
-            cardImageWrap.classList.remove('checkerboard');
-            cardImageWrap.style.backgroundColor = this.value;
-            generation.previewBg = this.value;
-            if (generation.editorSettings) {
-                generation.editorSettings.bgType = 'solid';
-                generation.editorSettings.bgColor = this.value;
-            }
-            App.saveGallery();
-        });
-    }
-
-    // Partager / retirer de la communaute (toggle)
-    var shareBtn = card.querySelector('.btn-share');
-    if (shareBtn) {
-        shareBtn.addEventListener('click', function() {
-            shareBtn.disabled = true;
-            var label = shareBtn.querySelector('.btn-share-label');
-            var isShared = generation._sharedToCommunity;
-            shareBtn.classList.add('loading');
-            if (label) label.textContent = isShared ? 'Removing…' : 'Sharing…';
-            var action = isShared
-                ? App.unshareToCommunity(generation)
-                : App.shareToCommunity(generation);
-            action.finally(function() {
-                shareBtn.disabled = false;
-                shareBtn.classList.remove('loading');
-            });
-        });
-    }
-
     // Supprimer la card
     var deleteBtn = card.querySelector('.btn-delete');
     if (deleteBtn) {
@@ -286,10 +231,19 @@ App.attachCardEvents = function(card, generation) {
         });
     }
 
-    // Clic sur l'image pour ouvrir l'editeur
+    // Clic sur l'image : ouvrir editeur OU ajouter comme layer (picker mode)
     var imageWrap = card.querySelector('.gallery-card-image');
     if (imageWrap) {
         imageWrap.addEventListener('click', function() {
+            if (App._galleryPickerMode) {
+                App.addEditorLayer(generation);
+                App._closeLayerPicker();
+                return;
+            }
+            var galleryOverlay = document.getElementById('galleryOverlay');
+            var galleryToggle = document.getElementById('galleryToggle');
+            if (galleryOverlay) galleryOverlay.classList.remove('open');
+            if (galleryToggle) galleryToggle.classList.remove('active');
             App.openEditor(generation);
         });
     }
@@ -345,19 +299,29 @@ App.updateGalleryCount = function() {
 };
 
 /**
- * Rend toute la galerie depuis l'etat.
+ * Nombre de cards chargees par page.
+ */
+App._GALLERY_PAGE_SIZE = 24;
+App._galleryRenderedCount = 0;
+
+/**
+ * Rend toute la galerie depuis l'etat (premier batch).
  */
 App.renderFullGallery = function() {
-    console.log('[renderFullGallery] called, generations=' + App.state.generations.length);
-    console.trace('[renderFullGallery] stack');
     var gallery = document.getElementById('gallery');
     var emptyState = document.getElementById('galleryEmpty');
 
-    // Vider la galerie (sauf l'etat vide)
+    // Vider la galerie (sauf l'etat vide et le sentinel)
     var cards = gallery.querySelectorAll('.gallery-card');
     for (var i = 0; i < cards.length; i++) {
         gallery.removeChild(cards[i]);
     }
+
+    // Retirer l'ancien sentinel s'il existe
+    var oldSentinel = document.getElementById('gallerySentinel');
+    if (oldSentinel) oldSentinel.parentNode.removeChild(oldSentinel);
+
+    App._galleryRenderedCount = 0;
 
     if (App.state.generations.length === 0) {
         if (emptyState) emptyState.style.display = '';
@@ -367,11 +331,70 @@ App.renderFullGallery = function() {
 
     if (emptyState) emptyState.style.display = 'none';
 
-    for (var j = 0; j < App.state.generations.length; j++) {
-        App.renderGalleryCard(App.state.generations[j], false);
+    // Rendre le premier batch
+    App._renderGalleryBatch();
+    App.updateGalleryCount();
+
+    // Observer pour infinite scroll
+    App._initGalleryObserver();
+};
+
+/**
+ * Rend le prochain batch de cards.
+ */
+App._renderGalleryBatch = function() {
+    var gallery = document.getElementById('gallery');
+    var gens = App.state.generations;
+    var end = Math.min(App._galleryRenderedCount + App._GALLERY_PAGE_SIZE, gens.length);
+
+    for (var j = App._galleryRenderedCount; j < end; j++) {
+        App.renderGalleryCard(gens[j], false);
     }
 
-    App.updateGalleryCount();
+    App._galleryRenderedCount = end;
+
+    // Ajouter/deplacer le sentinel pour l'infinite scroll
+    var sentinel = document.getElementById('gallerySentinel');
+    if (App._galleryRenderedCount < gens.length) {
+        if (!sentinel) {
+            sentinel = document.createElement('div');
+            sentinel.id = 'gallerySentinel';
+            sentinel.style.height = '1px';
+            sentinel.style.gridColumn = '1 / -1';
+        }
+        gallery.appendChild(sentinel);
+    } else if (sentinel && sentinel.parentNode) {
+        sentinel.parentNode.removeChild(sentinel);
+    }
+};
+
+/**
+ * IntersectionObserver pour charger les batches suivants.
+ */
+App._galleryObserver = null;
+
+App._initGalleryObserver = function() {
+    if (App._galleryObserver) {
+        App._galleryObserver.disconnect();
+    }
+
+    var galleryEl = document.getElementById('gallery');
+
+    App._galleryObserver = new IntersectionObserver(function(entries) {
+        for (var i = 0; i < entries.length; i++) {
+            if (entries[i].isIntersecting && App._galleryRenderedCount < App.state.generations.length) {
+                App._renderGalleryBatch();
+                // Re-observe le nouveau sentinel
+                var newSentinel = document.getElementById('gallerySentinel');
+                if (newSentinel) App._galleryObserver.observe(newSentinel);
+            }
+        }
+    }, { root: galleryEl, rootMargin: '200px' });
+
+    var sentinel = document.getElementById('gallerySentinel');
+    if (sentinel) {
+        App._galleryObserver.observe(sentinel);
+    }
 };
 
 /**
@@ -464,13 +487,6 @@ App.deleteGeneration = function(generation, cardEl) {
     var idx = App.state.generations.indexOf(generation);
     if (idx === -1) return;
 
-    // Unshare from community if shared
-    if (generation._sharedToCommunity && generation._sharedId) {
-        App.unshareToCommunity(generation).catch(function() {
-            // Best effort — delete locally even if unshare fails
-        });
-    }
-
     App.state.generations.splice(idx, 1);
 
     // Retirer la card du DOM avec une petite animation
@@ -494,15 +510,6 @@ App.deleteGeneration = function(generation, cardEl) {
 };
 
 /* ---- Utilitaires ---- */
-
-App.escapeHtml = function(str) {
-    if (!str) return '';
-    return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-};
 
 App.copyToClipboard = function(text) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -530,6 +537,21 @@ App.fallbackCopy = function(text) {
         App.showToast('Failed to copy', 'error');
     }
     document.body.removeChild(textarea);
+};
+
+/* ---- Time formatting ---- */
+
+App._timeAgo = function(ts) {
+    var now = Date.now();
+    var diff = now - ts;
+    var mins = Math.floor(diff / 60000);
+    var hours = Math.floor(diff / 3600000);
+    var days = Math.floor(diff / 86400000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return mins + 'm ago';
+    if (hours < 24) return hours + 'h ago';
+    if (days < 30) return days + 'd ago';
+    return new Date(ts).toLocaleDateString();
 };
 
 /* ---- Render composition sur canvas (layers + transforms + tint) ---- */
@@ -711,36 +733,6 @@ App._drawMeshGradient = function(ctx, size, colors) {
     }
 };
 
-/* ---- Download helpers ---- */
-
-App.downloadImage = function(generation) {
-    var es = generation.editorSettings;
-    var size = (es && es.exportSize) ? es.exportSize : null;
-
-    App._renderComposition(generation, size, false, null, function(canvas) {
-        var link = document.createElement('a');
-        link.download = 'icon-' + generation.model + '-' + Date.now() + '.png';
-        link.href = canvas.toDataURL('image/png');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    });
-};
-
-App.downloadImageWithBg = function(generation, bgColor) {
-    var es = generation.editorSettings;
-    var size = (es && es.exportSize) ? es.exportSize : null;
-
-    App._renderComposition(generation, size, true, bgColor, function(canvas) {
-        var link = document.createElement('a');
-        link.download = 'icon-bg-' + generation.model + '-' + Date.now() + '.png';
-        link.href = canvas.toDataURL('image/png');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    });
-};
-
 /**
  * Export ZIP avec toutes les tailles d'icones (avec fond + transparent).
  * Fonctionne depuis la galerie, sans necessite d'ouvrir l'editeur.
@@ -800,3 +792,4 @@ App.showToast = function(message, type) {
         toast.classList.remove('show');
     }, 2500);
 };
+

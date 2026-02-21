@@ -671,6 +671,29 @@ body.panels-hidden .editor-sidebar {
     object-fit: cover;
 }
 
+/* Style badge on community cards */
+.community-card-style-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.community-card-image:hover .community-card-style-badge {
+    opacity: 1;
+}
+
 /* Community cards reuse .gallery-card-meta and .gallery-card-actions */
 
 /* Share button */

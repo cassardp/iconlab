@@ -226,6 +226,7 @@ App.handleGenerate = function() {
             userPrompt: userPrompt,
             enrichedPrompt: finalPrompt,
             axes: JSON.parse(JSON.stringify(App.state.axes)),
+            stylePreset: App.state.stylePreset,
             quality: App.state.quality,
             transparent: App.state.transparentBg,
             duration: duration,

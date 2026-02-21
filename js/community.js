@@ -146,17 +146,12 @@ App._renderCommunityCard = function(icon) {
         }
     }
 
+    var styleName = App._getCommunityStyleLabel(icon.style_preset);
+
     card.innerHTML = ''
         + '<div class="community-card-image">'
         +   '<img src="' + App.escapeHtml(icon.image_url) + '" alt="Community icon" loading="lazy">'
-        +   '<div class="gallery-card-overlay">'
-        +     '<button class="gallery-card-overlay-btn btn-copy-prompt" title="Copy enriched prompt">'
-        +       '<i data-lucide="copy"></i> Prompt'
-        +     '</button>'
-        +     '<button class="gallery-card-overlay-btn btn-community-download" title="Download">'
-        +       '<i data-lucide="download"></i>'
-        +     '</button>'
-        +   '</div>'
+        +   '<span class="community-card-style-badge">' + App.escapeHtml(styleName) + '</span>'
         + '</div>'
         + '<div class="gallery-card-actions">'
         +   creatorHtml
@@ -175,19 +170,16 @@ App._renderCommunityCard = function(icon) {
         App._toggleLike(icon, card);
     });
 
-    var dlBtn = card.querySelector('.btn-community-download');
-    dlBtn.addEventListener('click', function() {
-        App._downloadCommunityIcon(icon);
-    });
-
-    var copyPromptBtn = card.querySelector('.btn-copy-prompt');
-    if (copyPromptBtn) {
-        copyPromptBtn.addEventListener('click', function() {
-            App.copyToClipboard(icon.enriched_prompt || icon.user_prompt || '');
-        });
-    }
-
     return card;
+};
+
+/* ---- Style label helper ---- */
+
+App._getCommunityStyleLabel = function(preset) {
+    if (preset && App.STYLE_PRESETS[preset]) {
+        return App.STYLE_PRESETS[preset].name;
+    }
+    return 'Custom';
 };
 
 /* ---- Time ago helper ---- */
@@ -313,6 +305,7 @@ App.shareToCommunity = function(generation) {
                                 user_prompt: generation.userPrompt || null,
                                 enriched_prompt: generation.enrichedPrompt || null,
                                 model: generation.model || null,
+                                style_preset: generation.stylePreset || null,
                                 user_id: userId
                             }).select().single();
                     })

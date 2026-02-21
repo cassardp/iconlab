@@ -754,11 +754,14 @@ body.panels-hidden .editor-sidebar {
     height: 16px;
     position: relative;
     top: -1px;
-    transition: transform 0.15s ease;
+    transition: transform 0.15s ease, color var(--transition-fast), fill var(--transition-fast);
+    color: var(--border);
+    fill: var(--border);
 }
 
 .btn-like:hover svg {
     color: #ef4444;
+    fill: #ef4444;
 }
 
 .btn-like:active svg {

@@ -97,6 +97,8 @@ App.openEditor = function(generation) {
     if (toolbarRight) {
         toolbarRight.classList.remove('disabled');
     }
+    var exportBtn = document.getElementById('editorExportBtn');
+    if (exportBtn) exportBtn.classList.remove('hidden');
 
     // Render les images et la layer list
     App._renderLayerImages(function() {
@@ -184,6 +186,8 @@ App.closeEditor = function() {
     // Disable toolbar right and reset active panel
     var toolbarRight = document.getElementById('toolbarRight');
     if (toolbarRight) toolbarRight.classList.add('disabled');
+    var exportBtn2 = document.getElementById('editorExportBtn');
+    if (exportBtn2) exportBtn2.classList.add('hidden');
     App._activeRightPanel = null;
     var panel = document.getElementById('toolbarRightPanel');
     if (panel) panel.classList.add('hidden');

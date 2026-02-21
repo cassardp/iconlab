@@ -83,12 +83,17 @@
     <!-- Left toolbar (floating) -->
     <div class="toolbar-left">
         <button class="toolbar-left-btn" id="galleryToggle" title="Gallery">
-            <i data-lucide="layout-grid"></i>
+            <i data-lucide="folder"></i>
         </button>
     </div>
 
     <!-- Canvas area (centre) -->
     <div class="canvas-area">
+        <!-- Export button (floating, between topbar and icon) -->
+        <button class="export-btn hidden" id="editorExportBtn" title="Export">
+            <i data-lucide="archive"></i>
+            <span>Export</span>
+        </button>
         <!-- Preview frame -->
         <div class="preview-frame" id="previewFrame">
             <div class="preview-placeholder" id="previewPlaceholder"></div>
@@ -101,10 +106,6 @@
     <!-- Right toolbar + panels (editor controls) -->
     <div class="toolbar-right disabled" id="toolbarRight">
         <div class="toolbar-right-btns">
-            <button class="toolbar-right-btn" id="editorExportBtn" title="Export">
-                <i data-lucide="archive"></i>
-            </button>
-            <div class="toolbar-right-sep"></div>
             <button class="toolbar-right-btn" data-panel="panelBackground" title="Background">
                 <i data-lucide="image"></i>
             </button>
@@ -336,7 +337,7 @@
     <div class="gallery-overlay" id="galleryOverlay">
         <header class="gallery-overlay-header">
             <div class="gallery-overlay-title">
-                <i data-lucide="layout-grid"></i>
+                <i data-lucide="folder"></i>
                 <span id="galleryCount">0 icons</span>
                 <span class="gallery-picker-title">Select an icon to add</span>
             </div>
@@ -454,7 +455,7 @@
         </button>
         <img src="assets/light.png" alt="Icon Lab" class="about-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="about-logo logo-light">
-        <p class="about-version">Version <span class="version-number">0.63</span></p>
+        <p class="about-version">Version <span class="version-number">0.64</span></p>
         <p class="about-description">A free tool for generating and iterating on app icon designs using AI. Customize prompts, layers, and backgrounds — all in the browser.</p>
         <div class="about-links">
             <a href="https://github.com/cassardp/iconlab" target="_blank" rel="noopener">

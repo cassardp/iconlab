@@ -1,0 +1,298 @@
+/* ============================================
+   Topbar — Navigation bar + API key bar
+   ============================================ */
+
+/* ---- Notification nouveaux modeles ---- */
+
+.new-models-notice {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 16px;
+    background: var(--accent, #3b82f6);
+    color: #fff;
+    font-size: 13px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+}
+
+.new-models-notice button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 4px;
+    opacity: 0.7;
+}
+
+.new-models-notice button:hover {
+    opacity: 1;
+}
+
+/* ---- Topbar ---- */
+
+.topbar {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 360px;
+    width: calc(100% - 32px);
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px 0 14px;
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    z-index: 100;
+    white-space: nowrap;
+}
+
+.topbar-left,
+.topbar-center,
+.topbar-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.topbar-center {
+    justify-content: center;
+}
+
+.topbar-right {
+    justify-content: flex-end;
+    gap: 2px;
+}
+
+.topbar-logo {
+    height: 14px;
+    width: auto;
+}
+
+.topbar-size-wrap {
+    position: relative;
+}
+
+.topbar-size-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px 4px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--foreground-muted);
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 99px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.topbar-size-btn:hover {
+    color: var(--foreground);
+    border-color: var(--border);
+}
+
+.topbar-size-chevron {
+    width: 12px;
+    height: 12px;
+}
+
+.topbar-size-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 110;
+}
+
+.topbar-size-option {
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--foreground-muted);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.topbar-size-option:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.topbar-size-option.active {
+    color: var(--foreground);
+}
+
+.topbar-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius);
+    color: var(--foreground-muted);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+    text-decoration: none;
+}
+
+.topbar-btn:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.topbar-btn:active {
+    transform: scale(0.9);
+}
+
+.topbar-btn svg,
+.topbar-btn [data-lucide] {
+    width: 18px;
+    height: 18px;
+}
+
+.version-number {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--foreground-muted);
+    opacity: 0.8;
+    padding: 0 6px;
+}
+
+/* Logo dark/light theme switching */
+.logo-light {
+    display: block;
+}
+
+.logo-dark {
+    display: none;
+}
+
+:root.light .logo-light {
+    display: none;
+}
+
+:root.light .logo-dark {
+    display: block;
+}
+
+/* Theme toggle icons: show target theme icon */
+.topbar-btn .icon-sun {
+    display: block;
+}
+
+.topbar-btn .icon-moon {
+    display: none;
+}
+
+:root.light .topbar-btn .icon-sun {
+    display: none;
+}
+
+:root.light .topbar-btn .icon-moon {
+    display: block;
+}
+
+/* ---- API Key bar (below topbar) ---- */
+
+.api-key-bar {
+    position: fixed;
+    top: 62px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 460px;
+    width: calc(100% - 32px);
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 4px 4px 14px;
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    z-index: 99;
+}
+
+.api-key-bar input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: none !important;
+    background: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    color: var(--foreground);
+    padding: 0;
+    -webkit-text-security: disc;
+}
+
+.api-key-bar input.visible {
+    -webkit-text-security: none;
+}
+
+.api-key-bar input::-webkit-contacts-auto-fill-button,
+.api-key-bar input::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+}
+
+.api-key-bar input::placeholder {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--muted-foreground);
+}
+
+.api-key-bar-toggle {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius);
+    color: var(--foreground-muted);
+    cursor: pointer;
+    transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.api-key-bar-toggle:hover {
+    color: var(--foreground);
+    background: var(--muted);
+}
+
+.api-key-bar-toggle svg {
+    width: 16px;
+    height: 16px;
+}

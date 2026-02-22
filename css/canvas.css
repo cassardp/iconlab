@@ -1,0 +1,296 @@
+/* ============================================
+   Canvas — Main area, toolbars, preview, panels
+   ============================================ */
+
+/* ---- Main area ---- */
+
+.main {
+    flex: 1;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ---- Toolbar left (floating) ---- */
+
+.toolbar-left {
+    position: absolute;
+    left: 12px;
+    top: calc(50% - 25px);
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    gap: 4px;
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    z-index: 30;
+}
+
+.toolbar-left-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius);
+    color: var(--foreground-muted);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.toolbar-left-btn:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.toolbar-left-btn.active {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.toolbar-left-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+
+/* ---- Canvas area (centre, plein ecran) ---- */
+
+.canvas-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: var(--background-subtle);
+    overflow: hidden;
+    padding: 0 64px 50px;
+}
+
+/* ---- Canvas stack (size + preview + download) ---- */
+
+.canvas-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 512px;
+}
+
+/* ---- Size selector ---- */
+
+.size-selector {
+    position: relative;
+    z-index: 30;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.canvas-stack:hover .size-selector:not(.disabled) {
+    opacity: 1;
+}
+
+.size-selector.disabled {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ---- Download button ---- */
+
+.download-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px 7px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--primary-foreground);
+    background: var(--primary);
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+}
+
+.canvas-stack:hover .download-btn:not(.disabled) {
+    opacity: 1;
+}
+
+.download-btn:hover {
+    background: var(--foreground);
+    color: var(--background);
+}
+
+.download-btn:active {
+    transform: scale(0.96);
+}
+
+.download-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.download-btn.disabled {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.download-btn.loading {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* ---- Preview frame ---- */
+
+.preview-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1;
+}
+
+.preview-placeholder {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 22.5%;
+    background: var(--muted);
+    user-select: none;
+    position: relative;
+}
+
+.preview-placeholder.loading::after {
+    content: '';
+    position: absolute;
+    top: calc(50% - 12px);
+    left: calc(50% - 12px);
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border);
+    border-top-color: var(--foreground);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+/* ---- Toolbar right (floating editor controls) ---- */
+
+.toolbar-right {
+    position: absolute;
+    right: 12px;
+    top: calc(50% - 25px);
+    transform: translateY(-50%);
+    z-index: 30;
+}
+
+.toolbar-right-divider {
+    width: 24px;
+    border: none;
+    border-top: 1px solid var(--border-subtle);
+    margin: 2px 0;
+}
+
+.toolbar-right-btns {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    gap: 4px;
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.toolbar-right-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius);
+    color: var(--foreground-muted);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.toolbar-right.disabled .toolbar-right-btn {
+    opacity: 0.3;
+    pointer-events: none;
+    cursor: default;
+}
+
+.toolbar-right-btn:hover {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.toolbar-right-btn.active {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.toolbar-right-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+#editorResetBtn svg {
+    width: 16px;
+    height: 16px;
+}
+
+#editorResetBtn.btn-disabled {
+    opacity: 0.25;
+    pointer-events: none;
+    cursor: default;
+}
+
+.toolbar-right-panel {
+    position: absolute;
+    right: calc(100% + 8px);
+    width: 230px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.toolbar-right-panel::-webkit-scrollbar {
+    display: none;
+}
+
+.panel-float {
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.panel-float .section-header {
+    padding: 12px 14px 8px;
+}
+
+.panel-float .section-content {
+    padding: 0 6px 10px;
+}
+
+.panel-float .setting-row {
+    padding: 0 8px;
+    min-height: 36px;
+}
+
+.panel-float .setting-label {
+    font-size: 12px;
+    min-width: 60px;
+}

@@ -1,0 +1,237 @@
+/* ============================================
+   Gallery — Overlay, cards, picker mode
+   ============================================ */
+
+/* ---- Gallery overlay ---- */
+
+.gallery-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: var(--background);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    transform: scale(0.97);
+    pointer-events: none;
+    visibility: hidden;
+    transform-origin: 24px 50%;
+    transition: opacity var(--transition-base), transform var(--transition-base), visibility var(--transition-base);
+}
+
+.gallery-overlay.open {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.gallery-overlay-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+}
+
+.gallery-overlay-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--foreground);
+}
+
+.gallery-overlay-title svg {
+    width: 20px;
+    height: 20px;
+}
+
+.gallery-overlay-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.gallery-overlay-actions .btn-sm {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 13px;
+}
+
+.gallery-overlay-actions .btn-sm svg {
+    width: 15px;
+    height: 15px;
+}
+
+.gallery-overlay-actions #galleryOverlayClose {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius);
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.gallery-overlay-actions #galleryOverlayClose:hover {
+    background: var(--border);
+}
+
+.gallery-overlay-actions #galleryOverlayClose svg {
+    width: 22px;
+    height: 22px;
+}
+
+.gallery-overlay .gallery {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(180px, calc(50% - 6px)), 1fr));
+    grid-auto-rows: min-content;
+    gap: 12px;
+    align-content: start;
+}
+
+/* Gallery Empty State */
+.gallery-empty {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    color: var(--foreground-muted);
+}
+
+.gallery-empty p {
+    font-size: 13px;
+}
+
+/* ---- Gallery Card ---- */
+
+.gallery-card {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    align-self: start;
+    cursor: pointer;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.gallery-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.gallery-card-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.gallery-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-card-overlay {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+    display: flex;
+    justify-content: space-between;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    z-index: 2;
+}
+
+.gallery-card-overlay-right {
+    display: flex;
+    gap: 4px;
+}
+
+.gallery-card-image:hover .gallery-card-overlay {
+    opacity: 1;
+}
+
+.gallery-card-overlay-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    transition: background var(--transition-fast);
+}
+
+.gallery-card-overlay-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.gallery-card-overlay-btn:hover {
+    background: rgba(0, 0, 0, 0.75);
+}
+
+/* ---- Gallery picker mode (layer selection) ---- */
+
+.gallery-picker-title {
+    display: none;
+}
+
+.gallery-overlay.picker-mode .gallery-overlay-title > i,
+.gallery-overlay.picker-mode #galleryCount {
+    display: none;
+}
+
+.gallery-overlay.picker-mode .gallery-picker-title {
+    display: inline;
+}
+
+.gallery-overlay.picker-mode #clearGalleryBtn {
+    display: none;
+}
+
+.gallery-overlay.picker-mode .gallery-card-overlay {
+    display: none;
+}
+
+.gallery-overlay.picker-mode .gallery-card-image {
+    background-color: var(--muted) !important;
+    background-image: none !important;
+}
+
+/* Loading card */
+.gallery-card.loading {
+    opacity: 0.7;
+}
+
+.gallery-card.loading .gallery-card-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--muted);
+}
+
+.gallery-card-loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: var(--foreground-muted);
+    font-size: 12px;
+}

@@ -11,12 +11,6 @@ label {
     margin-bottom: 4px;
 }
 
-label .hint {
-    font-weight: 400;
-    color: var(--foreground-muted);
-    font-size: 11px;
-}
-
 /* ---- Setting Row ---- */
 
 .setting-row {
@@ -378,20 +372,3 @@ select:focus {
     display: none;
 }
 
-/* ---- Axis bound labels (min/max on sliders) ---- */
-
-.axis-bound-label {
-    font-size: 10px;
-    color: var(--foreground-muted);
-    white-space: nowrap;
-    flex-shrink: 0;
-    min-width: 32px;
-}
-
-.axis-bound-label:first-child {
-    text-align: left;
-}
-
-.axis-bound-label:last-child {
-    text-align: right;
-}

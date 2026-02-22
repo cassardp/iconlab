@@ -257,6 +257,15 @@
     -webkit-text-security: none;
 }
 
+.api-key-bar input::-webkit-contacts-auto-fill-button,
+.api-key-bar input::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+}
+
 .api-key-bar input::placeholder {
     font-family: 'Inter', sans-serif;
     font-size: 13px;

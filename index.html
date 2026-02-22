@@ -49,18 +49,10 @@
         <img src="assets/dark.png" alt="Icon Lab" class="topbar-logo logo-light">
     </div>
     <div class="topbar-center">
-        <div class="topbar-size-wrap" id="sizeDropdownWrap">
-            <button class="topbar-size-btn" id="sizeDropdownBtn">
-                <span id="sizeDropdownLabel">512px</span>
-                <i data-lucide="chevron-down" class="topbar-size-chevron"></i>
-            </button>
-            <div class="topbar-size-menu hidden" id="sizeDropdownMenu">
-                <button class="topbar-size-option" data-size="64">64px</button>
-                <button class="topbar-size-option" data-size="128">128px</button>
-                <button class="topbar-size-option" data-size="256">256px</button>
-                <button class="topbar-size-option active" data-size="512">512px</button>
-            </div>
-        </div>
+        <button class="export-btn disabled" id="editorExportBtn" title="Export">
+            <i data-lucide="download"></i>
+            <span>Export</span>
+        </button>
     </div>
     <div class="topbar-right">
         <button class="topbar-btn" id="aboutBtn" title="About Icon Lab">
@@ -90,11 +82,21 @@
 
     <!-- Canvas area (centre) -->
     <div class="canvas-area">
-        <!-- Export button (floating, between topbar and icon) -->
-        <button class="export-btn hidden" id="editorExportBtn" title="Export">
-            <i data-lucide="archive"></i>
-            <span>Export</span>
-        </button>
+        <!-- Size selector (floating, above icon) -->
+        <div class="size-selector disabled" id="sizeSelector">
+            <div class="topbar-size-wrap" id="sizeDropdownWrap">
+                <button class="topbar-size-btn" id="sizeDropdownBtn">
+                    <span id="sizeDropdownLabel">512px</span>
+                    <i data-lucide="chevron-down" class="topbar-size-chevron"></i>
+                </button>
+                <div class="topbar-size-menu hidden" id="sizeDropdownMenu">
+                    <button class="topbar-size-option" data-size="64">64px</button>
+                    <button class="topbar-size-option" data-size="128">128px</button>
+                    <button class="topbar-size-option" data-size="256">256px</button>
+                    <button class="topbar-size-option active" data-size="512">512px</button>
+                </div>
+            </div>
+        </div>
         <!-- Preview frame -->
         <div class="preview-frame" id="previewFrame">
             <div class="preview-placeholder" id="previewPlaceholder"></div>
@@ -108,13 +110,13 @@
     <div class="toolbar-right disabled" id="toolbarRight">
         <div class="toolbar-right-btns">
             <button class="toolbar-right-btn" data-panel="panelBackground" title="Background">
-                <i data-lucide="image"></i>
+                <i data-lucide="scan"></i>
             </button>
             <button class="toolbar-right-btn" data-panel="panelLayers" title="Layers">
                 <i data-lucide="layers"></i>
             </button>
             <button class="toolbar-right-btn" data-panel="panelEffects" title="Effects">
-                <i data-lucide="sparkles"></i>
+                <i data-lucide="sliders-horizontal"></i>
             </button>
             <div class="toolbar-right-panel hidden" id="toolbarRightPanel">
 
@@ -456,7 +458,7 @@
         </button>
         <img src="assets/light.png" alt="Icon Lab" class="about-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="about-logo logo-light">
-        <p class="about-version">Version <span class="version-number">0.65</span></p>
+        <p class="about-version">Version <span class="version-number">0.66</span></p>
         <p class="about-description">A free tool for generating and iterating on app icon designs using AI. Customize prompts, layers, and backgrounds — all in the browser.</p>
         <div class="about-links">
             <a href="https://github.com/cassardp/iconlab" target="_blank" rel="noopener">

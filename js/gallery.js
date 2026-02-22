@@ -139,8 +139,8 @@ App.createCardHTML = function(gen) {
         +       '<i data-lucide="copy"></i> Prompt'
         +     '</button>'
         +     '<div class="gallery-card-overlay-right">'
-        +       '<button class="gallery-card-overlay-btn btn-download" title="Download image">'
-        +         '<i data-lucide="download"></i>'
+        +       '<button class="gallery-card-overlay-btn btn-duplicate" title="Duplicate">'
+        +         '<i data-lucide="copy-plus"></i>'
         +       '</button>'
         +       '<button class="gallery-card-overlay-btn btn-delete" title="Delete">'
         +         '<i data-lucide="trash-2"></i>'
@@ -207,11 +207,11 @@ App.attachCardEvents = function(card, generation) {
         });
     }
 
-    // Telecharger le ZIP avec toutes les tailles
-    var downloadBtn = card.querySelector('.btn-download');
-    if (downloadBtn) {
-        downloadBtn.addEventListener('click', function() {
-            App.downloadZip(generation);
+    // Dupliquer la generation
+    var duplicateBtn = card.querySelector('.btn-duplicate');
+    if (duplicateBtn) {
+        duplicateBtn.addEventListener('click', function() {
+            App.duplicateGeneration(generation);
         });
     }
 
@@ -403,6 +403,14 @@ App._initGalleryObserver = function() {
 App.clearGallery = function() {
     App.state.generations = [];
     App.renderFullGallery();
+    App.saveGallery();
+};
+
+App.duplicateGeneration = function(generation) {
+    var clone = JSON.parse(JSON.stringify(generation));
+    clone.timestamp = Date.now();
+    App.state.generations.unshift(clone);
+    App.renderGalleryCard(clone, true);
     App.saveGallery();
 };
 

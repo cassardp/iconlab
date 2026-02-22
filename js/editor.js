@@ -98,7 +98,9 @@ App.openEditor = function(generation) {
         toolbarRight.classList.remove('disabled');
     }
     var exportBtn = document.getElementById('editorExportBtn');
-    if (exportBtn) exportBtn.classList.remove('hidden');
+    if (exportBtn) exportBtn.classList.remove('disabled');
+    var sizeSelector = document.getElementById('sizeSelector');
+    if (sizeSelector) sizeSelector.classList.remove('disabled');
 
     // Render les images et la layer list
     App._renderLayerImages(function() {
@@ -187,7 +189,9 @@ App.closeEditor = function() {
     var toolbarRight = document.getElementById('toolbarRight');
     if (toolbarRight) toolbarRight.classList.add('disabled');
     var exportBtn2 = document.getElementById('editorExportBtn');
-    if (exportBtn2) exportBtn2.classList.add('hidden');
+    if (exportBtn2) exportBtn2.classList.add('disabled');
+    var sizeSelector2 = document.getElementById('sizeSelector');
+    if (sizeSelector2) sizeSelector2.classList.add('disabled');
     App._activeRightPanel = null;
     var panel = document.getElementById('toolbarRightPanel');
     if (panel) panel.classList.add('hidden');

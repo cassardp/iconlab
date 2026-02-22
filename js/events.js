@@ -321,6 +321,7 @@ App.updateGenerateButton = function() {
 App.handleGenerate = function() {
     if (App.state.isGenerating || !App.canGenerate()) return;
 
+    App._closeAllSections();
     App.state.isGenerating = true;
     App.updateGenerateButton();
 

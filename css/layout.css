@@ -41,42 +41,41 @@
     top: 12px;
     left: 50%;
     transform: translateX(-50%);
-    height: 40px;
+    max-width: 640px;
+    width: calc(100% - 32px);
+    height: 44px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: space-between;
     padding: 0 6px 0 12px;
     background: var(--card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     z-index: 100;
     white-space: nowrap;
 }
 
-.topbar-left {
+.topbar-left,
+.topbar-center,
+.topbar-right {
+    flex: 1;
     display: flex;
     align-items: center;
-    gap: 8px;
 }
 
-.topbar-logo {
-    height: 13px;
-    width: auto;
+.topbar-center {
+    justify-content: center;
 }
 
 .topbar-right {
-    display: flex;
-    align-items: center;
+    justify-content: flex-end;
     gap: 2px;
-    margin-left: auto;
 }
 
-.topbar-sep {
-    width: 1px;
-    height: 18px;
-    background: var(--border-subtle);
-    margin: 0 4px;
+.topbar-logo {
+    height: 14px;
+    width: auto;
 }
 
 .topbar-size-wrap {
@@ -87,8 +86,8 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 2px 6px 2px 8px;
-    font-size: 11px;
+    padding: 4px 8px 4px 10px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--foreground-muted);
     background: var(--muted);
@@ -146,8 +145,8 @@
 }
 
 .topbar-btn {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -171,8 +170,8 @@
 
 .topbar-btn svg,
 .topbar-btn [data-lucide] {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
 }
 
 .version-number {
@@ -236,18 +235,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 6px;
+    padding: 8px;
     gap: 4px;
     background: var(--card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     z-index: 30;
 }
 
 .toolbar-left-btn {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -270,8 +269,8 @@
 }
 
 .toolbar-left-btn svg {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
 }
 
 /* ---- Canvas area (centre, plein ecran) ---- */
@@ -297,22 +296,22 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 14px 6px 10px;
-    font-size: 12px;
+    padding: 7px 16px 7px 12px;
+    font-size: 13px;
     font-weight: 500;
-    color: var(--foreground-muted);
-    background: var(--card);
-    border: 1px solid var(--border-subtle);
+    color: var(--background);
+    background: var(--foreground);
+    border: none;
     border-radius: var(--radius-lg);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     z-index: 30;
-    transition: background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+    transition: opacity var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .export-btn:hover {
-    color: var(--foreground);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    opacity: 0.85;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .export-btn:active {
@@ -320,8 +319,8 @@
 }
 
 .export-btn svg {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
 }
 
 .export-btn.loading {
@@ -384,18 +383,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 6px;
+    padding: 8px;
     gap: 4px;
     background: var(--card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     position: relative;
 }
 
 .toolbar-right-btn {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -424,8 +423,8 @@
 }
 
 .toolbar-right-btn svg {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
 }
 
 .toolbar-right-panel {
@@ -746,7 +745,7 @@
     background: var(--card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     z-index: 60;
     gap: 0;
 }

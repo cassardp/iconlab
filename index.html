@@ -48,7 +48,7 @@
         <img src="assets/light.png" alt="Icon Lab" class="topbar-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="topbar-logo logo-light">
     </div>
-    <div class="topbar-right">
+    <div class="topbar-center">
         <div class="topbar-size-wrap" id="sizeDropdownWrap">
             <button class="topbar-size-btn" id="sizeDropdownBtn">
                 <span id="sizeDropdownLabel">512px</span>
@@ -61,16 +61,17 @@
                 <button class="topbar-size-option active" data-size="512">512px</button>
             </div>
         </div>
-        <div class="topbar-sep"></div>
+    </div>
+    <div class="topbar-right">
+        <button class="topbar-btn" id="aboutBtn" title="About Icon Lab">
+            <i data-lucide="info"></i>
+        </button>
         <button class="topbar-btn" id="settingsBtn" title="Settings">
             <i data-lucide="settings"></i>
         </button>
         <button class="topbar-btn" id="themeToggle" title="Toggle theme">
             <i data-lucide="moon" class="icon-moon"></i>
             <i data-lucide="sun" class="icon-sun"></i>
-        </button>
-        <button class="topbar-btn" id="aboutBtn" title="About Icon Lab">
-            <i data-lucide="info"></i>
         </button>
     </div>
 </header>
@@ -455,7 +456,7 @@
         </button>
         <img src="assets/light.png" alt="Icon Lab" class="about-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="about-logo logo-light">
-        <p class="about-version">Version <span class="version-number">0.64</span></p>
+        <p class="about-version">Version <span class="version-number">0.65</span></p>
         <p class="about-description">A free tool for generating and iterating on app icon designs using AI. Customize prompts, layers, and backgrounds — all in the browser.</p>
         <div class="about-links">
             <a href="https://github.com/cassardp/iconlab" target="_blank" rel="noopener">

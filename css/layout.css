@@ -1114,13 +1114,23 @@
     background: transparent !important;
     outline: none !important;
     box-shadow: none !important;
-    font-size: 15px;
+    font-size: 15px !important;
     color: var(--foreground);
     padding: 0 8px;
 }
 
 .prompt-bar-input::placeholder {
     color: var(--muted-foreground);
+    opacity: 0.5;
+}
+
+.prompt-hint {
+    font-size: 11px;
+    color: var(--muted-foreground);
+    opacity: 0.5;
+    text-align: center;
+    padding: 0 0 2px;
+    margin: 0;
 }
 
 .prompt-bar-btn {

@@ -46,6 +46,7 @@ App.buildEnrichedPrompt = function(userPrompt, transparentBg) {
     }
 
     // 5. Constraints
+    sections.push('The subject should fill roughly 80% of the image area.');
     sections.push(preset.constraints.join('\n'));
 
     return sections.join('\n\n');

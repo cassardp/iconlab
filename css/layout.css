@@ -384,10 +384,16 @@
 .size-selector {
     position: relative;
     z-index: 30;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.canvas-stack:hover .size-selector:not(.disabled) {
+    opacity: 1;
 }
 
 .size-selector.disabled {
-    opacity: 0.35;
+    opacity: 0;
     pointer-events: none;
 }
 
@@ -405,7 +411,12 @@
     border: none;
     border-radius: var(--radius-lg);
     cursor: pointer;
-    transition: background var(--transition-fast), color var(--transition-fast);
+    opacity: 0;
+    transition: opacity var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+}
+
+.canvas-stack:hover .download-btn:not(.disabled) {
+    opacity: 1;
 }
 
 .download-btn:hover {
@@ -423,7 +434,7 @@
 }
 
 .download-btn.disabled {
-    opacity: 0.35;
+    opacity: 0;
     pointer-events: none;
 }
 
@@ -966,6 +977,7 @@
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--foreground-muted) 60%, transparent);
+    padding-bottom: 3px;
 }
 
 .segmented-vertical {

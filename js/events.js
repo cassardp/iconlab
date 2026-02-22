@@ -68,6 +68,9 @@ App.initEventListeners = function() {
             App.resetEnrichedPrompt();
             App.updateGenerateButton();
         });
+        promptInput.addEventListener('mousedown', function() {
+            App._closeAllSections();
+        });
     }
 
     /* ---- Style Cards (click delegation) ---- */

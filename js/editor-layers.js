@@ -133,6 +133,25 @@ App.addEditorLayer = function(generation) {
     var layers = App.state.editor.layers || [];
     if (layers.length >= 5) return; // Max 5 layers
 
+    // Si on passe de 1 a 2 layers, dupliquer pour preserver l'original
+    if (layers.length === 1) {
+        var idx = App.state.editor.generationIndex;
+        var currentGen = App.state.generations[idx];
+        if (currentGen) {
+            App._editorSave();
+            var clone = JSON.parse(JSON.stringify(currentGen));
+            clone.timestamp = Date.now();
+            App.state.generations.unshift(clone);
+            App.renderGalleryCard(clone, true);
+            App.saveGallery();
+            // Pointer l'editeur sur le clone
+            App.state.editor.generationIndex = 0;
+            // Mettre a jour les index des autres generations
+            App.refreshGalleryCard(currentGen);
+            layers = App.state.editor.layers;
+        }
+    }
+
     var layerDefaults = App.LAYER_DEFAULTS;
     var newLayer = {};
     for (var k in layerDefaults) {
@@ -248,6 +267,15 @@ App._openLayerPicker = function() {
     var galleryToggle = document.getElementById('galleryToggle');
     if (!galleryOverlay) return;
 
+    // Masquer la card de l'image en cours d'edition
+    var currentGen = App.state.generations[App.state.editor.generationIndex];
+    if (currentGen) {
+        var gallery = document.getElementById('gallery');
+        var currentCard = gallery && gallery.querySelector('.gallery-card[data-ts="' + currentGen.timestamp + '"]');
+        if (currentCard) currentCard.style.display = 'none';
+        App._pickerHiddenCard = currentCard;
+    }
+
     App._galleryPickerMode = true;
     galleryOverlay.classList.add('picker-mode');
     galleryOverlay.classList.add('open');
@@ -258,6 +286,12 @@ App._closeLayerPicker = function() {
     var galleryOverlay = document.getElementById('galleryOverlay');
     var galleryToggle = document.getElementById('galleryToggle');
     if (!galleryOverlay) return;
+
+    // Restaurer la card masquee
+    if (App._pickerHiddenCard) {
+        App._pickerHiddenCard.style.display = '';
+        App._pickerHiddenCard = null;
+    }
 
     App._galleryPickerMode = false;
     galleryOverlay.classList.remove('picker-mode');

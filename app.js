@@ -125,7 +125,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 8. Init IndexedDB puis charger la galerie
     App.initDB().then(function() {
-        App.loadGallery();
+        App.loadGallery().then(function() {
+            if (App.state.generations.length === 0) {
+                App._seedDefaultGallery();
+            } else {
+                App.openEditor(App.state.generations[0]);
+            }
+        });
     });
 
     // 9. Verifier nouveaux modeles image OpenAI
@@ -238,4 +244,82 @@ App._buildAxesSliders = function() {
         row.appendChild(sliderRow);
         container.appendChild(row);
     }
+};
+
+/* ---- Seed default gallery on first launch ---- */
+
+App._fetchAsBase64 = function(url) {
+    return fetch(url)
+        .then(function(r) { return r.blob(); })
+        .then(function(blob) {
+            return new Promise(function(resolve) {
+                var reader = new FileReader();
+                reader.onloadend = function() { resolve(reader.result.split(',')[1]); };
+                reader.readAsDataURL(blob);
+            });
+        });
+};
+
+App._seedDefaultGallery = function() {
+    var base = {
+        model: '', userPrompt: '', enrichedPrompt: '', stylePreset: '',
+        quality: 'medium', transparent: true, duration: 0,
+        axes: { volume: 50, color: 50, shape: 50, detail: 50, text: 0 }
+    };
+
+    return Promise.all([
+        App._fetchAsBase64('assets/default/1.png'),
+        App._fetchAsBase64('assets/default/2.png')
+    ]).then(function(images) {
+        // 1. Image 1 seule
+        var entry1 = Object.assign({}, base, {
+            timestamp: 1,
+            imageBase64: images[0],
+            previewBg: 'checkerboard'
+        });
+        App.addToGallery(entry1);
+
+        // 2. Image 2 seule
+        var entry2 = Object.assign({}, base, {
+            timestamp: 2,
+            imageBase64: images[1],
+            previewBg: 'checkerboard'
+        });
+        App.addToGallery(entry2);
+
+        // 3. Composition multi-layer
+        var composition = Object.assign({}, base, {
+            timestamp: 3,
+            imageBase64: images[0],
+            previewBg: '#006d8f',
+            editorSettings: {
+                bgType: 'linear',
+                bgColor: '#006d8f',
+                gradientCenter: '#5BC0EB',
+                gradientEdge: '#2E6EA6',
+                linearAngle: 150,
+                linearStart: '#006d8f',
+                linearEnd: '#00364a',
+                meshColors: ['#5BC0EB', '#3A86C8', '#48B8D0', '#2E6EA6'],
+                exportSize: 1024,
+                activeLayerIndex: 0,
+                layers: [
+                    {
+                        imageBase64: images[0],
+                        scale: 100, rotation: 0, offsetX: 0, offsetY: 0, opacity: 100,
+                        tintEnabled: false, tintColor: '#5A9FD4',
+                        shadowEnabled: false, shadowBlur: 20, shadowOffsetY: 8, shadowOpacity: 40, shadowColor: '#1A1A2E'
+                    },
+                    {
+                        imageBase64: images[1],
+                        scale: 28, rotation: 20, offsetX: 28, offsetY: -28, opacity: 100,
+                        tintEnabled: true, tintColor: '#00a3d7',
+                        shadowEnabled: true, shadowBlur: 60, shadowOffsetY: 22, shadowOpacity: 51, shadowColor: '#1A1A2E'
+                    }
+                ]
+            }
+        });
+        App.addToGallery(composition);
+        App.openEditor(composition);
+    });
 };

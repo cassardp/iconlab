@@ -736,6 +736,9 @@
 .gallery-overlay.picker-mode .gallery-card-image.checkerboard::before {
     display: none;
 }
+.gallery-overlay.picker-mode .gallery-card.picker-hidden {
+    display: none;
+}
 
 /* Loading card */
 .gallery-card.loading {

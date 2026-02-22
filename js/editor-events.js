@@ -539,15 +539,17 @@ App.initEditorEvents = function() {
         }
     });
 
-    // Drag to move layer on canvas
+    // Drag to move layer on canvas + click to open Layers panel
     var canvasWrap = document.getElementById('editorCanvasWrap');
     if (canvasWrap) {
         var dragging = false;
+        var hasMoved = false;
         var startX = 0;
         var startY = 0;
         var startOffsetX = 0;
         var startOffsetY = 0;
         var dragRafId = 0;
+        var DRAG_THRESHOLD = 4;
 
         canvasWrap.addEventListener('mousedown', function(e) {
             // Detecter le layer sous le curseur et le selectionner
@@ -563,15 +565,24 @@ App.initEditorEvents = function() {
             if (!layer) return;
             e.preventDefault();
             dragging = true;
+            hasMoved = false;
             startX = e.clientX;
             startY = e.clientY;
             startOffsetX = layer.offsetX;
             startOffsetY = layer.offsetY;
-            canvasWrap.classList.add('dragging');
         });
 
         document.addEventListener('mousemove', function(e) {
             if (!dragging) return;
+
+            if (!hasMoved) {
+                var mx = Math.abs(e.clientX - startX);
+                var my = Math.abs(e.clientY - startY);
+                if (mx < DRAG_THRESHOLD && my < DRAG_THRESHOLD) return;
+                hasMoved = true;
+                canvasWrap.classList.add('dragging');
+            }
+
             if (dragRafId) return;
 
             dragRafId = requestAnimationFrame(function() {
@@ -601,7 +612,11 @@ App.initEditorEvents = function() {
 
         document.addEventListener('mouseup', function() {
             if (!dragging) return;
+            if (!hasMoved) {
+                App._toggleRightPanel('panelLayers');
+            }
             dragging = false;
+            hasMoved = false;
             canvasWrap.classList.remove('dragging');
         });
     }

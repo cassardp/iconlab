@@ -115,13 +115,6 @@ App.initEventListeners = function() {
                     }
                 }
 
-                // Reset preview to placeholder
-                if (App.state.editor.active) App.closeEditor();
-                var ph = document.getElementById('previewPlaceholder');
-                var cw = document.getElementById('editorCanvasWrap');
-                if (ph) ph.classList.remove('hidden');
-                if (cw) cw.classList.add('hidden');
-
                 // Open axes ribbon
                 App._closeAllSections();
                 var ribbon = document.getElementById('axesSliders');

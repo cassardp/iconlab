@@ -17,24 +17,25 @@ label .hint {
     font-size: 11px;
 }
 
-/* ---- Setting Row — Card style ---- */
+/* ---- Setting Row ---- */
 
 .setting-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    min-height: 48px;
+    min-height: 38px;
     padding: 0 16px;
-    margin-bottom: 8px;
-    background: var(--input);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    transition: border-color var(--transition-fast);
 }
 
-.setting-row:last-child {
-    margin-bottom: 0;
+.setting-row + .setting-row {
+    margin-top: 2px;
+}
+
+.setting-divider {
+    border: none;
+    border-top: 1px solid var(--border-subtle);
+    margin: 12px 8px;
 }
 
 .setting-label {
@@ -49,72 +50,24 @@ label .hint {
 .setting-row textarea,
 .setting-row .api-key-wrap,
 .setting-row .color-picker-wrap,
-.setting-row .slider-row {
+.setting-row .slider-row,
+.setting-row .segmented {
     flex: 1;
     min-width: 0;
 }
 
-/* Controls inside card rows — seamless */
-
-.setting-row select {
-    background-color: transparent;
-    border-color: transparent;
-}
-
-.setting-row select:hover {
-    background-color: transparent;
-    border-color: transparent;
-}
-
-.setting-row select:focus {
-    border-color: transparent;
-    box-shadow: none;
-}
+/* Controls inside setting rows */
 
 .setting-row textarea {
-    background: var(--background);
-    border: 1px solid var(--border);
-    margin: 8px 0;
+    margin: 4px 0;
     min-height: 60px;
-}
-
-.setting-row textarea:focus {
-    border-color: var(--ring);
-    box-shadow: none;
-}
-
-.setting-row .api-key-wrap input {
-    background: transparent;
-    border-color: transparent;
-}
-
-.setting-row .api-key-wrap input:hover,
-.setting-row .api-key-wrap input:focus {
-    background: transparent;
-    border-color: transparent;
-    box-shadow: none;
-}
-
-.setting-row .api-key-wrap button {
-    background: transparent;
-    border-color: transparent;
-}
-
-.setting-row .api-key-wrap button:hover {
-    background: color-mix(in srgb, var(--foreground) 8%, transparent);
-    border-color: transparent;
-}
-
-.setting-row .color-picker-wrap {
-    background: transparent;
-    border-color: transparent;
 }
 
 /* ---- Text inputs ---- */
 
 input[type="text"],
 input[type="password"],
-input[type="number"] {
+input[type="number"]:not(.slider-value) {
     width: 100%;
     height: 34px;
     padding: 0 10px;
@@ -130,14 +83,14 @@ input[type="number"] {
 
 input[type="text"]:hover,
 input[type="password"]:hover,
-input[type="number"]:hover {
+input[type="number"]:not(.slider-value):hover {
     border-color: var(--ring);
     background: var(--muted);
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus,
-input[type="number"]:focus {
+input[type="number"]:not(.slider-value):focus {
     border-color: var(--ring);
     box-shadow: var(--ring-shadow);
 }
@@ -205,155 +158,138 @@ select:focus {
     box-shadow: var(--ring-shadow);
 }
 
-/* ---- Slider row — Custom dotted track ---- */
+/* ---- Slider row ---- */
 
 .slider-row {
     display: flex;
     align-items: center;
-    height: 34px;
+    height: 30px;
     padding: 0;
-    background: transparent;
-    border-radius: 0;
-    box-sizing: border-box;
-    gap: 10px;
+    gap: 6px;
 }
 
 .slider-track-wrap {
     flex: 1;
     display: flex;
     align-items: center;
-    position: relative;
-}
-
-/* Dotted track overlay */
-.slider-track-wrap::before {
-    content: '';
-    position: absolute;
-    left: 7px;
-    right: 7px;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 4px;
-    background-image: radial-gradient(
-        circle,
-        color-mix(in srgb, var(--foreground-muted) 35%, transparent) 2px,
-        transparent 2px
-    );
-    background-size: calc(100% / 9) 4px;
-    pointer-events: none;
 }
 
 .slider-value {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--foreground);
-    width: 38px;
+    width: 36px;
     text-align: right;
     flex-shrink: 0;
     font-variant-numeric: tabular-nums;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    outline: none;
+    padding: 2px 4px;
+    font-family: inherit;
+    -moz-appearance: textfield;
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.slider-value::-webkit-inner-spin-button,
+.slider-value::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.slider-value:hover {
+    background: var(--input);
+}
+
+.slider-value:focus {
+    background: var(--input);
+    border-color: var(--ring);
+}
+
+.slider-suffix {
+    font-size: 11px;
+    color: var(--foreground-muted);
+    flex-shrink: 0;
+    margin-left: -2px;
 }
 
 .range-slider {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 20px;
-    background: transparent;
-    border: none;
-    border-radius: 0;
+    height: 3px;
+    background: var(--muted);
+    border-radius: 2px;
     outline: none;
     cursor: pointer;
-    position: relative;
-    z-index: 1;
 }
 
 .range-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 4px;
-    height: 22px;
-    background: var(--foreground-muted);
-    border-radius: 2px;
+    width: 16px;
+    height: 16px;
+    background: var(--foreground);
+    border: 2px solid var(--card);
+    border-radius: 50%;
     cursor: pointer;
-    transition: height var(--transition-fast);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    transition: box-shadow var(--transition-fast);
 }
 
 .range-slider:hover::-webkit-slider-thumb {
-    height: 26px;
-}
-
-.range-slider:active::-webkit-slider-thumb {
-    height: 28px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
 }
 
 .range-slider::-moz-range-thumb {
-    width: 4px;
-    height: 22px;
-    background: var(--foreground-muted);
-    border: none;
-    border-radius: 2px;
+    width: 12px;
+    height: 12px;
+    background: var(--foreground);
+    border: 2px solid var(--card);
+    border-radius: 50%;
     cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
 .range-slider::-moz-range-track {
-    background: transparent;
+    background: var(--muted);
+    height: 3px;
     border: none;
+    border-radius: 2px;
 }
 
-/* ---- Toggle ---- */
+/* ---- Segmented control (Yes / No) ---- */
 
-.toggle {
-    position: relative;
-    display: inline-block;
-    width: 32px;
-    height: 18px;
-    flex-shrink: 0;
+.segmented {
+    display: flex;
+    background: var(--input);
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius);
+    padding: 2px;
 }
 
-.toggle input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.toggle-slider {
-    position: absolute;
+.seg-btn {
+    flex: 1;
+    padding: 3px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: inherit;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: color-mix(in srgb, var(--foreground-muted) 50%, transparent);
     cursor: pointer;
-    inset: 0;
-    background: var(--background);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    transition: background var(--transition-fast), border-color var(--transition-fast);
+    transition: all var(--transition-fast);
 }
 
-.toggle-slider:hover {
-    border-color: var(--ring);
+.seg-btn:hover {
+    color: var(--foreground-muted);
 }
 
-.toggle-slider::before {
-    content: '';
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    left: 2px;
-    top: 2px;
-    background: var(--foreground-muted);
-    border-radius: 50%;
-    transition: transform var(--transition-base), background var(--transition-base);
-}
-
-.toggle input:checked + .toggle-slider {
-    background: var(--primary);
-    border-color: var(--primary);
-}
-
-.toggle input:checked + .toggle-slider::before {
-    transform: translateX(14px);
-    background: var(--primary-foreground);
-}
-
-.toggle input:disabled + .toggle-slider {
-    opacity: 0.4;
-    cursor: not-allowed;
+.seg-btn.active {
+    background: var(--card);
+    color: var(--foreground);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 /* ---- API Key input ---- */
@@ -400,9 +336,9 @@ select:focus {
 .color-picker-wrap {
     display: flex;
     align-items: center;
-    gap: 6px;
-    height: 34px;
-    padding: 0 6px 0 4px;
+    gap: 8px;
+    height: 30px;
+    padding: 3px 10px 3px 3px;
     background: var(--input);
     border: 1px solid var(--input-border);
     border-radius: var(--radius);
@@ -410,16 +346,15 @@ select:focus {
 }
 
 .color-picker-wrap input[type="color"] {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     padding: 0;
-    border: 1px solid var(--border);
-    border-radius: 4px;
+    border: none;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     background: none;
     flex-shrink: 0;
     pointer-events: none;
-    order: 1;
 }
 
 .color-picker-wrap input[type="color"].inactive {
@@ -453,7 +388,7 @@ select:focus {
     overflow: hidden;
     text-overflow: ellipsis;
     pointer-events: none;
-    text-align: right;
+    text-align: left;
 }
 
 .color-picker-label.active {

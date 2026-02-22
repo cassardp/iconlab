@@ -168,7 +168,12 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    margin-bottom: 4px;
+    padding: 0 8px;
+    min-height: 34px;
+}
+
+.mesh-color-row + .mesh-color-row {
+    margin-top: 2px;
 }
 
 .mesh-color-row .color-picker-wrap {

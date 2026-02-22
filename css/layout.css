@@ -391,6 +391,13 @@
     margin: 2px 0;
 }
 
+.toolbar-right-divider {
+    width: 24px;
+    border: none;
+    border-top: 1px solid var(--border-subtle);
+    margin: 2px 0;
+}
+
 .toolbar-right-btns {
     display: flex;
     flex-direction: column;
@@ -439,6 +446,17 @@
     height: 20px;
 }
 
+#editorResetBtn svg {
+    width: 16px;
+    height: 16px;
+}
+
+#editorResetBtn.btn-disabled {
+    opacity: 0.25;
+    pointer-events: none;
+    cursor: default;
+}
+
 .toolbar-right-panel {
     position: absolute;
     right: calc(100% + 8px);
@@ -461,17 +479,16 @@
 }
 
 .panel-float .section-header {
-    padding: 12px 12px 8px;
+    padding: 12px 14px 8px;
 }
 
 .panel-float .section-content {
-    padding: 0 8px 12px;
+    padding: 0 6px 10px;
 }
 
 .panel-float .setting-row {
-    padding: 0 10px;
-    margin-bottom: 4px;
-    min-height: 40px;
+    padding: 0 8px;
+    min-height: 36px;
 }
 
 .panel-float .setting-label {

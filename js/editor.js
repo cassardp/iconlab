@@ -102,6 +102,9 @@ App.openEditor = function(generation) {
     var sizeSelector = document.getElementById('sizeSelector');
     if (sizeSelector) sizeSelector.classList.remove('disabled');
 
+    // Update reset button state
+    App._updateResetBtn();
+
     // Render les images et la layer list
     App._renderLayerImages(function() {
         App.updateEditorPreview();
@@ -192,6 +195,10 @@ App.closeEditor = function() {
     if (exportBtn2) exportBtn2.classList.add('disabled');
     var sizeSelector2 = document.getElementById('sizeSelector');
     if (sizeSelector2) sizeSelector2.classList.add('disabled');
+
+    // Disable reset button
+    var resetBtn2 = document.getElementById('editorResetBtn');
+    if (resetBtn2) resetBtn2.classList.add('btn-disabled');
     App._activeRightPanel = null;
     var panel = document.getElementById('toolbarRightPanel');
     if (panel) panel.classList.add('hidden');
@@ -257,4 +264,43 @@ App.resetEditor = function() {
     App._renderLayerList();
     App._editorSyncControls();
     App._editorUpdateAddBtn();
+    App._updateResetBtn();
+};
+
+/* ---- Detecter si l'editeur a des modifications ---- */
+
+App._editorHasChanges = function() {
+    var s = App.state.editor;
+    var layers = s.layers || [];
+    var ld = App.LAYER_DEFAULTS;
+
+    // Plus d'un layer = modifie
+    if (layers.length !== 1) return true;
+
+    // Verifier les props du layer
+    var layer = layers[0];
+    var keys = ['scale', 'rotation', 'offsetX', 'offsetY', 'opacity', 'tintEnabled', 'shadowEnabled'];
+    for (var i = 0; i < keys.length; i++) {
+        if (layer[keys[i]] !== ld[keys[i]]) return true;
+    }
+
+    // Verifier le fond (comparer au fond initial)
+    var gen = App.state.generations[s.generationIndex];
+    var initBgType = 'solid';
+    if (gen && (gen.previewBg === 'checkerboard' || (!gen.previewBg && gen.transparent))) {
+        initBgType = 'none';
+    }
+    if (s.bgType !== initBgType) return true;
+
+    return false;
+};
+
+App._updateResetBtn = function() {
+    var btn = document.getElementById('editorResetBtn');
+    if (!btn) return;
+    if (App._editorHasChanges()) {
+        btn.classList.remove('btn-disabled');
+    } else {
+        btn.classList.add('btn-disabled');
+    }
 };

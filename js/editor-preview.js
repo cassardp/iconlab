@@ -12,6 +12,7 @@ App.updateEditorPreview = function() {
     if (!canvasWrap) return;
 
     App._editorScheduleSave();
+    App._updateResetBtn();
 
     // Calque fond
     if (s.bgType === 'none') {
@@ -129,12 +130,11 @@ App._editorSyncControls = function() {
     if (linEnd) linEnd.value = s.linearEnd;
     if (linEndLabel) linEndLabel.textContent = s.linearEnd;
 
-    // Direction picker active state
-    var dirBtns = document.querySelectorAll('#editorLinearDirection .dir-btn');
-    for (var d = 0; d < dirBtns.length; d++) {
-        var angle = parseInt(dirBtns[d].getAttribute('data-angle'), 10);
-        dirBtns[d].classList.toggle('active', angle === s.linearAngle);
-    }
+    // Linear angle slider sync
+    var angleSlider = document.getElementById('editorLinearAngle');
+    var angleValue = document.getElementById('editorLinearAngleValue');
+    if (angleSlider) angleSlider.value = s.linearAngle;
+    if (angleValue) angleValue.value = s.linearAngle;
 
     // Mesh color list
     App._renderMeshColorList();
@@ -144,57 +144,57 @@ App._editorSyncControls = function() {
         var scale = document.getElementById('editorScale');
         var scaleVal = document.getElementById('editorScaleValue');
         if (scale) scale.value = layer.scale;
-        if (scaleVal) scaleVal.textContent = layer.scale + '%';
+        if (scaleVal) scaleVal.value = layer.scale;
 
         var rotation = document.getElementById('editorRotation');
         var rotationVal = document.getElementById('editorRotationValue');
         if (rotation) rotation.value = layer.rotation;
-        if (rotationVal) rotationVal.textContent = layer.rotation + '\u00B0';
+        if (rotationVal) rotationVal.value = layer.rotation;
 
         var offsetX = document.getElementById('editorOffsetX');
         var offsetXVal = document.getElementById('editorOffsetXValue');
         if (offsetX) offsetX.value = layer.offsetX;
-        if (offsetXVal) offsetXVal.textContent = layer.offsetX + '%';
+        if (offsetXVal) offsetXVal.value = layer.offsetX;
 
         var offsetY = document.getElementById('editorOffsetY');
         var offsetYVal = document.getElementById('editorOffsetYValue');
         if (offsetY) offsetY.value = layer.offsetY;
-        if (offsetYVal) offsetYVal.textContent = layer.offsetY + '%';
+        if (offsetYVal) offsetYVal.value = layer.offsetY;
 
         var opacity = document.getElementById('editorOpacity');
         var opacityVal = document.getElementById('editorOpacityValue');
         var opVal = layer.opacity != null ? layer.opacity : 100;
         if (opacity) opacity.value = opVal;
-        if (opacityVal) opacityVal.textContent = opVal + '%';
+        if (opacityVal) opacityVal.value = opVal;
 
-        // Tint toggle
-        var tintEnabled = document.getElementById('editorTintEnabled');
-        if (tintEnabled) tintEnabled.checked = !!layer.tintEnabled;
+        // Tint segmented
+        var tintSeg = document.getElementById('editorTintEnabled');
+        if (tintSeg) App._syncSegmented(tintSeg, !!layer.tintEnabled);
 
         var tintColor = document.getElementById('editorTintColor');
         var tintColorLabel = document.getElementById('editorTintColorLabel');
         if (tintColor) tintColor.value = layer.tintColor || '#FF0000';
         if (tintColorLabel) tintColorLabel.textContent = layer.tintColor || '#FF0000';
 
-        // Shadow toggle
-        var shadowEnabled = document.getElementById('editorShadowEnabled');
-        if (shadowEnabled) shadowEnabled.checked = layer.shadowEnabled;
+        // Shadow segmented
+        var shadowSeg = document.getElementById('editorShadowEnabled');
+        if (shadowSeg) App._syncSegmented(shadowSeg, !!layer.shadowEnabled);
 
         // Shadow controls
         var shadowBlur = document.getElementById('editorShadowBlur');
         var shadowBlurVal = document.getElementById('editorShadowBlurValue');
         if (shadowBlur) shadowBlur.value = layer.shadowBlur;
-        if (shadowBlurVal) shadowBlurVal.textContent = layer.shadowBlur + 'px';
+        if (shadowBlurVal) shadowBlurVal.value = layer.shadowBlur;
 
         var shadowOffsetY = document.getElementById('editorShadowOffsetY');
         var shadowOffsetYVal = document.getElementById('editorShadowOffsetYValue');
         if (shadowOffsetY) shadowOffsetY.value = layer.shadowOffsetY;
-        if (shadowOffsetYVal) shadowOffsetYVal.textContent = layer.shadowOffsetY + 'px';
+        if (shadowOffsetYVal) shadowOffsetYVal.value = layer.shadowOffsetY;
 
         var shadowOpacity = document.getElementById('editorShadowOpacity');
         var shadowOpacityVal = document.getElementById('editorShadowOpacityValue');
         if (shadowOpacity) shadowOpacity.value = layer.shadowOpacity;
-        if (shadowOpacityVal) shadowOpacityVal.textContent = layer.shadowOpacity + '%';
+        if (shadowOpacityVal) shadowOpacityVal.value = layer.shadowOpacity;
 
         var shadowColor = document.getElementById('editorShadowColor');
         var shadowColorLabel = document.getElementById('editorShadowColorLabel');
@@ -231,11 +231,15 @@ App._editorToggleBgType = function() {
     var gradientRows = document.getElementById('editorBgGradientRows');
     var linearRows = document.getElementById('editorBgLinearRows');
     var meshRows = document.getElementById('editorBgMeshRows');
+    var divider = document.getElementById('editorBgDivider');
 
     var containers = [solidRow, gradientRows, linearRows, meshRows];
     for (var i = 0; i < containers.length; i++) {
         if (containers[i]) containers[i].classList.add('hidden');
     }
+
+    var hasContent = s.bgType !== 'none';
+    if (divider) divider.classList.toggle('hidden', !hasContent);
 
     if (s.bgType === 'solid') {
         if (solidRow) solidRow.classList.remove('hidden');

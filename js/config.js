@@ -238,6 +238,15 @@ App.STORAGE_KEYS = {
     theme: 'icon-theme'
 };
 
+/* ---- Segmented control helper ---- */
+
+App._syncSegmented = function(el, isOn) {
+    var onBtn = el.querySelector('.seg-on');
+    var offBtn = el.querySelector('.seg-off');
+    if (onBtn) onBtn.classList.toggle('active', isOn);
+    if (offBtn) offBtn.classList.toggle('active', !isOn);
+};
+
 /* ---- Color picker wrap : clic sur le wrapper ouvre le picker natif ---- */
 
 App._initColorPickerWraps = function(root) {

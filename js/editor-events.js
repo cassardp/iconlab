@@ -255,35 +255,50 @@ App.initEditorEvents = function() {
             var el = document.getElementById(cfg.id);
             var labelEl = document.getElementById(cfg.label);
             var rafId = 0;
+            function applyValue(val) {
+                var layer = App._editorActiveLayer();
+                if (!layer) return;
+                var min = parseInt(el.min, 10);
+                var max = parseInt(el.max, 10);
+                if (val < min) val = min;
+                if (val > max) val = max;
+                layer[cfg.key] = val;
+                if (labelEl) labelEl.value = val;
+                el.value = val;
+                if (!rafId) {
+                    rafId = requestAnimationFrame(function() {
+                        rafId = 0;
+                        App.updateEditorPreview();
+                    });
+                }
+            }
             if (el) {
                 el.addEventListener('input', function() {
+                    applyValue(parseInt(this.value, 10));
+                });
+            }
+            if (labelEl) {
+                labelEl.addEventListener('input', function() {
                     var val = parseInt(this.value, 10);
-                    var layer = App._editorActiveLayer();
-                    if (layer) {
-                        layer[cfg.key] = val;
-                        if (labelEl) labelEl.textContent = val + cfg.suffix;
-                        if (!rafId) {
-                            rafId = requestAnimationFrame(function() {
-                                rafId = 0;
-                                App.updateEditorPreview();
-                            });
-                        }
-                    }
+                    if (!isNaN(val)) applyValue(val);
                 });
             }
         })(rangeInputs[j]);
     }
 
-    // Toggle tint (ecrit sur le layer actif)
-    var tintToggle = document.getElementById('editorTintEnabled');
-    if (tintToggle) {
-        tintToggle.addEventListener('change', function() {
+    // Segmented tint (ecrit sur le layer actif)
+    var tintSeg = document.getElementById('editorTintEnabled');
+    if (tintSeg) {
+        tintSeg.addEventListener('click', function(e) {
+            var btn = e.target.closest('.seg-btn');
+            if (!btn) return;
             var layer = App._editorActiveLayer();
-            if (layer) {
-                layer.tintEnabled = this.checked;
-                App._editorToggleTint();
-                App.updateEditorPreview();
-            }
+            if (!layer) return;
+            var isOn = btn.classList.contains('seg-on');
+            layer.tintEnabled = isOn;
+            App._syncSegmented(tintSeg, isOn);
+            App._editorToggleTint();
+            App.updateEditorPreview();
         });
     }
 
@@ -301,33 +316,42 @@ App.initEditorEvents = function() {
         });
     }
 
-    // Toggle shadow (ecrit sur le layer actif)
-    var shadowToggle = document.getElementById('editorShadowEnabled');
-    if (shadowToggle) {
-        shadowToggle.addEventListener('change', function() {
+    // Segmented shadow (ecrit sur le layer actif)
+    var shadowSeg = document.getElementById('editorShadowEnabled');
+    if (shadowSeg) {
+        shadowSeg.addEventListener('click', function(e) {
+            var btn = e.target.closest('.seg-btn');
+            if (!btn) return;
             var layer = App._editorActiveLayer();
-            if (layer) {
-                layer.shadowEnabled = this.checked;
-                App._editorToggleShadow();
-                App.updateEditorPreview();
-            }
+            if (!layer) return;
+            var isOn = btn.classList.contains('seg-on');
+            layer.shadowEnabled = isOn;
+            App._syncSegmented(shadowSeg, isOn);
+            App._editorToggleShadow();
+            App.updateEditorPreview();
         });
     }
 
-    // Direction picker (linear gradient)
-    var dirPicker = document.getElementById('editorLinearDirection');
-    if (dirPicker) {
-        dirPicker.addEventListener('click', function(e) {
-            var btn = e.target.closest('.dir-btn');
-            if (!btn) return;
-            var angle = parseInt(btn.getAttribute('data-angle'), 10);
-            App.state.editor.linearAngle = angle;
-            // Update active state
-            var all = dirPicker.querySelectorAll('.dir-btn');
-            for (var i = 0; i < all.length; i++) {
-                all[i].classList.toggle('active', parseInt(all[i].getAttribute('data-angle'), 10) === angle);
-            }
-            App.updateEditorPreview();
+    // Linear angle slider
+    var angleSlider = document.getElementById('editorLinearAngle');
+    var angleValue = document.getElementById('editorLinearAngleValue');
+    function applyAngle(val) {
+        if (val < 0) val = 0;
+        if (val > 360) val = 360;
+        App.state.editor.linearAngle = val;
+        if (angleSlider) angleSlider.value = val;
+        if (angleValue) angleValue.value = val;
+        App.updateEditorPreview();
+    }
+    if (angleSlider) {
+        angleSlider.addEventListener('input', function() {
+            applyAngle(parseInt(this.value, 10));
+        });
+    }
+    if (angleValue) {
+        angleValue.addEventListener('input', function() {
+            var val = parseInt(this.value, 10);
+            if (!isNaN(val)) applyAngle(val);
         });
     }
 

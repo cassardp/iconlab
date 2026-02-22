@@ -64,15 +64,13 @@ img {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 16px;
+    padding: 16px 16px 8px;
 }
 
 .section-title {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: color-mix(in srgb, var(--foreground-muted) 70%, transparent);
+    color: var(--foreground);
 }
 
 /* Utility */

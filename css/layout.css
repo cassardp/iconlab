@@ -675,7 +675,7 @@
     overflow-y: auto;
     padding: 16px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(180px, calc(50% - 6px)), 1fr));
     grid-auto-rows: min-content;
     gap: 12px;
     align-content: start;

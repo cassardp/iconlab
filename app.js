@@ -220,7 +220,7 @@ App._buildAxesSliders = function() {
     colorWrap.className = 'color-picker-wrap';
     colorWrap.innerHTML =
         '<input type="color" id="colorPicker" value="#4A90D9" class="inactive">' +
-        '<span class="color-picker-label" id="colorPickerLabel">None</span>' +
+        '<span class="color-picker-label" id="colorPickerLabel">Color</span>' +
         '<button class="btn-icon btn-sm color-picker-reset hidden" id="colorPickerReset" title="Reset">' +
         '<i data-lucide="x"></i></button>';
     matControls.appendChild(colorWrap);

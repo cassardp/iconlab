@@ -197,7 +197,7 @@ App.initEventListeners = function() {
             App.state.color = '';
             if (colorPicker) colorPicker.classList.add('inactive');
             if (colorPickerLabel) {
-                colorPickerLabel.textContent = 'None';
+                colorPickerLabel.textContent = 'Color';
                 colorPickerLabel.classList.remove('active');
             }
             this.classList.add('hidden');
@@ -449,7 +449,7 @@ App.syncUIFromState = function() {
             if (colorPickerReset) colorPickerReset.classList.remove('hidden');
         } else {
             colorPicker.classList.add('inactive');
-            colorPickerLabel.textContent = 'None';
+            colorPickerLabel.textContent = 'Color';
             colorPickerLabel.classList.remove('active');
             if (colorPickerReset) colorPickerReset.classList.add('hidden');
         }

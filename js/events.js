@@ -252,11 +252,28 @@ App.initEventListeners = function() {
         });
     }
 
-    /* ---- Enriched Prompt Section Toggle ---- */
+    /* ---- Options Toggle (axes ribbon) ---- */
 
     var enrichedPromptToggle = document.getElementById('enrichedPromptToggle');
     if (enrichedPromptToggle) {
         enrichedPromptToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var ribbon = document.getElementById('axesSliders');
+            if (!ribbon) return;
+            var wasOpen = ribbon.classList.contains('open');
+            App._closeAllSections();
+            if (!wasOpen) {
+                ribbon.classList.add('open');
+                this.classList.add('active');
+            }
+        });
+    }
+
+    /* ---- Full Prompt Toggle ---- */
+
+    var fullPromptToggle = document.getElementById('fullPromptToggle');
+    if (fullPromptToggle) {
+        fullPromptToggle.addEventListener('click', function(e) {
             e.stopPropagation();
             App._toggleSection('enrichedSection', this);
         });

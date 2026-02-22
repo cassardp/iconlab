@@ -391,10 +391,13 @@
 
         <!-- Prompt bar -->
         <div class="prompt-bar">
-            <button class="prompt-bar-btn" id="enrichedPromptToggle" title="View full prompt">
-                <i data-lucide="file-text"></i>
+            <button class="prompt-bar-btn" id="enrichedPromptToggle" title="Options">
+                <i data-lucide="settings-2"></i>
             </button>
             <input type="text" id="promptInput" class="prompt-bar-input" placeholder="Choose a style to start...">
+            <button class="prompt-bar-btn" id="fullPromptToggle" title="View full prompt">
+                <i data-lucide="file-text"></i>
+            </button>
             <button class="btn btn-primary generate-btn" id="generateBtn" disabled>
                 <i data-lucide="arrow-up"></i>
             </button>
@@ -416,7 +419,7 @@
         </button>
         <img src="assets/light.png" alt="Icon Lab" class="about-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="about-logo logo-light">
-        <p class="about-version">Version <span class="version-number">0.82</span></p>
+        <p class="about-version">Version <span class="version-number">0.83</span></p>
         <p class="about-description">A free tool for generating and iterating on app icon designs using AI. Customize prompts, layers, and backgrounds — all in the browser.</p>
         <p class="about-description about-description-secondary">Bring your own key — add your OpenAI API key in settings to get started. Your key is stored locally on your device and is never sent anywhere other than directly to OpenAI.</p>
         <div class="about-links">

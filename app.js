@@ -275,30 +275,30 @@ App._seedDefaultGallery = function() {
         var composition = Object.assign({}, base, {
             timestamp: 3,
             imageBase64: images[0],
-            previewBg: '#006d8f',
+            previewBg: '#FFE2D6',
             editorSettings: {
-                bgType: 'linear',
-                bgColor: '#006d8f',
+                bgType: 'solid',
+                bgColor: '#FFE2D6',
                 gradientCenter: '#5BC0EB',
                 gradientEdge: '#2E6EA6',
-                linearAngle: 150,
-                linearStart: '#006d8f',
-                linearEnd: '#00364a',
+                linearAngle: 180,
+                linearStart: '#5BC0EB',
+                linearEnd: '#2E6EA6',
                 meshColors: ['#5BC0EB', '#3A86C8', '#48B8D0', '#2E6EA6'],
                 exportSize: 1024,
                 activeLayerIndex: 0,
                 layers: [
                     {
-                        imageBase64: images[0],
+                        imageBase64: images[1],
                         scale: 100, rotation: 0, offsetX: 0, offsetY: 0, opacity: 100,
                         tintEnabled: false, tintColor: '#5A9FD4',
                         shadowEnabled: false, shadowBlur: 20, shadowOffsetY: 8, shadowOpacity: 40, shadowColor: '#1A1A2E'
                     },
                     {
-                        imageBase64: images[1],
-                        scale: 28, rotation: 20, offsetX: 28, offsetY: -28, opacity: 100,
-                        tintEnabled: true, tintColor: '#00a3d7',
-                        shadowEnabled: true, shadowBlur: 60, shadowOffsetY: 22, shadowOpacity: 51, shadowColor: '#1A1A2E'
+                        imageBase64: images[0],
+                        scale: 50, rotation: 3, offsetX: 0, offsetY: 8, opacity: 90,
+                        tintEnabled: false, tintColor: '#5A9FD4',
+                        shadowEnabled: false, shadowBlur: 20, shadowOffsetY: 8, shadowOpacity: 40, shadowColor: '#1A1A2E'
                     }
                 ]
             }

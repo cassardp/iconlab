@@ -546,11 +546,6 @@ App.initEditorEvents = function() {
                 }
                 return;
             }
-            // Close settings panel
-            if (App._settingsPanelOpen) {
-                App._toggleSettingsPanel();
-                return;
-            }
             // Close editor panels
             if (App.state.editor.active) {
                 if (App._activeRightPanel) {

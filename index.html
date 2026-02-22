@@ -53,12 +53,21 @@
         <button class="topbar-btn" id="aboutBtn" title="About Icon Lab">
             <i data-lucide="info"></i>
         </button>
+        <button class="topbar-btn" id="apiKeyBtn" title="API Key">
+            <i data-lucide="key-round"></i>
+        </button>
         <button class="topbar-btn" id="themeToggle" title="Toggle theme">
             <i data-lucide="moon" class="icon-moon"></i>
             <i data-lucide="sun" class="icon-sun"></i>
         </button>
     </div>
 </header>
+<div class="api-key-bar hidden" id="apiKeyBar">
+    <input type="text" id="tokenInput" placeholder="OpenAI API key · stored locally in your browser" autocomplete="one-time-code" data-form-type="other" data-lpignore="true" data-1p-ignore>
+    <button type="button" class="api-key-bar-toggle" id="apiKeyToggle" title="Show/hide key">
+        <i data-lucide="eye"></i>
+    </button>
+</div>
 
 <!-- ================================================
      MAIN AREA
@@ -70,28 +79,6 @@
         <button class="toolbar-left-btn" id="galleryToggle" title="Gallery">
             <i data-lucide="folder"></i>
         </button>
-        <hr class="toolbar-left-divider">
-        <button class="toolbar-left-btn" id="settingsBtn" title="API Key">
-            <i data-lucide="key-round"></i>
-        </button>
-        <div class="toolbar-left-panel hidden" id="toolbarLeftPanel">
-            <div class="panel-float" id="panelSettings">
-                <div class="section-header">
-                    <span class="section-title">Settings</span>
-                </div>
-                <div class="section-content">
-                    <div class="setting-row">
-                        <span class="setting-label">API Key</span>
-                        <div class="api-key-wrap">
-                            <input type="password" id="apiKeyInput" placeholder="sk-..." autocomplete="off">
-                            <button type="button" id="apiKeyToggle" title="Show/hide key">
-                                <i data-lucide="eye"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Canvas area (centre) -->
@@ -429,7 +416,7 @@
         </button>
         <img src="assets/light.png" alt="Icon Lab" class="about-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="about-logo logo-light">
-        <p class="about-version">Version <span class="version-number">0.73</span></p>
+        <p class="about-version">Version <span class="version-number">0.74</span></p>
         <p class="about-description">A free tool for generating and iterating on app icon designs using AI. Customize prompts, layers, and backgrounds — all in the browser.</p>
         <div class="about-links">
             <a href="https://github.com/cassardp/iconlab" target="_blank" rel="noopener">

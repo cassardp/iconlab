@@ -6,9 +6,30 @@ var App = window.App || {};
 
 App.initEventListeners = function() {
 
-    /* ---- API Key ---- */
+    /* ---- API Key (bar below topbar) ---- */
 
-    var apiKeyInput = document.getElementById('apiKeyInput');
+    var apiKeyInput = document.getElementById('tokenInput');
+    var apiKeyBar = document.getElementById('apiKeyBar');
+    var apiKeyBtn = document.getElementById('apiKeyBtn');
+    var apiKeyToggle = document.getElementById('apiKeyToggle');
+
+    App._toggleApiKeyBar = function() {
+        if (!apiKeyBar) return;
+        var isHidden = apiKeyBar.classList.contains('hidden');
+        apiKeyBar.classList.toggle('hidden', !isHidden);
+        if (apiKeyBtn) apiKeyBtn.classList.toggle('active', isHidden);
+        if (isHidden && apiKeyInput) {
+            lucide.createIcons({ nodes: [apiKeyBar] });
+            apiKeyInput.focus();
+        }
+    };
+
+    if (apiKeyBtn) {
+        apiKeyBtn.addEventListener('click', function() {
+            App._toggleApiKeyBar();
+        });
+    }
+
     if (apiKeyInput) {
         apiKeyInput.addEventListener('input', function() {
             App.saveApiKey(this.value.trim());
@@ -16,11 +37,26 @@ App.initEventListeners = function() {
         });
     }
 
-    var apiKeyToggle = document.getElementById('apiKeyToggle');
     if (apiKeyToggle && apiKeyInput) {
         apiKeyToggle.addEventListener('click', function() {
-            apiKeyInput.type = apiKeyInput.type === 'password' ? 'text' : 'password';
+            var isVisible = apiKeyInput.classList.toggle('visible');
+            apiKeyToggle.innerHTML = '<i data-lucide="' + (isVisible ? 'eye-off' : 'eye') + '"></i>';
+            lucide.createIcons({ nodes: [apiKeyToggle] });
         });
+    }
+
+    // Click outside closes
+    document.addEventListener('mousedown', function(e) {
+        if (apiKeyBar && !apiKeyBar.classList.contains('hidden')) {
+            if (!apiKeyBar.contains(e.target) && !apiKeyBtn.contains(e.target)) {
+                App._toggleApiKeyBar();
+            }
+        }
+    });
+
+    // Auto-open if no key saved
+    if (!App.hasApiKey()) {
+        App._toggleApiKeyBar();
     }
 
     /* ---- Prompt Input ---- */
@@ -361,7 +397,7 @@ App.handleGenerate = function() {
 
 App.syncUIFromState = function() {
     // API key
-    var apiKeyInput = document.getElementById('apiKeyInput');
+    var apiKeyInput = document.getElementById('tokenInput');
     if (apiKeyInput) apiKeyInput.value = App.getApiKey();
 
     // Style cards active state

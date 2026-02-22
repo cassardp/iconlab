@@ -48,38 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target === aboutModal) aboutModal.classList.remove('show');
     });
 
-    // 2c. Settings panel (left toolbar)
-    App._settingsPanelOpen = false;
-
-    App._toggleSettingsPanel = function() {
-        var panel = document.getElementById('toolbarLeftPanel');
-        var btn = document.getElementById('settingsBtn');
-        if (!panel) return;
-        App._settingsPanelOpen = !App._settingsPanelOpen;
-        panel.classList.toggle('hidden', !App._settingsPanelOpen);
-        if (btn) btn.classList.toggle('active', App._settingsPanelOpen);
-        if (App._settingsPanelOpen) {
-            lucide.createIcons({ nodes: [panel] });
-        }
-    };
-
-    var settingsBtn = document.getElementById('settingsBtn');
-    if (settingsBtn) {
-        settingsBtn.addEventListener('click', function() {
-            App._toggleSettingsPanel();
-        });
-    }
-
-    // Click outside to close settings panel
-    document.addEventListener('mousedown', function(e) {
-        if (!App._settingsPanelOpen) return;
-        var toolbar = document.querySelector('.toolbar-left');
-        if (toolbar && !toolbar.contains(e.target)) {
-            App._toggleSettingsPanel();
-        }
-    });
-
-    // 2d. Gallery overlay
+    // 2c. Gallery overlay
     var galleryToggle = document.getElementById('galleryToggle');
     var galleryOverlay = document.getElementById('galleryOverlay');
     var galleryClose = document.getElementById('galleryOverlayClose');

@@ -217,6 +217,77 @@
     display: block;
 }
 
+/* ---- API Key bar (below topbar) ---- */
+
+.api-key-bar {
+    position: fixed;
+    top: 62px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 460px;
+    width: calc(100% - 32px);
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 4px 4px 14px;
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    z-index: 99;
+}
+
+.api-key-bar input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: none !important;
+    background: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    color: var(--foreground);
+    padding: 0;
+    -webkit-text-security: disc;
+}
+
+.api-key-bar input.visible {
+    -webkit-text-security: none;
+}
+
+.api-key-bar input::placeholder {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--muted-foreground);
+}
+
+.api-key-bar-toggle {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius);
+    color: var(--foreground-muted);
+    cursor: pointer;
+    transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.api-key-bar-toggle:hover {
+    color: var(--foreground);
+    background: var(--muted);
+}
+
+.api-key-bar-toggle svg {
+    width: 16px;
+    height: 16px;
+}
+
 /* ---- Main area ---- */
 
 .main {
@@ -274,29 +345,6 @@
     height: 20px;
 }
 
-.toolbar-left-divider {
-    width: 24px;
-    border: none;
-    border-top: 1px solid var(--border-subtle);
-    margin: 2px 0;
-}
-
-/* ---- Left panel (floating, mirrors right panel) ---- */
-
-.toolbar-left-panel {
-    position: absolute;
-    left: calc(100% + 8px);
-    top: 0;
-    width: 230px;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.toolbar-left-panel::-webkit-scrollbar {
-    display: none;
-}
 
 /* ---- Canvas area (centre, plein ecran) ---- */
 

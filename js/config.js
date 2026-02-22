@@ -50,13 +50,13 @@ App.STYLE_PRESETS = {
         placeholder: 'a fox',
         defaultAxes: { volume: 50, color: 50, shape: 100, detail: 50, text: 0 },
         subject: 'app icon of {subject}.',
-        base: 'simplified illustration, no outlines, no textures, extremely clean and modern, vector-illustration feel, Apple-design-language aesthetic',
+        base: 'flat design illustration, front-facing minimalistic style, no outlines, no textures, clean shapes, balanced spacing, simple geometric charm, extremely clean and modern, vector-illustration feel, Apple-design-language aesthetic',
         constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.'],
         axes: {
             volume: ['completely flat, no volume, no shading', 'subtle volume without any 3D rendering, soft shading', 'soft 3D look, visible depth and lighting'],
-            color:  ['monochrome palette, single hue', 'limited palette of 2-3 colors', 'rich vibrant multiple colors, smooth gradients'],
-            shape:  ['sharp geometric edges, angular silhouette', 'balanced mix of straight and curved edges', 'bold rounded silhouette, no hard edges, shapes blend softly'],
-            detail: ['almost abstract simplicity, very few details', 'moderate detail, recognizable forms', 'many details, complex shapes and patterns'],
+            color:  ['monochrome palette, single hue, soft neutral tones', 'soft neutral palette of 2-3 harmonious colors', 'rich vibrant multiple colors, smooth gradients'],
+            shape:  ['sharp geometric edges, angular silhouette', 'balanced mix of straight and curved edges, simple geometric charm', 'bold rounded silhouette, no hard edges, shapes blend softly'],
+            detail: ['almost abstract simplicity, very few details, minimal strokes', 'moderate detail, recognizable forms, balanced spacing', 'many details, complex shapes and patterns'],
             text:   ['no text or lettering', 'minimal subtle text element', 'prominent text or lettering']
         }
     },
@@ -103,6 +103,24 @@ App.STYLE_PRESETS = {
             shape:  ['sharp angular letterform, geometric type', 'semi-bold letterform, balanced edges', 'semi-bold rounded letterform, no hard edges'],
             detail: ['minimal clean letterform, no textures', 'moderate detail, subtle textures', 'highly detailed letterform, complex surface work'],
             text:   ['no extra text, just the letter', 'minimal subtle text element', 'prominent text or lettering around the letter']
+        }
+    },
+    'notion': {
+        name: 'Notion',
+        placeholder: 'an apple',
+        defaultAxes: { volume: 50, color: 0, shape: 50, detail: 0, text: 0 },
+        subject: 'a {subject}.',
+        base: 'minimalist black-and-white flat vector illustration in expressive Notion avatar art style, thick uniform black outlines (monoline weight), organic smooth confident lines, quirky charming personality through shape and proportions, selective strategic solid black fills for dark surfaces and shadows, lighter surfaces and main body areas remain pure flat white, no shading, no gray tones, no gradients, only pure black and pure white, clean centered composition on white background, high contrast clean 2D vector graphics',
+        constraints: [
+            'Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.',
+            'Strictly black and white only — no gray tones, no gradients, no color. Lines must be thick and uniform weight, never thin or variable.'
+        ],
+        axes: {
+            volume: ['pure outline only, no black fills, completely flat line drawing', 'selective strategic solid black fills for shadows and dark surfaces, white for lighter areas', 'heavy bold black fills dominating the shapes, maximum contrast, mostly black with white details'],
+            color:  ['pure black and white only, no color whatsoever', 'black and white with one subtle accent color', 'black outlines with multiple flat color fills, still no gradients'],
+            shape:  ['sharp geometric angular shapes, rigid structured lines', 'organic smooth confident lines, natural flowing shapes', 'very rounded bubbly shapes, exaggerated soft curves'],
+            detail: ['extreme simplicity, very few strokes, almost abstract', 'moderate detail, recognizable stylized forms', 'many fine details, complex line work and patterns'],
+            text:   ['no text or lettering', 'minimal subtle text element', 'prominent text or lettering']
         }
     },
     'sticker': {

@@ -48,7 +48,6 @@ label .hint {
 
 .setting-row select,
 .setting-row textarea,
-.setting-row .api-key-wrap,
 .setting-row .color-picker-wrap,
 .setting-row .slider-row,
 .setting-row .segmented {
@@ -292,44 +291,6 @@ select:focus {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
-/* ---- API Key input ---- */
-
-.api-key-wrap {
-    display: flex;
-    gap: 4px;
-}
-
-.api-key-wrap input {
-    flex: 1;
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    font-size: 12px;
-}
-
-.api-key-wrap button {
-    flex-shrink: 0;
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--input);
-    border: 1px solid var(--input-border);
-    border-radius: var(--radius);
-    color: var(--foreground-muted);
-    cursor: pointer;
-    transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
-}
-
-.api-key-wrap button:hover {
-    color: var(--foreground);
-    border-color: var(--ring);
-    background: var(--muted);
-}
-
-.api-key-wrap button svg {
-    width: 16px;
-    height: 16px;
-}
 
 /* ---- Color picker ---- */
 

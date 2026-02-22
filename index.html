@@ -115,9 +115,6 @@
             <button class="toolbar-right-btn" data-panel="panelLayers" title="Layers">
                 <i data-lucide="layers"></i>
             </button>
-            <button class="toolbar-right-btn" data-panel="panelEffects" title="Effects">
-                <i data-lucide="sliders-horizontal"></i>
-            </button>
             <hr class="toolbar-right-divider" id="editorResetDivider">
             <button class="toolbar-right-btn btn-disabled" id="editorResetBtn" title="Reset all">
                 <i data-lucide="rotate-ccw"></i>
@@ -258,73 +255,65 @@
                                 <input type="number" class="slider-value" id="editorOpacityValue" min="0" max="100" value="100"><span class="slider-suffix">%</span>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Effects panel -->
-            <div class="panel-float hidden" id="panelEffects">
-                <div class="section-header">
-                    <span class="section-title">Effects</span>
-                </div>
-                <div class="section-content">
-                    <div class="setting-row">
-                        <span class="setting-label">Tint</span>
-                        <div class="segmented" id="editorTintEnabled">
-                            <button class="seg-btn seg-on">Yes</button>
-                            <button class="seg-btn seg-off active">No</button>
-                        </div>
-                    </div>
-                    <div id="editorTintControls" class="hidden">
+                        <hr class="setting-divider">
                         <div class="setting-row">
-                            <span class="setting-label">Color</span>
-                            <div class="color-picker-wrap">
-                                <input type="color" id="editorTintColor" value="#FF0000">
-                                <span class="color-picker-label active" id="editorTintColorLabel">#FF0000</span>
+                            <span class="setting-label">Tint</span>
+                            <div class="segmented" id="editorTintEnabled">
+                                <button class="seg-btn seg-on">Yes</button>
+                                <button class="seg-btn seg-off active">No</button>
                             </div>
                         </div>
-                    </div>
-                    <hr class="setting-divider">
-                    <div class="setting-row">
-                        <span class="setting-label">Shadow</span>
-                        <div class="segmented" id="editorShadowEnabled">
-                            <button class="seg-btn seg-on">Yes</button>
-                            <button class="seg-btn seg-off active">No</button>
-                        </div>
-                    </div>
-                    <div id="editorShadowControls" class="hidden">
-                        <div class="setting-row">
-                            <span class="setting-label">Blur</span>
-                            <div class="slider-row">
-                                <div class="slider-track-wrap">
-                                    <input type="range" id="editorShadowBlur" class="range-slider" min="0" max="60" value="20">
+                        <div id="editorTintControls" class="hidden">
+                            <div class="setting-row">
+                                <span class="setting-label">Color</span>
+                                <div class="color-picker-wrap">
+                                    <input type="color" id="editorTintColor" value="#FF0000">
+                                    <span class="color-picker-label active" id="editorTintColorLabel">#FF0000</span>
                                 </div>
-                                <input type="number" class="slider-value" id="editorShadowBlurValue" min="0" max="60" value="20"><span class="slider-suffix">px</span>
                             </div>
                         </div>
+                        <hr class="setting-divider">
                         <div class="setting-row">
-                            <span class="setting-label">Offset Y</span>
-                            <div class="slider-row">
-                                <div class="slider-track-wrap">
-                                    <input type="range" id="editorShadowOffsetY" class="range-slider" min="0" max="40" value="8">
+                            <span class="setting-label">Shadow</span>
+                            <div class="segmented" id="editorShadowEnabled">
+                                <button class="seg-btn seg-on">Yes</button>
+                                <button class="seg-btn seg-off active">No</button>
+                            </div>
+                        </div>
+                        <div id="editorShadowControls" class="hidden">
+                            <div class="setting-row">
+                                <span class="setting-label">Blur</span>
+                                <div class="slider-row">
+                                    <div class="slider-track-wrap">
+                                        <input type="range" id="editorShadowBlur" class="range-slider" min="0" max="60" value="20">
+                                    </div>
+                                    <input type="number" class="slider-value" id="editorShadowBlurValue" min="0" max="60" value="20"><span class="slider-suffix">px</span>
                                 </div>
-                                <input type="number" class="slider-value" id="editorShadowOffsetYValue" min="0" max="40" value="8"><span class="slider-suffix">px</span>
                             </div>
-                        </div>
-                        <div class="setting-row">
-                            <span class="setting-label">Opacity</span>
-                            <div class="slider-row">
-                                <div class="slider-track-wrap">
-                                    <input type="range" id="editorShadowOpacity" class="range-slider" min="0" max="100" value="40">
+                            <div class="setting-row">
+                                <span class="setting-label">Offset Y</span>
+                                <div class="slider-row">
+                                    <div class="slider-track-wrap">
+                                        <input type="range" id="editorShadowOffsetY" class="range-slider" min="0" max="40" value="8">
+                                    </div>
+                                    <input type="number" class="slider-value" id="editorShadowOffsetYValue" min="0" max="40" value="8"><span class="slider-suffix">px</span>
                                 </div>
-                                <input type="number" class="slider-value" id="editorShadowOpacityValue" min="0" max="100" value="40"><span class="slider-suffix">%</span>
                             </div>
-                        </div>
-                        <div class="setting-row">
-                            <span class="setting-label">Color</span>
-                            <div class="color-picker-wrap">
-                                <input type="color" id="editorShadowColor" value="#000000">
-                                <span class="color-picker-label active" id="editorShadowColorLabel">#000000</span>
+                            <div class="setting-row">
+                                <span class="setting-label">Opacity</span>
+                                <div class="slider-row">
+                                    <div class="slider-track-wrap">
+                                        <input type="range" id="editorShadowOpacity" class="range-slider" min="0" max="100" value="40">
+                                    </div>
+                                    <input type="number" class="slider-value" id="editorShadowOpacityValue" min="0" max="100" value="40"><span class="slider-suffix">%</span>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <span class="setting-label">Color</span>
+                                <div class="color-picker-wrap">
+                                    <input type="color" id="editorShadowColor" value="#000000">
+                                    <span class="color-picker-label active" id="editorShadowColorLabel">#000000</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -457,7 +446,7 @@
         </button>
         <img src="assets/light.png" alt="Icon Lab" class="about-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="about-logo logo-light">
-        <p class="about-version">Version <span class="version-number">0.68</span></p>
+        <p class="about-version">Version <span class="version-number">0.69</span></p>
         <p class="about-description">A free tool for generating and iterating on app icon designs using AI. Customize prompts, layers, and backgrounds — all in the browser.</p>
         <div class="about-links">
             <a href="https://github.com/cassardp/iconlab" target="_blank" rel="noopener">

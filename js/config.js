@@ -47,7 +47,7 @@ App.AXIS_DEFAULTS = { volume: 0, color: 100, shape: 100, detail: 0, text: 0 };
 App.STYLE_PRESETS = {
     'illustration': {
         name: 'Illustration',
-        placeholder: 'a fox',
+        placeholder: 'A fox',
         defaultAxes: { volume: 50, color: 50, shape: 100, detail: 50, text: 0 },
         subject: 'app icon of {subject}.',
         base: 'flat design illustration, front-facing minimalistic style, no outlines, no textures, clean shapes, balanced spacing, simple geometric charm, extremely clean and modern, vector-illustration feel, Apple-design-language aesthetic',
@@ -62,7 +62,7 @@ App.STYLE_PRESETS = {
     },
     'blender': {
         name: 'Blender',
-        placeholder: 'a mushroom',
+        placeholder: 'A mushroom',
         defaultAxes: { volume: 100, color: 50, shape: 100, detail: 50, text: 0 },
         subject: 'app icon of {subject}.',
         base: 'Blender-quality render, warm diffused studio lighting, no harsh specular highlights, smooth subsurface scattering, soft ambient occlusion',
@@ -77,7 +77,7 @@ App.STYLE_PRESETS = {
     },
     'logo': {
         name: 'Logo',
-        placeholder: 'a bird',
+        placeholder: 'A bird',
         defaultAxes: { volume: 0, color: 0, shape: 50, detail: 0, text: 0 },
         subject: '{subject}, logo, modern, Paul Rand style.',
         base: 'simplified flat illustration, no outlines, no textures, extremely clean and modern, Apple-design-language aesthetic',
@@ -107,7 +107,7 @@ App.STYLE_PRESETS = {
     },
     'notion': {
         name: 'Notion',
-        placeholder: 'an apple',
+        placeholder: 'A man with a New York cap',
         defaultAxes: { volume: 50, color: 0, shape: 50, detail: 0, text: 0 },
         subject: 'a {subject}.',
         base: 'minimalist black-and-white flat vector illustration in expressive Notion avatar art style, thick uniform black outlines (monoline weight), organic smooth confident lines, quirky charming personality through shape and proportions, selective strategic solid black fills for dark surfaces and shadows, lighter surfaces and main body areas remain pure flat white, no shading, no gray tones, no gradients, only pure black and pure white, clean centered composition on white background, high contrast clean 2D vector graphics',
@@ -125,7 +125,7 @@ App.STYLE_PRESETS = {
     },
     'sticker': {
         name: 'Sticker',
-        placeholder: 'a rocket',
+        placeholder: 'A rocket',
         defaultAxes: { volume: 0, color: 50, shape: 100, detail: 0, text: 0 },
         subject: 'app icon of {subject}.',
         base: 'flat die-cut sticker, solid opaque color fills, cartoon-simple, thick off-white (#FAF9F7) outline border around the entire sticker shape',

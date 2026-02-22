@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var sizeBtn = document.getElementById('sizeDropdownBtn');
     var sizeMenu = document.getElementById('sizeDropdownMenu');
     var sizeLabel = document.getElementById('sizeDropdownLabel');
-    var previewFrame = document.getElementById('previewFrame');
+    var canvasStack = document.querySelector('.canvas-stack');
     var SIZE_MAP = { 64: 64, 128: 128, 256: 256, 512: 512 };
 
     if (sizeBtn && sizeMenu) {
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!opt) return;
             var size = parseInt(opt.getAttribute('data-size'), 10);
             sizeLabel.textContent = size + 'px';
-            previewFrame.style.maxWidth = SIZE_MAP[size] + 'px';
+            canvasStack.style.maxWidth = SIZE_MAP[size] + 'px';
             var all = sizeMenu.querySelectorAll('.topbar-size-option');
             for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
             opt.classList.add('active');

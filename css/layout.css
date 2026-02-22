@@ -460,7 +460,7 @@
 .toolbar-right-panel {
     position: absolute;
     right: calc(100% + 8px);
-    width: 260px;
+    width: 230px;
     max-height: calc(100vh - 120px);
     overflow-y: auto;
     scrollbar-width: none;

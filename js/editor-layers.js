@@ -65,11 +65,15 @@ App._renderLayerList = function() {
     var layers = App.state.editor.layers || [];
     var active = App.state.editor.activeLayerIndex;
 
-    for (var i = 0; i < layers.length; i++) {
+    for (var i = layers.length - 1; i >= 0; i--) {
         var layer = layers[i];
         var item = document.createElement('div');
         item.className = 'editor-layer-item' + (i === active ? ' active' : '');
         item.setAttribute('data-layer-index', i);
+        // Handle de drag
+        var handle = document.createElement('span');
+        handle.className = 'editor-layer-handle';
+        handle.innerHTML = '<i data-lucide="grip-vertical" style="width:14px;height:14px"></i>';
 
         var thumb = document.createElement('img');
         thumb.className = 'editor-layer-thumb';
@@ -83,35 +87,17 @@ App._renderLayerList = function() {
         var actions = document.createElement('div');
         actions.className = 'editor-layer-actions';
 
-        // Bouton monter
-        if (layers.length > 1) {
-            var upBtn = document.createElement('button');
-            upBtn.className = 'btn-icon btn-xs';
-            upBtn.title = 'Move up';
-            upBtn.setAttribute('data-action', 'move-up');
-            upBtn.innerHTML = '<i data-lucide="chevron-up"></i>';
-            if (i === 0) upBtn.style.visibility = 'hidden';
-            actions.appendChild(upBtn);
-
-            var downBtn = document.createElement('button');
-            downBtn.className = 'btn-icon btn-xs';
-            downBtn.title = 'Move down';
-            downBtn.setAttribute('data-action', 'move-down');
-            downBtn.innerHTML = '<i data-lucide="chevron-down"></i>';
-            if (i === layers.length - 1) downBtn.style.visibility = 'hidden';
-            actions.appendChild(downBtn);
-        }
-
         // Bouton supprimer (cache si un seul layer)
         if (layers.length > 1) {
             var delBtn = document.createElement('button');
             delBtn.className = 'btn-icon btn-xs';
             delBtn.title = 'Remove layer';
             delBtn.setAttribute('data-action', 'delete');
-            delBtn.innerHTML = '<i data-lucide="x"></i>';
+            delBtn.innerHTML = '<i data-lucide="trash-2"></i>';
             actions.appendChild(delBtn);
         }
 
+        item.appendChild(handle);
         item.appendChild(thumb);
         item.appendChild(name);
         item.appendChild(actions);
@@ -133,7 +119,8 @@ App.selectEditorLayer = function(index) {
     // Update highlight dans la liste
     var items = document.querySelectorAll('.editor-layer-item');
     for (var i = 0; i < items.length; i++) {
-        items[i].classList.toggle('active', i === index);
+        var itemIndex = parseInt(items[i].getAttribute('data-layer-index'), 10);
+        items[i].classList.toggle('active', itemIndex === index);
     }
 
     // Sync les controles avec le layer selectionne
@@ -192,7 +179,7 @@ App.removeEditorLayer = function(index) {
     App._editorUpdateAddBtn();
 };
 
-/* ---- Reordonner un layer ---- */
+/* ---- Reordonner un layer (swap adjacent) ---- */
 
 App.reorderEditorLayer = function(fromIndex, direction) {
     var layers = App.state.editor.layers || [];
@@ -212,6 +199,32 @@ App.reorderEditorLayer = function(fromIndex, direction) {
     }
 
     // Re-render
+    App._renderLayerImages(function() {
+        App.updateEditorPreview();
+    });
+    App._renderLayerList();
+};
+
+/* ---- Deplacer un layer (drag & drop) ---- */
+
+App._moveEditorLayer = function(fromIndex, toIndex) {
+    var layers = App.state.editor.layers || [];
+    if (fromIndex < 0 || fromIndex >= layers.length) return;
+    if (toIndex < 0 || toIndex >= layers.length) return;
+
+    var moving = layers.splice(fromIndex, 1)[0];
+    layers.splice(toIndex, 0, moving);
+
+    // Suivre le layer actif
+    var active = App.state.editor.activeLayerIndex;
+    if (active === fromIndex) {
+        App.state.editor.activeLayerIndex = toIndex;
+    } else if (fromIndex < active && toIndex >= active) {
+        App.state.editor.activeLayerIndex = active - 1;
+    } else if (fromIndex > active && toIndex <= active) {
+        App.state.editor.activeLayerIndex = active + 1;
+    }
+
     App._renderLayerImages(function() {
         App.updateEditorPreview();
     });

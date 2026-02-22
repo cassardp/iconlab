@@ -109,10 +109,13 @@ App.initEditorEvents = function() {
     }
 
 
-    // Event delegation sur la layer list
+    // Event delegation sur la layer list (click + pointer drag & drop)
     var layerList = document.getElementById('editorLayerList');
     if (layerList) {
+        var dragState = null;
+
         layerList.addEventListener('click', function(e) {
+            if (e._dragHandled) return;
             var actionBtn = e.target.closest('[data-action]');
             var item = e.target.closest('.editor-layer-item');
             if (!item) return;
@@ -123,15 +126,140 @@ App.initEditorEvents = function() {
                 var action = actionBtn.getAttribute('data-action');
                 if (action === 'delete') {
                     App.removeEditorLayer(index);
-                } else if (action === 'move-up') {
-                    App.reorderEditorLayer(index, 'up');
-                } else if (action === 'move-down') {
-                    App.reorderEditorLayer(index, 'down');
                 }
             } else {
-                // Click sur l'item = selectionner le layer
                 App.selectEditorLayer(index);
             }
+        });
+
+        // Pointer-based drag on handle
+        // List is rendered in reverse: DOM position 0 = highest array index (top layer)
+        layerList.addEventListener('mousedown', function(e) {
+            var handle = e.target.closest('.editor-layer-handle');
+            if (!handle) return;
+            var item = handle.closest('.editor-layer-item');
+            if (!item) return;
+            e.preventDefault();
+
+            var items = layerList.querySelectorAll('.editor-layer-item');
+            if (items.length < 2) return;
+
+            // Find visual position of source in DOM
+            var srcVisualPos = -1;
+            for (var p = 0; p < items.length; p++) {
+                if (items[p] === item) { srcVisualPos = p; break; }
+            }
+
+            var srcArrayIndex = parseInt(item.getAttribute('data-layer-index'), 10);
+
+            // Capture midpoints of visible items (excluding source)
+            var midpoints = [];
+            var visibleItems = [];
+            for (var r = 0; r < items.length; r++) {
+                if (r === srcVisualPos) continue;
+                var rect = items[r].getBoundingClientRect();
+                midpoints.push(rect.top + rect.height / 2);
+                visibleItems.push(items[r]);
+            }
+
+            // Item height for gap
+            var itemHeight = items[0].getBoundingClientRect().height + 2; // +gap
+
+            // Create ghost
+            var srcRect = item.getBoundingClientRect();
+            var ghost = item.cloneNode(true);
+            ghost.className = 'editor-layer-ghost';
+            ghost.style.width = srcRect.width + 'px';
+            ghost.style.left = srcRect.left + 'px';
+            ghost.style.top = srcRect.top + 'px';
+            document.body.appendChild(ghost);
+
+            // Figer la hauteur du container avant de cacher l'item
+            layerList.style.minHeight = layerList.offsetHeight + 'px';
+
+            item.classList.add('dragging');
+            layerList.classList.add('dragging-active');
+
+            dragState = {
+                srcVisualPos: srcVisualPos,
+                srcArrayIndex: srcArrayIndex,
+                totalLayers: items.length,
+                ghost: ghost,
+                startY: e.clientY,
+                ghostStartTop: srcRect.top,
+                midpoints: midpoints,
+                visibleItems: visibleItems,
+                itemHeight: itemHeight,
+                currentGapSlot: -1
+            };
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!dragState) return;
+
+            // Move ghost
+            var dy = e.clientY - dragState.startY;
+            dragState.ghost.style.top = (dragState.ghostStartTop + dy) + 'px';
+
+            // Find gap slot among visible items (0 = before first, N = after last)
+            var cursorY = e.clientY;
+            var slot = dragState.visibleItems.length;
+            for (var i = 0; i < dragState.midpoints.length; i++) {
+                if (cursorY < dragState.midpoints[i]) {
+                    slot = i;
+                    break;
+                }
+            }
+
+            if (slot !== dragState.currentGapSlot) {
+                dragState.currentGapSlot = slot;
+                // Shift visible items to open a gap at slot
+                for (var v = 0; v < dragState.visibleItems.length; v++) {
+                    if (v >= slot) {
+                        dragState.visibleItems[v].style.transform = 'translateY(' + dragState.itemHeight + 'px)';
+                    } else {
+                        dragState.visibleItems[v].style.transform = '';
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('mouseup', function(e) {
+            if (!dragState) return;
+            var srcArrayIndex = dragState.srcArrayIndex;
+            var srcVisualPos = dragState.srcVisualPos;
+            var gapSlot = dragState.currentGapSlot;
+            var total = dragState.totalLayers;
+
+            // Cleanup
+            if (dragState.ghost.parentNode) dragState.ghost.parentNode.removeChild(dragState.ghost);
+            for (var v = 0; v < dragState.visibleItems.length; v++) {
+                dragState.visibleItems[v].style.transform = '';
+            }
+            var items = layerList.querySelectorAll('.editor-layer-item');
+            for (var c = 0; c < items.length; c++) {
+                items[c].classList.remove('dragging');
+            }
+            layerList.classList.remove('dragging-active');
+            layerList.style.minHeight = '';
+
+            // Convert gap slot (among visible items) back to visual slot (among all items)
+            // gapSlot is the position among items excluding source
+            // Convert to position among all items:
+            var dropVisualSlot = gapSlot;
+            if (dropVisualSlot >= srcVisualPos) dropVisualSlot++;
+
+            // Convert visual slot to array index
+            // Visual slot 0 = top = highest array index, Visual slot N = bottom = index 0
+            if (gapSlot >= 0 && dropVisualSlot !== srcVisualPos && dropVisualSlot !== srcVisualPos + 1) {
+                var targetArrayPos = total - dropVisualSlot;
+                if (targetArrayPos > srcArrayIndex) targetArrayPos--;
+                if (targetArrayPos !== srcArrayIndex && targetArrayPos >= 0 && targetArrayPos < total) {
+                    e._dragHandled = true;
+                    App._moveEditorLayer(srcArrayIndex, targetArrayPos);
+                }
+            }
+            dragState = null;
         });
     }
 

@@ -67,7 +67,39 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+}
+
+.editor-add-layer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 6px 8px;
+    margin-top: 4px;
     margin-bottom: 12px;
+    border: none;
+    border-radius: var(--radius);
+    background: none;
+    color: var(--foreground-muted);
+    font-size: 12px;
+    cursor: pointer;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.editor-add-layer-btn:hover {
+    color: var(--foreground);
+    border-color: var(--foreground-muted);
+}
+
+.editor-add-layer-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.editor-add-layer-btn svg {
+    width: 14px;
+    height: 14px;
 }
 
 .editor-layer-item {
@@ -85,7 +117,7 @@
 }
 
 .editor-layer-item.active {
-    background: var(--accent);
+    background: var(--muted);
 }
 
 .editor-layer-thumb {
@@ -116,6 +148,47 @@
 .editor-layer-item:hover .editor-layer-actions,
 .editor-layer-item.active .editor-layer-actions {
     opacity: 1;
+}
+
+.editor-layer-handle {
+    display: flex;
+    align-items: center;
+    cursor: grab;
+    color: var(--foreground-muted);
+    flex-shrink: 0;
+    margin-left: -4px;
+}
+
+.editor-layer-handle:active {
+    cursor: grabbing;
+}
+
+.editor-layer-list.dragging-active .editor-layer-item {
+    transition: transform 150ms ease;
+}
+
+.editor-layer-item.dragging {
+    opacity: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    transition: none;
+}
+
+.editor-layer-ghost {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: var(--radius);
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    opacity: 0.9;
 }
 
 /* Layer picker now reuses gallery overlay (see layout.css .picker-mode) */

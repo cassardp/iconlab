@@ -128,29 +128,3 @@
     color: var(--foreground);
 }
 
-/* ============================================
-   Settings Modal
-   ============================================ */
-
-.settings-modal {
-    position: relative;
-    padding: 0;
-    max-width: 400px;
-    width: 400px;
-    text-align: left;
-}
-
-.settings-modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 16px 12px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--foreground);
-    border-bottom: 1px solid var(--border-subtle);
-}
-
-.settings-modal .section-content {
-    padding: 12px 16px 16px;
-}

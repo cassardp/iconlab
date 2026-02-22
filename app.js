@@ -48,27 +48,36 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target === aboutModal) aboutModal.classList.remove('show');
     });
 
-    // 2c. Settings modal
-    var settingsModal = document.getElementById('settingsModal');
-    var settingsBtn = document.getElementById('settingsBtn');
-    var settingsClose = document.getElementById('settingsModalClose');
+    // 2c. Settings panel (left toolbar)
+    App._settingsPanelOpen = false;
 
+    App._toggleSettingsPanel = function() {
+        var panel = document.getElementById('toolbarLeftPanel');
+        var btn = document.getElementById('settingsBtn');
+        if (!panel) return;
+        App._settingsPanelOpen = !App._settingsPanelOpen;
+        panel.classList.toggle('hidden', !App._settingsPanelOpen);
+        if (btn) btn.classList.toggle('active', App._settingsPanelOpen);
+        if (App._settingsPanelOpen) {
+            lucide.createIcons({ nodes: [panel] });
+        }
+    };
+
+    var settingsBtn = document.getElementById('settingsBtn');
     if (settingsBtn) {
         settingsBtn.addEventListener('click', function() {
-            settingsModal.classList.add('show');
-            lucide.createIcons({ nodes: [settingsModal] });
+            App._toggleSettingsPanel();
         });
     }
-    if (settingsClose) {
-        settingsClose.addEventListener('click', function() {
-            settingsModal.classList.remove('show');
-        });
-    }
-    if (settingsModal) {
-        settingsModal.addEventListener('click', function(e) {
-            if (e.target === settingsModal) settingsModal.classList.remove('show');
-        });
-    }
+
+    // Click outside to close settings panel
+    document.addEventListener('mousedown', function(e) {
+        if (!App._settingsPanelOpen) return;
+        var toolbar = document.querySelector('.toolbar-left');
+        if (toolbar && !toolbar.contains(e.target)) {
+            App._toggleSettingsPanel();
+        }
+    });
 
     // 2d. Gallery overlay
     var galleryToggle = document.getElementById('galleryToggle');

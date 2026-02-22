@@ -519,6 +519,11 @@ App.initEditorEvents = function() {
                 }
                 return;
             }
+            // Close settings panel
+            if (App._settingsPanelOpen) {
+                App._toggleSettingsPanel();
+                return;
+            }
             // Close editor panels
             if (App.state.editor.active) {
                 if (App._activeRightPanel) {
@@ -530,11 +535,12 @@ App.initEditorEvents = function() {
         }
     });
 
-    // Click outside to close right panel
+    // Click outside to close right panel (ignore canvas area)
     document.addEventListener('mousedown', function(e) {
         if (!App._activeRightPanel) return;
         var toolbar = document.getElementById('toolbarRight');
-        if (toolbar && !toolbar.contains(e.target)) {
+        var canvas = document.getElementById('editorCanvasWrap');
+        if (toolbar && !toolbar.contains(e.target) && !(canvas && canvas.contains(e.target))) {
             App._toggleRightPanel(App._activeRightPanel);
         }
     });
@@ -552,15 +558,6 @@ App.initEditorEvents = function() {
         var DRAG_THRESHOLD = 4;
 
         canvasWrap.addEventListener('mousedown', function(e) {
-            // Detecter le layer sous le curseur et le selectionner
-            var layerWrap = e.target.closest('.editor-layer-wrap');
-            if (layerWrap) {
-                var clickedIndex = parseInt(layerWrap.getAttribute('data-layer-index'), 10);
-                if (!isNaN(clickedIndex) && clickedIndex !== App.state.editor.activeLayerIndex) {
-                    App.selectEditorLayer(clickedIndex);
-                }
-            }
-
             var layer = App._editorActiveLayer();
             if (!layer) return;
             e.preventDefault();

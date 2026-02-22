@@ -41,9 +41,9 @@
     top: 12px;
     left: 50%;
     transform: translateX(-50%);
-    max-width: 640px;
+    max-width: 360px;
     width: calc(100% - 32px);
-    height: 48px;
+    height: 42px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -146,8 +146,8 @@
 }
 
 .topbar-btn {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -171,8 +171,8 @@
 
 .topbar-btn svg,
 .topbar-btn [data-lucide] {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
 }
 
 .version-number {
@@ -279,6 +279,23 @@
     border: none;
     border-top: 1px solid var(--border-subtle);
     margin: 2px 0;
+}
+
+/* ---- Left panel (floating, mirrors right panel) ---- */
+
+.toolbar-left-panel {
+    position: absolute;
+    left: calc(100% + 8px);
+    top: 0;
+    width: 230px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.toolbar-left-panel::-webkit-scrollbar {
+    display: none;
 }
 
 /* ---- Canvas area (centre, plein ecran) ---- */

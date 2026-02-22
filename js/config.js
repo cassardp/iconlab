@@ -33,11 +33,11 @@ App.MODELS = {
 /* ---- Axes semantiques ---- */
 
 App.AXES = [
-    { key: 'volume', labelMin: 'Flat',    labelMax: '3D' },
-    { key: 'color',  labelMin: 'Mono',    labelMax: 'Colorful' },
-    { key: 'shape',  labelMin: 'Sharp',   labelMax: 'Rounded' },
-    { key: 'detail', labelMin: 'Minimal', labelMax: 'Detailed' },
-    { key: 'text',   labelMin: 'No Text', labelMax: 'Text' }
+    { key: 'volume', labelMin: 'Flat',    labelMid: 'Relief',   labelMax: '3D' },
+    { key: 'color',  labelMin: 'Mono',    labelMid: 'Limited',  labelMax: 'Multicolor' },
+    { key: 'shape',  labelMin: 'Sharp',   labelMid: 'Smooth',   labelMax: 'Rounded' },
+    { key: 'detail', labelMin: 'Minimal', labelMid: 'Balanced', labelMax: 'Detailed' },
+    { key: 'text',   labelMin: 'No Text', labelMid: 'Short',    labelMax: 'Text' }
 ];
 
 App.AXIS_DEFAULTS = { volume: 0, color: 100, shape: 100, detail: 0, text: 0 };
@@ -254,7 +254,7 @@ App._initColorPickerWraps = function(root) {
     for (var i = 0; i < wraps.length; i++) {
         (function(wrap) {
             wrap.addEventListener('click', function(e) {
-                if (e.target.closest('.color-picker-reset')) return;
+                if (e.target.closest('.color-picker-reset') || e.target.closest('.color-hex-input')) return;
                 var input = wrap.querySelector('input[type="color"]');
                 if (input) input.click();
             });

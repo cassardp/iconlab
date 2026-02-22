@@ -107,28 +107,28 @@ App._editorSyncControls = function() {
     var bgColor = document.getElementById('editorBgColor');
     var bgColorLabel = document.getElementById('editorBgColorLabel');
     if (bgColor) bgColor.value = s.bgColor;
-    if (bgColorLabel) bgColorLabel.textContent = s.bgColor;
+    if (bgColorLabel) bgColorLabel.value = s.bgColor;
 
     var gradCenter = document.getElementById('editorGradientCenter');
     var gradCenterLabel = document.getElementById('editorGradientCenterLabel');
     if (gradCenter) gradCenter.value = s.gradientCenter;
-    if (gradCenterLabel) gradCenterLabel.textContent = s.gradientCenter;
+    if (gradCenterLabel) gradCenterLabel.value = s.gradientCenter;
 
     var gradEdge = document.getElementById('editorGradientEdge');
     var gradEdgeLabel = document.getElementById('editorGradientEdgeLabel');
     if (gradEdge) gradEdge.value = s.gradientEdge;
-    if (gradEdgeLabel) gradEdgeLabel.textContent = s.gradientEdge;
+    if (gradEdgeLabel) gradEdgeLabel.value = s.gradientEdge;
 
     // Linear gradient controls
     var linStart = document.getElementById('editorLinearStart');
     var linStartLabel = document.getElementById('editorLinearStartLabel');
     if (linStart) linStart.value = s.linearStart;
-    if (linStartLabel) linStartLabel.textContent = s.linearStart;
+    if (linStartLabel) linStartLabel.value = s.linearStart;
 
     var linEnd = document.getElementById('editorLinearEnd');
     var linEndLabel = document.getElementById('editorLinearEndLabel');
     if (linEnd) linEnd.value = s.linearEnd;
-    if (linEndLabel) linEndLabel.textContent = s.linearEnd;
+    if (linEndLabel) linEndLabel.value = s.linearEnd;
 
     // Linear angle slider sync
     var angleSlider = document.getElementById('editorLinearAngle');
@@ -174,7 +174,7 @@ App._editorSyncControls = function() {
         var tintColor = document.getElementById('editorTintColor');
         var tintColorLabel = document.getElementById('editorTintColorLabel');
         if (tintColor) tintColor.value = layer.tintColor || '#FF0000';
-        if (tintColorLabel) tintColorLabel.textContent = layer.tintColor || '#FF0000';
+        if (tintColorLabel) tintColorLabel.value = layer.tintColor || '#FF0000';
 
         // Shadow segmented
         var shadowSeg = document.getElementById('editorShadowEnabled');
@@ -199,7 +199,7 @@ App._editorSyncControls = function() {
         var shadowColor = document.getElementById('editorShadowColor');
         var shadowColorLabel = document.getElementById('editorShadowColorLabel');
         if (shadowColor) shadowColor.value = layer.shadowColor;
-        if (shadowColorLabel) shadowColorLabel.textContent = layer.shadowColor;
+        if (shadowColorLabel) shadowColorLabel.value = layer.shadowColor;
     }
 
     // Visibilite conditionnelle
@@ -302,9 +302,12 @@ App._renderMeshColorList = function() {
             input.className = 'mesh-color-input';
             input.setAttribute('data-mesh-index', idx);
 
-            var label = document.createElement('span');
-            label.className = 'color-picker-label active';
-            label.textContent = colors[idx];
+            var label = document.createElement('input');
+            label.type = 'text';
+            label.className = 'slider-value color-hex-input';
+            label.value = colors[idx];
+            label.maxLength = 7;
+            label.spellcheck = false;
 
             wrap.appendChild(input);
             wrap.appendChild(label);
@@ -328,8 +331,23 @@ App._renderMeshColorList = function() {
             // Color input event
             input.addEventListener('input', function() {
                 App.state.editor.meshColors[idx] = this.value;
-                label.textContent = this.value;
+                label.value = this.value;
                 App.updateEditorPreview();
+            });
+
+            // Hex input event
+            label.addEventListener('change', function() {
+                var v = this.value.trim();
+                if (/^#?[0-9a-f]{6}$/i.test(v)) {
+                    if (v[0] !== '#') v = '#' + v;
+                    v = v.toUpperCase();
+                    this.value = v;
+                    input.value = v;
+                    App.state.editor.meshColors[idx] = v;
+                    App.updateEditorPreview();
+                } else {
+                    this.value = App.state.editor.meshColors[idx];
+                }
             });
 
             container.appendChild(row);

@@ -345,25 +345,65 @@ App.initEditorEvents = function() {
             if (el) {
                 el.addEventListener('input', function() {
                     App.state.editor[cfg.key] = this.value;
-                    if (labelEl) labelEl.textContent = this.value;
+                    if (labelEl) labelEl.value = this.value;
                     App.updateEditorPreview();
+                });
+            }
+            if (labelEl) {
+                labelEl.addEventListener('change', function() {
+                    var v = this.value.trim();
+                    if (/^#?[0-9a-f]{6}$/i.test(v)) {
+                        if (v[0] !== '#') v = '#' + v;
+                        v = v.toUpperCase();
+                        this.value = v;
+                        if (el) el.value = v;
+                        App.state.editor[cfg.key] = v;
+                        App.updateEditorPreview();
+                    } else {
+                        this.value = App.state.editor[cfg.key];
+                    }
                 });
             }
         })(bgColorInputs[i]);
     }
 
-    // Color picker — shadow (ecrit sur le layer actif)
-    var shadowColorEl = document.getElementById('editorShadowColor');
-    var shadowColorLabelEl = document.getElementById('editorShadowColorLabel');
-    if (shadowColorEl) {
-        shadowColorEl.addEventListener('input', function() {
-            var layer = App._editorActiveLayer();
-            if (layer) {
-                layer.shadowColor = this.value;
-                if (shadowColorLabelEl) shadowColorLabelEl.textContent = this.value;
-                App.updateEditorPreview();
+    // Color pickers — layer (ecrivent sur le layer actif)
+    var layerColorInputs = [
+        { id: 'editorShadowColor', key: 'shadowColor', label: 'editorShadowColorLabel', fallback: '#000000' },
+        { id: 'editorTintColor',   key: 'tintColor',   label: 'editorTintColorLabel',   fallback: '#FF0000' }
+    ];
+
+    for (var ci = 0; ci < layerColorInputs.length; ci++) {
+        (function(cfg) {
+            var el = document.getElementById(cfg.id);
+            var labelEl = document.getElementById(cfg.label);
+            if (el) {
+                el.addEventListener('input', function() {
+                    var layer = App._editorActiveLayer();
+                    if (!layer) return;
+                    layer[cfg.key] = this.value;
+                    if (labelEl) labelEl.value = this.value;
+                    App.updateEditorPreview();
+                });
             }
-        });
+            if (labelEl) {
+                labelEl.addEventListener('change', function() {
+                    var layer = App._editorActiveLayer();
+                    if (!layer) return;
+                    var v = this.value.trim();
+                    if (/^#?[0-9a-f]{6}$/i.test(v)) {
+                        if (v[0] !== '#') v = '#' + v;
+                        v = v.toUpperCase();
+                        this.value = v;
+                        if (el) el.value = v;
+                        layer[cfg.key] = v;
+                        App.updateEditorPreview();
+                    } else {
+                        this.value = layer[cfg.key] || cfg.fallback;
+                    }
+                });
+            }
+        })(layerColorInputs[ci]);
     }
 
     // Range sliders (ecrivent sur le layer actif)
@@ -430,19 +470,6 @@ App.initEditorEvents = function() {
         });
     }
 
-    // Color picker — tint (ecrit sur le layer actif)
-    var tintColorEl = document.getElementById('editorTintColor');
-    var tintColorLabelEl = document.getElementById('editorTintColorLabel');
-    if (tintColorEl) {
-        tintColorEl.addEventListener('input', function() {
-            var layer = App._editorActiveLayer();
-            if (layer) {
-                layer.tintColor = this.value;
-                if (tintColorLabelEl) tintColorLabelEl.textContent = this.value;
-                App.updateEditorPreview();
-            }
-        });
-    }
 
     // Segmented shadow (ecrit sur le layer actif)
     var shadowSeg = document.getElementById('editorShadowEnabled');
@@ -501,10 +528,10 @@ App.initEditorEvents = function() {
     // Escape pour fermer
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            // Close popovers first
-            var openPopover = document.querySelector('.popover:not(.hidden)');
-            if (openPopover) {
-                App._closeAllPopovers();
+            // Close prompt sections first
+            var openSection = document.querySelector('.prompt-section.open');
+            if (openSection) {
+                App._closeAllSections();
                 return;
             }
             // Close gallery overlay (normal or picker mode)
@@ -600,8 +627,8 @@ App.initEditorEvents = function() {
                 var oyVal = document.getElementById('editorOffsetYValue');
                 var oxInput = document.getElementById('editorOffsetX');
                 var oyInput = document.getElementById('editorOffsetY');
-                if (oxVal) oxVal.textContent = layer.offsetX + '%';
-                if (oyVal) oyVal.textContent = layer.offsetY + '%';
+                if (oxVal) oxVal.value = layer.offsetX;
+                if (oyVal) oyVal.value = layer.offsetY;
                 if (oxInput) oxInput.value = layer.offsetX;
                 if (oyInput) oyInput.value = layer.offsetY;
             });

@@ -185,74 +185,80 @@ App._buildStyleCards = function() {
 
     for (var id in App.STYLE_PRESETS) {
         var preset = App.STYLE_PRESETS[id];
-        var card = document.createElement('div');
-        card.className = 'style-card';
-        card.setAttribute('data-preset', id);
-
-        var preview = document.createElement('div');
-        preview.className = 'style-card-preview';
-        var img = document.createElement('img');
-        img.src = 'assets/styles/' + id + '.png';
-        img.alt = preset.name;
-        preview.appendChild(img);
-
-        var label = document.createElement('div');
-        label.className = 'style-card-label';
-        label.textContent = preset.name;
-
-        card.appendChild(preview);
-        card.appendChild(label);
-        container.appendChild(card);
+        var chip = document.createElement('button');
+        chip.className = 'style-chip';
+        chip.setAttribute('data-preset', id);
+        chip.textContent = preset.name;
+        container.appendChild(chip);
     }
 };
 
-/* ---- Build axes sliders in options popover ---- */
+/* ---- Build axes segmented controls in options section ---- */
 
 App._buildAxesSliders = function() {
-    var container = document.getElementById('axesSliders');
-    if (!container) return;
+    var ribbon = document.getElementById('axesSliders');
+    if (!ribbon) return;
+
+    var container = document.createElement('div');
+    container.className = 'axes-ribbon-inner';
+
+    var stops = [0, 50, 100];
 
     for (var i = 0; i < App.AXES.length; i++) {
         var axis = App.AXES[i];
-        var row = document.createElement('div');
-        row.className = 'setting-row';
-        row.setAttribute('data-axis', axis.key);
+        var col = document.createElement('div');
+        col.className = 'axis-col';
+        col.setAttribute('data-axis', axis.key);
 
         var label = document.createElement('span');
-        label.className = 'setting-label';
+        label.className = 'axis-label';
         label.textContent = axis.key.charAt(0).toUpperCase() + axis.key.slice(1);
+        col.appendChild(label);
 
-        var sliderRow = document.createElement('div');
-        sliderRow.className = 'slider-row';
+        var seg = document.createElement('div');
+        seg.className = 'segmented segmented-vertical';
+        seg.id = 'axis-' + axis.key;
 
-        var minLabel = document.createElement('span');
-        minLabel.className = 'axis-bound-label';
-        minLabel.textContent = axis.labelMin;
+        var labels = [axis.labelMin, axis.labelMid, axis.labelMax];
+        var currentVal = App.state.axes[axis.key];
 
-        var trackWrap = document.createElement('div');
-        trackWrap.className = 'slider-track-wrap';
+        for (var s = 0; s < stops.length; s++) {
+            var btn = document.createElement('button');
+            btn.className = 'seg-btn';
+            btn.setAttribute('data-value', stops[s]);
+            btn.textContent = labels[s];
+            if (stops[s] === currentVal) btn.classList.add('active');
+            seg.appendChild(btn);
+        }
 
-        var input = document.createElement('input');
-        input.type = 'range';
-        input.className = 'range-slider';
-        input.min = '0';
-        input.max = '100';
-        input.step = '50';
-        input.value = App.state.axes[axis.key];
-        input.id = 'axis-' + axis.key;
-
-        var maxLabel = document.createElement('span');
-        maxLabel.className = 'axis-bound-label';
-        maxLabel.textContent = axis.labelMax;
-
-        trackWrap.appendChild(input);
-        sliderRow.appendChild(minLabel);
-        sliderRow.appendChild(trackWrap);
-        sliderRow.appendChild(maxLabel);
-        row.appendChild(label);
-        row.appendChild(sliderRow);
-        container.appendChild(row);
+        col.appendChild(seg);
+        container.appendChild(col);
     }
+
+    // Material + Color column
+    var matCol = document.createElement('div');
+    matCol.className = 'axis-col';
+    var matLabel = document.createElement('span');
+    matLabel.className = 'axis-label';
+    matLabel.textContent = 'Material';
+    matCol.appendChild(matLabel);
+    var matControls = document.createElement('div');
+    matControls.className = 'axis-col-controls';
+    var matSelect = document.createElement('select');
+    matSelect.id = 'materialSelect';
+    matControls.appendChild(matSelect);
+    var colorWrap = document.createElement('div');
+    colorWrap.className = 'color-picker-wrap';
+    colorWrap.innerHTML =
+        '<input type="color" id="colorPicker" value="#4A90D9" class="inactive">' +
+        '<span class="color-picker-label" id="colorPickerLabel">None</span>' +
+        '<button class="btn-icon btn-sm color-picker-reset hidden" id="colorPickerReset" title="Reset">' +
+        '<i data-lucide="x"></i></button>';
+    matControls.appendChild(colorWrap);
+    matCol.appendChild(matControls);
+    container.appendChild(matCol);
+
+    ribbon.appendChild(container);
 };
 
 /* ---- Seed default gallery on first launch ---- */

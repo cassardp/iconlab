@@ -39,62 +39,89 @@ App.initEventListeners = function() {
     var styleCards = document.getElementById('styleCards');
     if (styleCards) {
         styleCards.addEventListener('click', function(e) {
-            var card = e.target.closest('.style-card');
+            var card = e.target.closest('.style-chip');
             if (!card) return;
             var presetId = card.getAttribute('data-preset');
             if (!presetId || !App.STYLE_PRESETS[presetId]) return;
 
-            App.state.stylePreset = presetId;
-            var preset = App.STYLE_PRESETS[presetId];
+            var wasActive = App.state.stylePreset === presetId;
 
-            // Appliquer le placeholder du preset
             var promptInput = document.getElementById('promptInput');
-            if (promptInput && preset.placeholder) {
-                promptInput.placeholder = preset.placeholder;
-            }
 
-            // Appliquer les axes par defaut du preset
-            if (preset.defaultAxes) {
-                for (var axKey in preset.defaultAxes) {
-                    App.state.axes[axKey] = preset.defaultAxes[axKey];
-                    var slider = document.getElementById('axis-' + axKey);
-                    if (slider) slider.value = preset.defaultAxes[axKey];
+            if (wasActive) {
+                // Deselect style + close options
+                App.state.stylePreset = null;
+                App._closeAllSections();
+                if (promptInput) promptInput.placeholder = 'Choose a style to start...';
+            } else {
+                // Select style + open options
+                App.state.stylePreset = presetId;
+                var preset = App.STYLE_PRESETS[presetId];
+
+                var promptInput = document.getElementById('promptInput');
+                if (promptInput && preset.placeholder) {
+                    promptInput.placeholder = preset.placeholder;
                 }
+
+                if (preset.defaultAxes) {
+                    for (var axKey in preset.defaultAxes) {
+                        App.state.axes[axKey] = preset.defaultAxes[axKey];
+                        var axSeg = document.getElementById('axis-' + axKey);
+                        if (axSeg) {
+                            var axBtns = axSeg.querySelectorAll('.seg-btn');
+                            for (var ab = 0; ab < axBtns.length; ab++) {
+                                axBtns[ab].classList.toggle('active', parseInt(axBtns[ab].getAttribute('data-value'), 10) === preset.defaultAxes[axKey]);
+                            }
+                        }
+                    }
+                }
+
+                // Reset preview to placeholder
+                if (App.state.editor.active) App.closeEditor();
+                var ph = document.getElementById('previewPlaceholder');
+                var cw = document.getElementById('editorCanvasWrap');
+                if (ph) ph.classList.remove('hidden');
+                if (cw) cw.classList.add('hidden');
+
+                // Open axes ribbon
+                App._closeAllSections();
+                var ribbon = document.getElementById('axesSliders');
+                if (ribbon) ribbon.classList.add('open');
             }
 
             App.resetEnrichedPrompt();
             App.saveState();
-
-            // Reset preview to placeholder
-            if (App.state.editor.active) App.closeEditor();
-            var ph = document.getElementById('previewPlaceholder');
-            var cw = document.getElementById('editorCanvasWrap');
-            if (ph) ph.classList.remove('hidden');
-            if (cw) cw.classList.add('hidden');
+            App.updateGenerateButton();
 
             // Update active state on cards
-            var allCards = styleCards.querySelectorAll('.style-card');
+            var allCards = styleCards.querySelectorAll('.style-chip');
             for (var i = 0; i < allCards.length; i++) {
-                allCards[i].classList.toggle('active', allCards[i].getAttribute('data-preset') === presetId);
+                allCards[i].classList.toggle('active', allCards[i].getAttribute('data-preset') === App.state.stylePreset);
             }
         });
     }
 
-    /* ---- Axes Sliders ---- */
+    /* ---- Axes Segmented Controls ---- */
 
     var axesContainer = document.getElementById('axesSliders');
     if (axesContainer) {
-        for (var ai = 0; ai < App.AXES.length; ai++) {
-            (function(axis) {
-                var slider = document.getElementById('axis-' + axis.key);
-                if (slider) {
-                    slider.addEventListener('input', function() {
-                        App.state.axes[axis.key] = parseInt(this.value, 10);
-                        App.resetEnrichedPrompt();
-                    });
-                }
-            })(App.AXES[ai]);
-        }
+        axesContainer.addEventListener('click', function(e) {
+            var btn = e.target.closest('.seg-btn');
+            if (!btn) return;
+            var seg = btn.closest('.segmented');
+            if (!seg) return;
+            var axisKey = seg.id.replace('axis-', '');
+            var value = parseInt(btn.getAttribute('data-value'), 10);
+
+            App.state.axes[axisKey] = value;
+
+            var btns = seg.querySelectorAll('.seg-btn');
+            for (var i = 0; i < btns.length; i++) {
+                btns[i].classList.toggle('active', btns[i] === btn);
+            }
+
+            App.resetEnrichedPrompt();
+        });
     }
 
     /* ---- Material Select ---- */
@@ -186,46 +213,21 @@ App.initEventListeners = function() {
         });
     }
 
-    /* ---- More Options Popover ---- */
-
-    var moreOptionsBtn = document.getElementById('moreOptionsBtn');
-    var moreOptionsPopover = document.getElementById('moreOptionsPopover');
-    if (moreOptionsBtn && moreOptionsPopover) {
-        moreOptionsBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            var isOpen = !moreOptionsPopover.classList.contains('hidden');
-            // Close all popovers first
-            App._closeAllPopovers();
-            if (!isOpen) {
-                moreOptionsPopover.classList.remove('hidden');
-                moreOptionsBtn.classList.add('active');
-                lucide.createIcons({ nodes: [moreOptionsPopover] });
-            }
-        });
-    }
-
-    /* ---- Enriched Prompt Popover ---- */
+    /* ---- Enriched Prompt Section Toggle ---- */
 
     var enrichedPromptToggle = document.getElementById('enrichedPromptToggle');
-    var enrichedPromptPopover = document.getElementById('enrichedPromptPopover');
-    if (enrichedPromptToggle && enrichedPromptPopover) {
+    if (enrichedPromptToggle) {
         enrichedPromptToggle.addEventListener('click', function(e) {
             e.stopPropagation();
-            var isOpen = !enrichedPromptPopover.classList.contains('hidden');
-            App._closeAllPopovers();
-            if (!isOpen) {
-                enrichedPromptPopover.classList.remove('hidden');
-                enrichedPromptToggle.classList.add('active');
-                lucide.createIcons({ nodes: [enrichedPromptPopover] });
-            }
+            App._toggleSection('enrichedSection', this);
         });
     }
 
-    /* ---- Close popovers on outside click ---- */
+    /* ---- Close sections on outside click ---- */
 
     document.addEventListener('click', function(e) {
-        if (!e.target.closest('.popover') && !e.target.closest('.prompt-bar-btn')) {
-            App._closeAllPopovers();
+        if (!e.target.closest('.prompt-container') && !e.target.closest('.prompt-bar-btn') && !e.target.closest('.axes-ribbon') && !e.target.closest('.style-ribbon')) {
+            App._closeAllSections();
         }
     });
 
@@ -241,12 +243,26 @@ App.initEventListeners = function() {
     });
 };
 
-/* ---- Close all popovers ---- */
+/* ---- Toggle prompt section ---- */
 
-App._closeAllPopovers = function() {
-    var popovers = document.querySelectorAll('.popover');
-    for (var i = 0; i < popovers.length; i++) {
-        popovers[i].classList.add('hidden');
+App._toggleSection = function(sectionId, btn) {
+    var section = document.getElementById(sectionId);
+    if (!section) return;
+    var wasOpen = section.classList.contains('open');
+    App._closeAllSections();
+    if (!wasOpen) {
+        section.classList.add('open');
+        if (btn) btn.classList.add('active');
+        lucide.createIcons({ nodes: [section] });
+    }
+};
+
+/* ---- Close all sections ---- */
+
+App._closeAllSections = function() {
+    var sections = document.querySelectorAll('.prompt-section, .axes-ribbon');
+    for (var i = 0; i < sections.length; i++) {
+        sections[i].classList.remove('open');
     }
     var btns = document.querySelectorAll('.prompt-bar-btn');
     for (var j = 0; j < btns.length; j++) {
@@ -257,7 +273,7 @@ App._closeAllPopovers = function() {
 /* ---- UI Helpers ---- */
 
 App.canGenerate = function() {
-    return App.hasApiKey() && App.getFinalPrompt().trim().length > 0;
+    return App.hasApiKey() && App.state.stylePreset && App.getFinalPrompt().trim().length > 0;
 };
 
 App.updateGenerateButton = function() {
@@ -351,16 +367,22 @@ App.syncUIFromState = function() {
     // Style cards active state
     var styleCards = document.getElementById('styleCards');
     if (styleCards) {
-        var cards = styleCards.querySelectorAll('.style-card');
+        var cards = styleCards.querySelectorAll('.style-chip');
         for (var ci = 0; ci < cards.length; ci++) {
             cards[ci].classList.toggle('active', cards[ci].getAttribute('data-preset') === App.state.stylePreset);
         }
     }
 
-    // Axes sliders
+    // Axes segmented controls
     for (var ai = 0; ai < App.AXES.length; ai++) {
-        var axSlider = document.getElementById('axis-' + App.AXES[ai].key);
-        if (axSlider) axSlider.value = App.state.axes[App.AXES[ai].key];
+        var axSeg = document.getElementById('axis-' + App.AXES[ai].key);
+        if (axSeg) {
+            var axVal = App.state.axes[App.AXES[ai].key];
+            var axBtns = axSeg.querySelectorAll('.seg-btn');
+            for (var ab = 0; ab < axBtns.length; ab++) {
+                axBtns[ab].classList.toggle('active', parseInt(axBtns[ab].getAttribute('data-value'), 10) === axVal);
+            }
+        }
     }
 
     // Material
@@ -402,9 +424,9 @@ App.syncUIFromState = function() {
     if (promptInput) {
         if (App.state.prompt) promptInput.value = App.state.prompt;
         var activePreset = App.STYLE_PRESETS[App.state.stylePreset];
-        if (activePreset && activePreset.placeholder) {
-            promptInput.placeholder = activePreset.placeholder;
-        }
+        promptInput.placeholder = activePreset && activePreset.placeholder
+            ? activePreset.placeholder
+            : 'Choose a style to start...';
     }
 
     // Generate button

@@ -5,11 +5,11 @@
 /* Dark theme (default) - Tailwind Neutral */
 :root {
     /* Background */
-    --background: #171717;       /* neutral-900 */
-    --background-subtle: #1a1a1a;
+    --background: #262626;       /* neutral-800 */
+    --background-subtle: #2a2a2a;
 
     /* Card/Surface */
-    --card: #262626;             /* neutral-800 */
+    --card: #171717;             /* neutral-900 */
     --card-foreground: #d4d4d4;  /* neutral-300 */
 
     /* Muted */
@@ -26,7 +26,7 @@
 
     /* Ring (focus) */
     --ring: #525252;             /* neutral-600 */
-    --ring-offset: #171717;
+    --ring-offset: #262626;
     --ring-shadow: 0 0 0 3px rgba(82, 82, 82, 0.3);
 
     /* Primary */

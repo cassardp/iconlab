@@ -71,8 +71,8 @@
             <i data-lucide="folder"></i>
         </button>
         <hr class="toolbar-left-divider">
-        <button class="toolbar-left-btn" id="settingsBtn" title="Settings">
-            <i data-lucide="settings-2"></i>
+        <button class="toolbar-left-btn" id="settingsBtn" title="API Key">
+            <i data-lucide="key-round"></i>
         </button>
         <div class="toolbar-left-panel hidden" id="toolbarLeftPanel">
             <div class="panel-float" id="panelSettings">
@@ -121,7 +121,7 @@
             </div>
             <!-- Download button -->
             <button class="download-btn disabled" id="editorExportBtn" title="Download">
-                <i data-lucide="download"></i>
+                <i data-lucide="archive"></i>
                 <span>Download</span>
             </button>
         </div>
@@ -163,7 +163,7 @@
                         <span class="setting-label">Color</span>
                         <div class="color-picker-wrap">
                             <input type="color" id="editorBgColor" value="#4A90D9">
-                            <span class="color-picker-label active" id="editorBgColorLabel">#4A90D9</span>
+                            <input type="text" class="slider-value color-hex-input" id="editorBgColorLabel" value="#4A90D9" maxlength="7" spellcheck="false">
                         </div>
                     </div>
                     <div id="editorBgGradientRows" class="hidden">
@@ -171,14 +171,14 @@
                             <span class="setting-label">Center</span>
                             <div class="color-picker-wrap">
                                 <input type="color" id="editorGradientCenter" value="#5BC0EB">
-                                <span class="color-picker-label active" id="editorGradientCenterLabel">#5BC0EB</span>
+                                <input type="text" class="slider-value color-hex-input" id="editorGradientCenterLabel" value="#5BC0EB" maxlength="7" spellcheck="false">
                             </div>
                         </div>
                         <div class="setting-row">
                             <span class="setting-label">Edge</span>
                             <div class="color-picker-wrap">
                                 <input type="color" id="editorGradientEdge" value="#2E6EA6">
-                                <span class="color-picker-label active" id="editorGradientEdgeLabel">#2E6EA6</span>
+                                <input type="text" class="slider-value color-hex-input" id="editorGradientEdgeLabel" value="#2E6EA6" maxlength="7" spellcheck="false">
                             </div>
                         </div>
                     </div>
@@ -197,14 +197,14 @@
                             <span class="setting-label">Start</span>
                             <div class="color-picker-wrap">
                                 <input type="color" id="editorLinearStart" value="#5BC0EB">
-                                <span class="color-picker-label active" id="editorLinearStartLabel">#5BC0EB</span>
+                                <input type="text" class="slider-value color-hex-input" id="editorLinearStartLabel" value="#5BC0EB" maxlength="7" spellcheck="false">
                             </div>
                         </div>
                         <div class="setting-row">
                             <span class="setting-label">End</span>
                             <div class="color-picker-wrap">
                                 <input type="color" id="editorLinearEnd" value="#2E6EA6">
-                                <span class="color-picker-label active" id="editorLinearEndLabel">#2E6EA6</span>
+                                <input type="text" class="slider-value color-hex-input" id="editorLinearEndLabel" value="#2E6EA6" maxlength="7" spellcheck="false">
                             </div>
                         </div>
                     </div>
@@ -237,7 +237,7 @@
                                 <div class="slider-track-wrap">
                                     <input type="range" id="editorScale" class="range-slider" min="10" max="150" value="100">
                                 </div>
-                                <input type="number" class="slider-value" id="editorScaleValue" min="10" max="150" value="100"><span class="slider-suffix">%</span>
+                                <input type="number" class="slider-value" id="editorScaleValue" min="10" max="150" value="100">
                             </div>
                         </div>
                         <div class="setting-row">
@@ -246,7 +246,7 @@
                                 <div class="slider-track-wrap">
                                     <input type="range" id="editorRotation" class="range-slider" min="-180" max="180" value="0">
                                 </div>
-                                <input type="number" class="slider-value" id="editorRotationValue" min="-180" max="180" value="0"><span class="slider-suffix">°</span>
+                                <input type="number" class="slider-value" id="editorRotationValue" min="-180" max="180" value="0">
                             </div>
                         </div>
                         <div class="setting-row">
@@ -255,7 +255,7 @@
                                 <div class="slider-track-wrap">
                                     <input type="range" id="editorOffsetX" class="range-slider" min="-50" max="50" value="0">
                                 </div>
-                                <input type="number" class="slider-value" id="editorOffsetXValue" min="-50" max="50" value="0"><span class="slider-suffix">%</span>
+                                <input type="number" class="slider-value" id="editorOffsetXValue" min="-50" max="50" value="0">
                             </div>
                         </div>
                         <div class="setting-row">
@@ -264,7 +264,7 @@
                                 <div class="slider-track-wrap">
                                     <input type="range" id="editorOffsetY" class="range-slider" min="-50" max="50" value="0">
                                 </div>
-                                <input type="number" class="slider-value" id="editorOffsetYValue" min="-50" max="50" value="0"><span class="slider-suffix">%</span>
+                                <input type="number" class="slider-value" id="editorOffsetYValue" min="-50" max="50" value="0">
                             </div>
                         </div>
                         <div class="setting-row">
@@ -273,7 +273,7 @@
                                 <div class="slider-track-wrap">
                                     <input type="range" id="editorOpacity" class="range-slider" min="0" max="100" value="100">
                                 </div>
-                                <input type="number" class="slider-value" id="editorOpacityValue" min="0" max="100" value="100"><span class="slider-suffix">%</span>
+                                <input type="number" class="slider-value" id="editorOpacityValue" min="0" max="100" value="100">
                             </div>
                         </div>
                         <hr class="setting-divider">
@@ -289,7 +289,7 @@
                                 <span class="setting-label">Color</span>
                                 <div class="color-picker-wrap">
                                     <input type="color" id="editorTintColor" value="#FF0000">
-                                    <span class="color-picker-label active" id="editorTintColorLabel">#FF0000</span>
+                                    <input type="text" class="slider-value color-hex-input" id="editorTintColorLabel" value="#FF0000" maxlength="7" spellcheck="false">
                                 </div>
                             </div>
                         </div>
@@ -308,7 +308,7 @@
                                     <div class="slider-track-wrap">
                                         <input type="range" id="editorShadowBlur" class="range-slider" min="0" max="60" value="20">
                                     </div>
-                                    <input type="number" class="slider-value" id="editorShadowBlurValue" min="0" max="60" value="20"><span class="slider-suffix">px</span>
+                                    <input type="number" class="slider-value" id="editorShadowBlurValue" min="0" max="60" value="20">
                                 </div>
                             </div>
                             <div class="setting-row">
@@ -317,7 +317,7 @@
                                     <div class="slider-track-wrap">
                                         <input type="range" id="editorShadowOffsetY" class="range-slider" min="0" max="40" value="8">
                                     </div>
-                                    <input type="number" class="slider-value" id="editorShadowOffsetYValue" min="0" max="40" value="8"><span class="slider-suffix">px</span>
+                                    <input type="number" class="slider-value" id="editorShadowOffsetYValue" min="0" max="40" value="8">
                                 </div>
                             </div>
                             <div class="setting-row">
@@ -326,14 +326,14 @@
                                     <div class="slider-track-wrap">
                                         <input type="range" id="editorShadowOpacity" class="range-slider" min="0" max="100" value="40">
                                     </div>
-                                    <input type="number" class="slider-value" id="editorShadowOpacityValue" min="0" max="100" value="40"><span class="slider-suffix">%</span>
+                                    <input type="number" class="slider-value" id="editorShadowOpacityValue" min="0" max="100" value="40">
                                 </div>
                             </div>
                             <div class="setting-row">
                                 <span class="setting-label">Color</span>
                                 <div class="color-picker-wrap">
                                     <input type="color" id="editorShadowColor" value="#000000">
-                                    <span class="color-picker-label active" id="editorShadowColorLabel">#000000</span>
+                                    <input type="text" class="slider-value color-hex-input" id="editorShadowColorLabel" value="#000000" maxlength="7" spellcheck="false">
                                 </div>
                             </div>
                         </div>
@@ -373,62 +373,45 @@
 </div>
 
 <!-- ================================================
-     BOTTOM BLOCK
+     BOTTOM TOOLBAR
      ================================================ -->
-<div class="bottom-block">
+<div class="bottom-toolbar" id="bottomToolbar">
 
-    <!-- Style cards -->
-    <div class="style-cards" id="styleCards"></div>
+    <!-- Style ribbon (always visible) -->
+    <div class="style-ribbon" id="styleCards"></div>
 
-    <!-- Prompt bar -->
-    <div class="prompt-bar">
-        <button class="prompt-bar-btn" id="moreOptionsBtn" title="More options">
-            <i data-lucide="sliders-horizontal"></i>
-        </button>
-        <input type="text" id="promptInput" class="prompt-bar-input" placeholder="Describe your icon...">
-        <button class="prompt-bar-btn" id="enrichedPromptToggle" title="View full prompt">
-            <i data-lucide="file-text"></i>
-        </button>
-        <button class="btn btn-primary btn-sm" id="generateBtn" disabled>
-            Generate
-            <i data-lucide="arrow-up"></i>
-        </button>
-    </div>
+    <!-- Axes ribbon (always visible, horizontal scroll) -->
+    <div class="axes-ribbon" id="axesSliders"></div>
 
-    <!-- Popover: enriched prompt -->
-    <div class="popover hidden" id="enrichedPromptPopover">
-        <div class="popover-header">
-            <span class="section-title">Final prompt <span class="hint">(editable)</span></span>
-            <button class="btn-icon btn-sm" id="copyPromptBtn" title="Copy">
-                <i data-lucide="copy"></i>
-            </button>
-        </div>
-        <textarea id="enrichedPrompt" class="enriched-prompt" placeholder="The enriched prompt will appear here. You can edit it before generating."></textarea>
-    </div>
+    <!-- Prompt container -->
+    <div class="prompt-container" id="promptContainer">
+        <div class="prompt-sections" id="promptSections">
 
-    <!-- Popover: more options (axes, material, color) -->
-    <div class="popover hidden" id="moreOptionsPopover">
-        <div class="popover-header">
-            <span class="section-title">Options</span>
-        </div>
-        <div class="section-content">
-            <div id="axesSliders">
-                <!-- Generated dynamically by JS from App.AXES -->
-            </div>
-            <div class="setting-row">
-                <span class="setting-label">Material</span>
-                <select id="materialSelect"></select>
-            </div>
-            <div class="setting-row" id="colorRow">
-                <span class="setting-label">Color</span>
-                <div class="color-picker-wrap">
-                    <input type="color" id="colorPicker" value="#4A90D9" class="inactive">
-                    <span class="color-picker-label" id="colorPickerLabel">None</span>
-                    <button class="btn-icon btn-sm color-picker-reset hidden" id="colorPickerReset" title="Reset">
-                        <i data-lucide="x"></i>
+            <!-- Enriched prompt section (expandable) -->
+            <div class="prompt-section" id="enrichedSection">
+                <div class="prompt-section-header">
+                    <span class="section-title">Final prompt <span class="hint">(editable)</span></span>
+                    <button class="btn-icon btn-sm" id="copyPromptBtn" title="Copy">
+                        <i data-lucide="copy"></i>
                     </button>
                 </div>
+                <div class="prompt-section-body">
+                    <textarea id="enrichedPrompt" class="enriched-prompt" placeholder="The enriched prompt will appear here. You can edit it before generating."></textarea>
+                </div>
             </div>
+
+        </div>
+
+        <!-- Prompt bar -->
+        <div class="prompt-bar">
+            <button class="prompt-bar-btn" id="enrichedPromptToggle" title="View full prompt">
+                <i data-lucide="file-text"></i>
+            </button>
+            <input type="text" id="promptInput" class="prompt-bar-input" placeholder="Choose a style to start...">
+            <button class="btn btn-primary btn-sm" id="generateBtn" disabled>
+                Generate
+                <i data-lucide="wand-sparkles"></i>
+            </button>
         </div>
     </div>
 
@@ -446,7 +429,7 @@
         </button>
         <img src="assets/light.png" alt="Icon Lab" class="about-logo logo-dark">
         <img src="assets/dark.png" alt="Icon Lab" class="about-logo logo-light">
-        <p class="about-version">Version <span class="version-number">0.72</span></p>
+        <p class="about-version">Version <span class="version-number">0.73</span></p>
         <p class="about-description">A free tool for generating and iterating on app icon designs using AI. Customize prompts, layers, and backgrounds — all in the browser.</p>
         <div class="about-links">
             <a href="https://github.com/cassardp/iconlab" target="_blank" rel="noopener">

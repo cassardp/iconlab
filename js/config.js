@@ -49,14 +49,14 @@ App.STYLE_PRESETS = {
         name: 'Illustration',
         placeholder: 'A fox',
         defaultAxes: { volume: 50, color: 50, shape: 100, detail: 50, text: 0 },
-        subject: 'app icon of {subject}.',
-        base: 'flat design illustration, front-facing minimalistic style, no outlines, no textures, clean shapes, balanced spacing, simple geometric charm, extremely clean and modern, vector-illustration feel, Apple-design-language aesthetic',
-        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.'],
+        subject: '{subject}, centered.',
+        base: 'smooth gradient illustration, clean simplified forms, vivid saturated colors, soft matte shading with seamless color gradients, no outlines, no textures, no grain, no specular highlights, no gloss, matte finish, diffused lighting',
+        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame, no rounded rectangle, no background shape behind the subject. No shadows, no glows. All shapes must be solid and fully filled, no holes, no cutouts, no negative space inside the subject.'],
         axes: {
-            volume: ['completely flat, no volume, no shading', 'subtle volume without any 3D rendering, soft shading', 'soft 3D look, visible depth and lighting'],
-            color:  ['monochrome palette, single hue, soft neutral tones', 'soft neutral palette of 2-3 harmonious colors', 'rich vibrant multiple colors, smooth gradients'],
-            shape:  ['sharp geometric edges, angular silhouette', 'balanced mix of straight and curved edges, simple geometric charm', 'bold rounded silhouette, no hard edges, shapes blend softly'],
-            detail: ['almost abstract simplicity, very few details, minimal strokes', 'moderate detail, recognizable forms, balanced spacing', 'many details, complex shapes and patterns'],
+            volume: ['strictly flat, solid color fills only, absolutely no gradients, no shading, no volume, no depth', 'soft matte gradient shading, gentle volume, smooth color transitions', 'rich volume with deep matte gradients, soft diffused depth, no glossy highlights'],
+            color:  ['monochrome, single hue only', 'warm palette of 4-5 soft harmonious colors', 'vibrant multi-color gradients, rich warm-to-cool transitions, saturated hues'],
+            shape:  ['sharp geometric edges, angular simplified forms', 'balanced mix of straight and curved, clean proportions', 'very round and smooth, soft bulging forms, no hard edges'],
+            detail: ['extreme simplification, minimal abstract silhouette', 'moderate detail, recognizable clean forms, selective accents', 'detailed with multiple gradient layers, fine shading nuances'],
             text:   ['no text or lettering', 'minimal subtle text element', 'prominent text or lettering']
         }
     },
@@ -64,9 +64,9 @@ App.STYLE_PRESETS = {
         name: 'Blender',
         placeholder: 'A mushroom',
         defaultAxes: { volume: 100, color: 50, shape: 100, detail: 50, text: 0 },
-        subject: 'app icon of {subject}.',
+        subject: '{subject}, centered.',
         base: 'Blender-quality render, warm diffused studio lighting, no harsh specular highlights, smooth subsurface scattering, soft ambient occlusion',
-        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.'],
+        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows. All shapes must be solid and fully filled, no holes, no cutouts, no negative space inside the subject.'],
         axes: {
             volume: ['flat stylized render, minimal depth', 'soft 3D render with gentle bevels', 'full 3D render with smooth rounded geometry, deep bevels and strong depth'],
             color:  ['monochrome palette, single hue', 'limited palette of 2-3 colors, natural tones', 'rich vibrant colors, smooth color gradients from warm to cool tones'],
@@ -81,7 +81,7 @@ App.STYLE_PRESETS = {
         defaultAxes: { volume: 0, color: 0, shape: 50, detail: 0, text: 0 },
         subject: '{subject}, logo, modern, Paul Rand style.',
         base: 'simplified flat illustration, no outlines, no textures, extremely clean and modern, Apple-design-language aesthetic',
-        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.'],
+        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows. All shapes must be solid and fully filled, no holes, no cutouts, no negative space inside the subject.'],
         axes: {
             volume: ['completely flat, no volume, no shading', 'subtle volume, soft shading', 'soft 3D look, visible depth and lighting'],
             color:  ['monochrome black and white', 'limited palette of 2-3 colors', 'rich vibrant multiple colors'],
@@ -96,7 +96,7 @@ App.STYLE_PRESETS = {
         defaultAxes: { volume: 50, color: 50, shape: 50, detail: 0, text: 0 },
         subject: 'the letter "{subject}", a single typographic letter or character.',
         base: 'extremely clean and modern, beautiful shading, Apple-design-language aesthetic',
-        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.'],
+        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows. All shapes must be solid and fully filled, no holes, no cutouts, no negative space inside the subject.'],
         axes: {
             volume: ['completely flat letterform, no volume', 'subtle volume without any 3D rendering', 'strong 3D extruded letterform with depth'],
             color:  ['monochrome, single color', 'two-tone color scheme', 'rich colorful gradient letterform'],
@@ -112,7 +112,7 @@ App.STYLE_PRESETS = {
         subject: 'a {subject}.',
         base: 'minimalist black-and-white flat vector illustration in expressive Notion avatar art style, thick uniform black outlines (monoline weight), organic smooth confident lines, quirky charming personality through shape and proportions, selective strategic solid black fills for dark surfaces and shadows, lighter surfaces and main body areas remain pure flat white, no shading, no gray tones, no gradients, only pure black and pure white, clean centered composition on white background, high contrast clean 2D vector graphics',
         constraints: [
-            'Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.',
+            'Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows. All shapes must be solid and fully filled, no holes, no cutouts, no negative space inside the subject.',
             'Strictly black and white only — no gray tones, no gradients, no color. Lines must be thick and uniform weight, never thin or variable.'
         ],
         axes: {
@@ -127,10 +127,10 @@ App.STYLE_PRESETS = {
         name: 'Sticker',
         placeholder: 'A rocket',
         defaultAxes: { volume: 0, color: 50, shape: 100, detail: 0, text: 0 },
-        subject: 'app icon of {subject}.',
+        subject: '{subject}, centered.',
         base: 'flat die-cut sticker, solid opaque color fills, cartoon-simple, thick off-white (#FAF9F7) outline border around the entire sticker shape',
         constraints: [
-            'Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows, no holes or cutouts.',
+            'Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows. All shapes must be solid and fully filled, no holes, no cutouts, no negative space inside the subject.',
             'The sticker border must be off-white (#FAF9F7), never pure white. Every part of the sticker must be fully opaque — only the area outside the sticker should be transparent.'
         ],
         axes: {

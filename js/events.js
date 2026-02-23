@@ -119,6 +119,8 @@ App.initEventListeners = function() {
                 App._closeAllSections();
                 var ribbon = document.getElementById('axesSliders');
                 if (ribbon) ribbon.classList.add('open');
+                var toolbar = document.getElementById('bottomToolbar');
+                if (toolbar) toolbar.classList.add('backdrop-active');
             }
 
             App.resetEnrichedPrompt();
@@ -258,6 +260,8 @@ App.initEventListeners = function() {
             if (!wasOpen) {
                 ribbon.classList.add('open');
                 this.classList.add('active');
+                var toolbar = document.getElementById('bottomToolbar');
+                if (toolbar) toolbar.classList.add('backdrop-active');
             }
         });
     }
@@ -303,6 +307,8 @@ App._toggleSection = function(sectionId, btn) {
         section.classList.add('open');
         if (btn) btn.classList.add('active');
         lucide.createIcons({ nodes: [section] });
+        var toolbar = document.getElementById('bottomToolbar');
+        if (toolbar) toolbar.classList.add('backdrop-active');
     }
 };
 
@@ -317,6 +323,8 @@ App._closeAllSections = function() {
     for (var j = 0; j < btns.length; j++) {
         btns[j].classList.remove('active');
     }
+    var toolbar = document.getElementById('bottomToolbar');
+    if (toolbar) toolbar.classList.remove('backdrop-active');
 };
 
 /* ---- UI Helpers ---- */

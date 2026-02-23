@@ -60,18 +60,18 @@ App.STYLE_PRESETS = {
             text:   ['no text or lettering', 'minimal subtle text element', 'prominent text or lettering']
         }
     },
-    'blender': {
-        name: 'Blender',
-        placeholder: 'A mushroom',
-        defaultAxes: { volume: 100, color: 50, shape: 100, detail: 50, text: 0 },
+    '3d': {
+        name: '3D',
+        placeholder: 'A treasure chest',
+        defaultAxes: { volume: 100, color: 50, shape: 50, detail: 50, text: 0 },
         subject: '{subject}, centered.',
-        base: 'Blender-quality render, warm diffused studio lighting, no harsh specular highlights, smooth subsurface scattering, soft ambient occlusion',
-        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame. No shadows, no glows. All shapes must be solid and fully filled, no holes, no cutouts, no negative space inside the subject.'],
+        base: '3D isometric collectible icon, clean lines, realistic proportions, smooth surfaces, refined contours, soft ambient shadows, matte finish, no harsh specular highlights, minimalistic semi-realistic style, front-facing view, subtle reflections, clean studio lighting, ultra-soft diffuse under-object shadow with feathered edges like a soft gradient on a clean white surface',
+        constraints: ['Single centered subject only, no duplicates, no extra elements. No frame, no background elements. No text. All shapes must be solid and fully filled, no holes, no cutouts, no negative space inside the subject.'],
         axes: {
-            volume: ['flat stylized render, minimal depth', 'soft 3D render with gentle bevels', 'full 3D render with smooth rounded geometry, deep bevels and strong depth'],
-            color:  ['monochrome palette, single hue', 'limited palette of 2-3 colors, natural tones', 'rich vibrant colors, smooth color gradients from warm to cool tones'],
-            shape:  ['sharp angular geometry, hard edges', 'balanced geometry, some rounded elements', 'smooth rounded geometry, no hard edges, gentle bevels everywhere'],
-            detail: ['simple clean shapes, minimal detail', 'moderate detail, natural material textures', 'many details, fine surface details and textures'],
+            volume: ['flat stylized render, no depth, no isometric perspective', 'soft 3D with gentle isometric perspective, subtle ambient shadows', 'highly detailed 3D isometric render, strong depth, deep ambient occlusion, pronounced soft under-object shadow'],
+            color:  ['monochrome, single hue only', 'natural realistic colors, balanced palette', 'vibrant rich colors, bold saturated hues with warm-to-cool transitions'],
+            shape:  ['sharp geometric edges, angular hard surfaces', 'clean balanced proportions, mix of straight and curved', 'smooth rounded surfaces, soft refined contours, no hard edges'],
+            detail: ['simplified minimal forms, clean silhouette', 'moderate detail, realistic proportions, subtle surface texture', 'highly detailed surfaces, fine material grain and textures, subtle subsurface scattering'],
             text:   ['no text or lettering', 'minimal subtle text element', 'prominent text or lettering']
         }
     },

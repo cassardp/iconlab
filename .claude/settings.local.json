@@ -21,7 +21,11 @@
       "Bash(comm:*)",
       "Bash(cat:*)",
       "Bash(echo Vercel CLI not installed:*)",
-      "Bash(head:*)"
+      "Bash(head:*)",
+      "WebFetch(domain:gist.github.com)",
+      "WebFetch(domain:sparkiconai.com)",
+      "WebFetch(domain:joschua.io)",
+      "WebFetch(domain:alltimedesign.com)"
     ]
   },
   "outputStyle": "default"

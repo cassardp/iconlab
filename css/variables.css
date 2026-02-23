@@ -30,7 +30,7 @@
     --ring-shadow: 0 0 0 3px rgba(82, 82, 82, 0.3);
 
     /* Primary */
-    --primary: #404040;          /* neutral-700 */
+    --primary: #4a4a4a;          /* neutral-650 */
     --primary-foreground: #fafafa;
 
     /* Secondary */
@@ -90,7 +90,7 @@
     --ring-offset: #ffffff;
     --ring-shadow: 0 0 0 3px rgba(115, 115, 115, 0.3);
 
-    --primary: #525252;
+    --primary: #404040;          /* neutral-700 */
     --primary-foreground: #fafafa;
 
     --secondary: #ebebeb;

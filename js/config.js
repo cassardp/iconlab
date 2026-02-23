@@ -34,7 +34,7 @@ App.MODELS = {
 
 App.AXES = [
     { key: 'volume', labelMin: 'Flat',    labelMid: 'Relief',   labelMax: '3D' },
-    { key: 'color',  labelMin: 'Mono',    labelMid: 'Limited',  labelMax: 'Multicolor' },
+    { key: 'color',  labelMin: 'Mono',    labelMid: 'Natural',  labelMax: 'Multicolor' },
     { key: 'shape',  labelMin: 'Sharp',   labelMid: 'Smooth',   labelMax: 'Rounded' },
     { key: 'detail', labelMin: 'Minimal', labelMid: 'Balanced', labelMax: 'Detailed' },
     { key: 'text',   labelMin: 'No Text', labelMid: 'Short',    labelMax: 'Text' }
@@ -54,7 +54,7 @@ App.STYLE_PRESETS = {
         constraints: ['Single centered subject only, no duplicates, no extra elements. No frame, no rounded rectangle, no background shape behind the subject. No shadows, no glows. All shapes must be solid and fully filled, no holes, no cutouts, no negative space inside the subject.'],
         axes: {
             volume: ['strictly flat, solid color fills only, absolutely no gradients, no shading, no volume, no depth', 'soft matte gradient shading, gentle volume, smooth color transitions', 'rich volume with deep matte gradients, soft diffused depth, no glossy highlights'],
-            color:  ['monochrome, single hue only', 'warm palette of 4-5 soft harmonious colors', 'vibrant multi-color gradients, rich warm-to-cool transitions, saturated hues'],
+            color:  ['monochrome, single hue only', 'natural colors, as many hues as the subject needs but no more', 'vibrant multi-color gradients, rich warm-to-cool transitions'],
             shape:  ['sharp geometric edges, angular simplified forms', 'balanced mix of straight and curved, clean proportions', 'very round and smooth, soft bulging forms, no hard edges'],
             detail: ['extreme simplification, minimal abstract silhouette', 'moderate detail, recognizable clean forms, selective accents', 'detailed with multiple gradient layers, fine shading nuances'],
             text:   ['no text or lettering', 'minimal subtle text element', 'prominent text or lettering']

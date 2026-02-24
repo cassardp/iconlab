@@ -279,7 +279,7 @@ App._editorHasChanges = function() {
 
     // Verifier les props du layer
     var layer = layers[0];
-    var keys = ['scale', 'rotation', 'offsetX', 'offsetY', 'opacity', 'tintEnabled', 'shadowEnabled'];
+    var keys = ['scale', 'rotation', 'offsetX', 'offsetY', 'opacity', 'invertEnabled', 'tintEnabled', 'shadowEnabled'];
     for (var i = 0; i < keys.length; i++) {
         if (layer[keys[i]] !== ld[keys[i]]) return true;
     }

@@ -203,6 +203,7 @@ App.LAYER_DEFAULTS = {
     offsetX: 0,
     offsetY: 0,
     opacity: 100,
+    invertEnabled: false,
     tintEnabled: false,
     tintColor: '#5A9FD4',
     shadowEnabled: false,

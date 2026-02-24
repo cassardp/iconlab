@@ -454,6 +454,21 @@ App.initEditorEvents = function() {
         })(rangeInputs[j]);
     }
 
+    // Segmented invert (ecrit sur le layer actif)
+    var invertSeg = document.getElementById('editorInvertEnabled');
+    if (invertSeg) {
+        invertSeg.addEventListener('click', function(e) {
+            var btn = e.target.closest('.seg-btn');
+            if (!btn) return;
+            var layer = App._editorActiveLayer();
+            if (!layer) return;
+            var isOn = btn.classList.contains('seg-on');
+            layer.invertEnabled = isOn;
+            App._syncSegmented(invertSeg, isOn);
+            App.updateEditorPreview();
+        });
+    }
+
     // Segmented tint (ecrit sur le layer actif)
     var tintSeg = document.getElementById('editorTintEnabled');
     if (tintSeg) {

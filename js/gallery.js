@@ -665,6 +665,21 @@ App._renderComposition = function(generation, size, withBg, bgColor, callback) {
                 ctx.rotate(layer.rotation * Math.PI / 180);
             }
 
+            // Invert (pre-process avant tint/draw)
+            var srcImg = img;
+            if (layer.invertEnabled) {
+                var invCanvas = document.createElement('canvas');
+                invCanvas.width = exportSize;
+                invCanvas.height = exportSize;
+                var invCtx = invCanvas.getContext('2d');
+                invCtx.filter = 'invert(1)';
+                invCtx.drawImage(img, 0, 0, exportSize, exportSize);
+                invCtx.filter = 'none';
+                invCtx.globalCompositeOperation = 'destination-in';
+                invCtx.drawImage(img, 0, 0, exportSize, exportSize);
+                srcImg = invCanvas;
+            }
+
             // Tint
             if (layer.tintEnabled && layer.tintColor) {
                 var tmpCanvas = document.createElement('canvas');
@@ -673,7 +688,7 @@ App._renderComposition = function(generation, size, withBg, bgColor, callback) {
                 var tmpCtx = tmpCanvas.getContext('2d');
                 // Dessiner l'image avec opacity
                 tmpCtx.globalAlpha = ctx.globalAlpha;
-                tmpCtx.drawImage(img, 0, 0, exportSize, exportSize);
+                tmpCtx.drawImage(srcImg, 0, 0, exportSize, exportSize);
                 // Tint a pleine opacite (blend color sur l'image)
                 tmpCtx.globalAlpha = 1;
                 tmpCtx.globalCompositeOperation = 'color';
@@ -681,12 +696,12 @@ App._renderComposition = function(generation, size, withBg, bgColor, callback) {
                 tmpCtx.fillRect(0, 0, exportSize, exportSize);
                 // Masquer avec la silhouette originale
                 tmpCtx.globalCompositeOperation = 'destination-in';
-                tmpCtx.drawImage(img, 0, 0, exportSize, exportSize);
+                tmpCtx.drawImage(srcImg, 0, 0, exportSize, exportSize);
                 // Dessiner le resultat sur le canvas principal a pleine opacite
                 ctx.globalAlpha = 1;
                 ctx.drawImage(tmpCanvas, -half, -half, exportSize, exportSize);
             } else {
-                ctx.drawImage(img, -half, -half, exportSize, exportSize);
+                ctx.drawImage(srcImg, -half, -half, exportSize, exportSize);
             }
 
             ctx.restore();

@@ -61,12 +61,14 @@ App.updateEditorPreview = function() {
         // Opacity
         var opacityVal = (layer.opacity != null ? layer.opacity : 100) / 100;
 
-        // Drop-shadow filter
-        var filterStr = 'none';
+        // Filter (invert + drop-shadow)
+        var filterParts = [];
+        if (layer.invertEnabled) filterParts.push('invert(1)');
         if (layer.shadowEnabled) {
             var rgba = App._hexToRgba(layer.shadowColor, layer.shadowOpacity / 100);
-            filterStr = 'drop-shadow(0 ' + layer.shadowOffsetY + 'px ' + layer.shadowBlur + 'px ' + rgba + ')';
+            filterParts.push('drop-shadow(0 ' + layer.shadowOffsetY + 'px ' + layer.shadowBlur + 'px ' + rgba + ')');
         }
+        var filterStr = filterParts.length ? filterParts.join(' ') : 'none';
 
         // Appliquer sur le wrapper (pas de transform/filter pour eviter stacking context)
         wrap.style.transform = 'none';
@@ -166,6 +168,10 @@ App._editorSyncControls = function() {
         var opVal = layer.opacity != null ? layer.opacity : 100;
         if (opacity) opacity.value = opVal;
         if (opacityVal) opacityVal.value = opVal;
+
+        // Invert segmented
+        var invertSeg = document.getElementById('editorInvertEnabled');
+        if (invertSeg) App._syncSegmented(invertSeg, !!layer.invertEnabled);
 
         // Tint segmented
         var tintSeg = document.getElementById('editorTintEnabled');

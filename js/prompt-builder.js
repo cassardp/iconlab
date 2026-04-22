@@ -49,7 +49,39 @@ App.buildEnrichedPrompt = function(userPrompt, transparentBg) {
     sections.push('The subject should fill roughly 80% of the image area.');
     sections.push(preset.constraints.join('\n'));
 
+    // 6. Background (bake into prompt for models without transparent bg support)
+    var modelCfg = App.MODELS[App.state.model];
+    var modelSupportsTransparent = modelCfg && modelCfg.capabilities && modelCfg.capabilities.transparentBg;
+    if (!modelSupportsTransparent) {
+        var bgDesc = App._buildBackgroundDescription();
+        if (bgDesc) sections.push(bgDesc);
+    }
+
     return sections.join('\n\n');
+};
+
+/**
+ * Decrit le background configure dans l'editeur en langage naturel
+ * pour injection dans le prompt (modeles sans transparent bg natif).
+ * Retourne '' si bgType === 'none'.
+ */
+App._buildBackgroundDescription = function() {
+    var e = App.state.editor;
+    if (!e || e.bgType === 'none') return '';
+
+    switch (e.bgType) {
+        case 'solid':
+            return 'Background: solid ' + e.bgColor + ' fill covering the entire canvas.';
+        case 'gradient':
+            return 'Background: smooth radial gradient, ' + e.gradientCenter + ' at the center fading to ' + e.gradientEdge + ' at the edges, covering the entire canvas.';
+        case 'linear':
+            var angle = (e.linearAngle != null) ? e.linearAngle : 180;
+            return 'Background: linear gradient at ' + angle + ' degrees, from ' + e.linearStart + ' to ' + e.linearEnd + ', covering the entire canvas.';
+        case 'mesh':
+            var colors = (e.meshColors && e.meshColors.length) ? e.meshColors.join(', ') : '';
+            return 'Background: soft mesh gradient blending the colors ' + colors + ', covering the entire canvas.';
+    }
+    return '';
 };
 
 /**

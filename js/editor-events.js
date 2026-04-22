@@ -326,6 +326,7 @@ App.initEditorEvents = function() {
             s.bgType = newType;
             App._editorSyncControls();
             App.updateEditorPreview();
+            if (App.updateEnrichedPrompt) App.updateEnrichedPrompt();
         });
     }
 
@@ -347,6 +348,7 @@ App.initEditorEvents = function() {
                     App.state.editor[cfg.key] = this.value;
                     if (labelEl) labelEl.value = this.value;
                     App.updateEditorPreview();
+                    if (App.updateEnrichedPrompt) App.updateEnrichedPrompt();
                 });
             }
             if (labelEl) {
@@ -359,6 +361,7 @@ App.initEditorEvents = function() {
                         if (el) el.value = v;
                         App.state.editor[cfg.key] = v;
                         App.updateEditorPreview();
+                        if (App.updateEnrichedPrompt) App.updateEnrichedPrompt();
                     } else {
                         this.value = App.state.editor[cfg.key];
                     }

@@ -120,10 +120,12 @@ App.createCardHTML = function(gen) {
             imgHtml = '<img src="data:image/png;base64,' + gen.imageBase64 + '" alt="Generated icon"' + imgStyle + '>';
         }
     } else {
-        if (gen.previewBg === 'checkerboard' || (!gen.previewBg && gen.transparent)) {
+        if (gen.bgBakedIn) {
+            // Fond deja dans l'image : pas de bg additionnel
+        } else if (gen.previewBg === 'checkerboard' || (!gen.previewBg && gen.transparent)) {
             bgClass = ' checkerboard';
         }
-        bgStyle = hasSavedBg ? ' style="background-color:' + gen.previewBg + '"' : '';
+        bgStyle = (!gen.bgBakedIn && hasSavedBg) ? ' style="background-color:' + gen.previewBg + '"' : '';
         imgHtml = '<img src="data:image/png;base64,' + gen.imageBase64 + '" alt="Generated icon">';
     }
 

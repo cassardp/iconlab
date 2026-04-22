@@ -364,6 +364,11 @@ App.handleGenerate = function() {
     var userPrompt = App.state.prompt;
     var startTime = Date.now();
 
+    // Detecter si le bg est bake dans le prompt (modeles sans transparent natif + bg configure)
+    var modelCfg = App.MODELS[model];
+    var modelSupportsTransparent = modelCfg && modelCfg.capabilities && modelCfg.capabilities.transparentBg;
+    var bgBakedIn = !modelSupportsTransparent && App.state.editor.bgType !== 'none';
+
     App.addLoadingCard();
 
     App.generateOpenAI(finalPrompt, {
@@ -387,6 +392,7 @@ App.handleGenerate = function() {
             stylePreset: App.state.stylePreset,
             quality: App.state.quality,
             transparent: App.state.transparentBg,
+            bgBakedIn: bgBakedIn,
             duration: duration,
             timestamp: Date.now()
         };

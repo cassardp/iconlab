@@ -180,11 +180,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!App.MODELS[id]) return;
             App.state.model = id;
             App.saveState();
-            modelLabel.textContent = App.MODELS[id].name;
+            var m = App.MODELS[id];
+            modelLabel.textContent = m.name;
             var all = modelMenu.querySelectorAll('.topbar-model-option');
             for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
             opt.classList.add('active');
             modelMenu.classList.add('hidden');
+            // Refresh prompt enrichi : la description du bg depend du modele choisi
+            if (App.updateEnrichedPrompt) App.updateEnrichedPrompt();
         });
         document.addEventListener('mousedown', function(e) {
             if (!modelBtn.contains(e.target) && !modelMenu.contains(e.target)) {

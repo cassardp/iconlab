@@ -50,7 +50,10 @@ App.openEditor = function(generation) {
 
     // Fallback : fond depuis previewBg ou transparent si pas de reglages sauvegardes
     if (!saved) {
-        if (generation.previewBg === 'checkerboard' || (!generation.previewBg && generation.transparent)) {
+        if (generation.bgBakedIn) {
+            // Fond deja genere dans l'image par le modele : pas de bg additionnel
+            App.state.editor.bgType = 'none';
+        } else if (generation.previewBg === 'checkerboard' || (!generation.previewBg && generation.transparent)) {
             App.state.editor.bgType = 'none';
         } else if (generation.previewBg) {
             App.state.editor.bgColor = generation.previewBg;

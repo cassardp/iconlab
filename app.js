@@ -144,6 +144,48 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // 11. Model dropdown
+    var modelBtn = document.getElementById('modelDropdownBtn');
+    var modelMenu = document.getElementById('modelDropdownMenu');
+    var modelLabel = document.getElementById('modelDropdownLabel');
+
+    if (modelBtn && modelMenu && modelLabel) {
+        for (var modelId in App.MODELS) {
+            var modelOpt = document.createElement('button');
+            modelOpt.className = 'topbar-model-option';
+            modelOpt.setAttribute('data-model', modelId);
+            modelOpt.textContent = App.MODELS[modelId].name;
+            if (modelId === App.state.model) {
+                modelOpt.classList.add('active');
+                modelLabel.textContent = App.MODELS[modelId].name;
+            }
+            modelMenu.appendChild(modelOpt);
+        }
+
+        modelBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            modelMenu.classList.toggle('hidden');
+        });
+        modelMenu.addEventListener('click', function(e) {
+            var opt = e.target.closest('.topbar-model-option');
+            if (!opt) return;
+            var id = opt.getAttribute('data-model');
+            if (!App.MODELS[id]) return;
+            App.state.model = id;
+            App.saveState();
+            modelLabel.textContent = App.MODELS[id].name;
+            var all = modelMenu.querySelectorAll('.topbar-model-option');
+            for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
+            opt.classList.add('active');
+            modelMenu.classList.add('hidden');
+        });
+        document.addEventListener('mousedown', function(e) {
+            if (!modelBtn.contains(e.target) && !modelMenu.contains(e.target)) {
+                modelMenu.classList.add('hidden');
+            }
+        });
+    }
 });
 
 /* ---- Build style cards ---- */

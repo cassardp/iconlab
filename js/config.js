@@ -7,9 +7,16 @@ var App = window.App || {};
 /* ---- Modeles OpenAI ---- */
 
 App.MODELS = {
+    'gpt-image-2': {
+        name: 'GPT Image 2',
+        description: 'State-of-the-art, sharper text, flexible sizes',
+        capabilities: { transparentBg: false, edits: true, referenceImages: 10 },
+        defaultQuality: 'medium',
+        recommendedBackground: 'auto'
+    },
     'gpt-image-1.5': {
         name: 'GPT Image 1.5',
-        description: 'Latest model, faster, 20% cheaper than 1.0',
+        description: 'Faster, 20% cheaper than 1.0',
         capabilities: { transparentBg: true, edits: true, referenceImages: 10 },
         defaultQuality: 'medium',
         recommendedBackground: 'transparent'

@@ -7,7 +7,7 @@ var App = window.App || {};
 /* ---- Etat ---- */
 
 App.state = {
-    model: 'gpt-image-1.5',
+    model: 'gpt-image-2',
     prompt: '',
     stylePreset: '',
     axes: { volume: 0, color: 100, shape: 100, detail: 0, text: 0 },
@@ -58,6 +58,7 @@ App.saveState = function() {
 };
 
 App.loadSavedState = function() {
-    App.state.model = 'gpt-image-1.5';
+    var savedModel = localStorage.getItem(App.STORAGE_KEYS.model);
+    App.state.model = (savedModel && App.MODELS[savedModel]) ? savedModel : 'gpt-image-2';
     App.state.quality = 'medium';
 };

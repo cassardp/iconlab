@@ -42,7 +42,7 @@ Scripts charges via `<script>` dans `index.html` dans cet ordre strict :
 
 ### Key Patterns
 
-- **State** : Centralise dans `App.state`. Preferences simples dans LocalStorage (API key, theme), galerie dans IndexedDB (`icon-lab` / `generations`, keyPath `timestamp`). Model et quality sont fixes (`gpt-image-1.5`, `medium`).
+- **State** : Centralise dans `App.state`. Preferences simples dans LocalStorage (API key, theme), galerie dans IndexedDB (`icon-lab` / `generations`, keyPath `timestamp`). Model et quality sont fixes (`gpt-image-2`, `medium`).
 - **API Calls** : Appels directs navigateur-vers-OpenAI (pas de proxy). Cle API dans LocalStorage. Retry automatique sur rate limit (429/529, backoff exponentiel, max 3 tentatives). Detection de nouveaux modeles `gpt-image-*` au chargement via `/v1/models`.
 - **Prompt Builder** : Assemble le prompt depuis le preset actif + axes + material + color. Le prompt enrichi est editable dans un textarea avant envoi. Un flag `_enrichedManuallyEdited` empeche l'ecrasement si l'utilisateur a modifie le texte.
 - **Axes semantiques** : 5 sliders discrets (3 stops : 0, 50, 100) controlent le style via `App.AXES` : `volume` (Flat↔3D), `color` (Mono↔Colorful), `shape` (Sharp↔Rounded), `detail` (Minimal↔Detailed), `text` (No Text↔Text).

@@ -17,9 +17,11 @@ App.generateOpenAI = function(prompt, options) {
         return Promise.reject(new Error('No OpenAI API key configured'));
     }
 
-    var model = options.model || 'gpt-image-1';
+    var model = options.model || 'gpt-image-2';
     var quality = options.quality || 'medium';
-    var background = options.transparentBg ? 'transparent' : 'auto';
+    var modelConfig = App.MODELS[model];
+    var supportsTransparent = modelConfig && modelConfig.capabilities && modelConfig.capabilities.transparentBg;
+    var background = (options.transparentBg && supportsTransparent) ? 'transparent' : 'auto';
 
     return App._generateDirect(prompt, apiKey, model, quality, background);
 };
@@ -34,9 +36,11 @@ App._generateDirect = function(prompt, apiKey, model, quality, background) {
         size: '1024x1024',
         quality: quality,
         output_format: 'png',
-        background: background,
         n: 1
     };
+    if (background === 'transparent') {
+        body.background = 'transparent';
+    }
 
     return App._fetchWithRetry('https://api.openai.com/v1/images/generations', {
         method: 'POST',

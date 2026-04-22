@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
             modelOpt.innerHTML =
                 '<span class="topbar-model-option-name">' + m.name + '</span>' +
                 '<span class="topbar-model-option-meta">' +
-                (supportsTransparent ? 'Transparent' : 'Opaque') +
+                (supportsTransparent ? 'Transparent' : 'Solid') +
                 '</span>';
             if (modelId === App.state.model) {
                 modelOpt.classList.add('active');

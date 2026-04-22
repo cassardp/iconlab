@@ -152,13 +152,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (modelBtn && modelMenu && modelLabel) {
         for (var modelId in App.MODELS) {
+            var m = App.MODELS[modelId];
+            var supportsTransparent = m.capabilities && m.capabilities.transparentBg;
             var modelOpt = document.createElement('button');
             modelOpt.className = 'topbar-model-option';
             modelOpt.setAttribute('data-model', modelId);
-            modelOpt.textContent = App.MODELS[modelId].name;
+            modelOpt.innerHTML =
+                '<span class="topbar-model-option-name">' + m.name + '</span>' +
+                '<span class="topbar-model-option-meta">' +
+                (supportsTransparent ? 'Transparent' : 'Opaque') +
+                '</span>';
             if (modelId === App.state.model) {
                 modelOpt.classList.add('active');
-                modelLabel.textContent = App.MODELS[modelId].name;
+                modelLabel.textContent = m.name;
             }
             modelMenu.appendChild(modelOpt);
         }
